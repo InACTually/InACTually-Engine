@@ -25,14 +25,13 @@ namespace py = pybind11;
 
 act::proc::MediaPipeProcNode::MediaPipeProcNode() : ProcNodeBase("MediaPipe") {
 	m_drawSize = ivec2(200, 200);
-	 
-	m_adaptor = std::make_shared<act::comp::PythonAdaptor>(
+
+	py::scoped_interpreter guard{};
+	m_adaptor = act::comp::PythonAdaptor::create(
 		"C:/Users/fabian/Documents/02_Private/01_Projects/InActually-Engine/scripts/mediapipe/",
 		"mediapipe",
 		"MediaPipe_Module",
-		"process_frame"
-	);
-
+		"process_frame");
 
 	auto image = InputPort<cv::UMat>::create(PT_IMAGE, "image", [&](cv::UMat mat) { this->onMat(mat); });
 	m_inputPorts.push_back(image);
@@ -52,6 +51,10 @@ void act::proc::MediaPipeProcNode::onMat(cv::UMat event) {
 }
 
 void act::proc::MediaPipeProcNode::update() {
+
+	if (m_input.empty()) {
+		return;
+	}
 
 	// Convert cv::Mat -> numpy
 	py::array_t<uint8_t> np_frame(
