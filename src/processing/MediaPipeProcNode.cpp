@@ -25,21 +25,16 @@ namespace py = pybind11;
 
 act::proc::MediaPipeProcNode::MediaPipeProcNode() : ProcNodeBase("MediaPipe") {
 	m_drawSize = ivec2(200, 200);
-
-	py::scoped_interpreter guard{};
-	m_adaptor = act::comp::PythonAdaptor::create(
-		"C:/Users/fabian/Documents/02_Private/01_Projects/InActually-Engine/scripts/mediapipe/",
-		"mediapipe",
-		"MediaPipe_Module",
-		"process_frame");
-
+	
 	auto image = InputPort<cv::UMat>::create(PT_IMAGE, "image", [&](cv::UMat mat) { this->onMat(mat); });
 	m_inputPorts.push_back(image);
 
 	m_outputPort = OutputPort<cv::UMat>::create(PT_IMAGE, "output image");
 	 
 	m_outputPorts.push_back(m_outputPort);
- 
+
+	m_input = cv::UMat (100, 100, CV_8UC1, cv::Scalar(128));
+
 }
 
 act::proc::MediaPipeProcNode::~MediaPipeProcNode() {
@@ -48,9 +43,28 @@ act::proc::MediaPipeProcNode::~MediaPipeProcNode() {
 
 void act::proc::MediaPipeProcNode::onMat(cv::UMat event) {
 	m_input = event;
+
 }
 
 void act::proc::MediaPipeProcNode::update() {
+
+
+	//needed to init it here since constructor is somehow called even before a MediaPipeProcNode is created in GUI ???
+	if (m_guard == nullptr) {
+		m_guard = std::make_unique<py::scoped_interpreter>();
+	}
+	
+
+	if (m_adaptor == nullptr) {
+
+	 
+		m_adaptor = act::comp::PythonAdaptor::create(
+			"mediapipe/",
+			"mediapipe",
+			"MediaPipe_Module",
+			"process_frame");
+	}
+
 
 	if (m_input.empty()) {
 		return;

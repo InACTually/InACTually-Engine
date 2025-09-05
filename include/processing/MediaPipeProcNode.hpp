@@ -21,7 +21,7 @@
 #include "computing/PythonAdaptor.hpp"
 #include "opencv2/core/core_c.h"
 #include "opencv2/imgproc.hpp"
-
+ 
 using namespace ci;
 using namespace ci::app;
 
@@ -52,7 +52,7 @@ namespace act {
 
 			cv::UMat	m_input;
 			cv::UMat	m_output;
-
+			std::unique_ptr<py::scoped_interpreter> m_guard;
 		}; using MediaPipeProcNodeRef = std::shared_ptr<MediaPipeProcNode>;
 
 	}

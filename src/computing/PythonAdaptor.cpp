@@ -18,10 +18,13 @@
 #include "PythonAdaptor.hpp"
 #include <filesystem>
 #include "cinder/Log.h"
- 
+#include "cinder/app/App.h"
+
 namespace fs = std::filesystem;
 
-act::comp::PythonAdaptor::PythonAdaptor()   {}
+act::comp::PythonAdaptor::PythonAdaptor()   {
+
+}
 
 act::comp::PythonAdaptor::PythonAdaptor(
 	const std::string& modulePath,
@@ -30,23 +33,28 @@ act::comp::PythonAdaptor::PythonAdaptor(
 	const std::string& functionName)
 {
     try{
-        //TODO this should only be called once, refactor to another place maybe PythonAdaptorManager Class 
 
 
-        auto sys = py::module::import("sys");
+        fs::path assetPath = ci::app::getAssetPath("");
+        fs::path baseDir = assetPath.parent_path();
 
-        std::string packages = modulePath + venvName + "/Lib/site-packages";
-        sys.attr("path").attr("insert")(0, packages);
-
-        if (!fs::exists(modulePath)) {
-            CI_LOG_E("Module path does not exist: " << modulePath);
+        fs::path scriptDir = (baseDir / "../scripts" / modulePath).lexically_normal();
+        std::string fullPath = scriptDir.string();
+        
+        if (!fs::exists(fullPath)) {
+            CI_LOG_E("Module path does not exist: " << fullPath);
             throw std::runtime_error("Invalid module path");
         }
+        
+        auto sys = py::module::import("sys");
 
-        sys.attr("path").attr("insert")(0, modulePath);
+        sys.attr("path").attr("insert")(0, fullPath);
 
-        sys.attr("prefix") = modulePath + venvName;
-        sys.attr("exec_prefix") = modulePath + venvName;
+        std::string packages = fullPath + venvName + "/Lib/site-packages";
+        sys.attr("path").attr("insert")(0, packages);
+
+        sys.attr("prefix") = fullPath + venvName;
+        sys.attr("exec_prefix") = fullPath + venvName;
 
         CI_LOG_I("Python version: " << std::string(pybind11::str(sys.attr("version"))));
         CI_LOG_I("Python executable: " << std::string(pybind11::str(sys.attr("executable"))));
