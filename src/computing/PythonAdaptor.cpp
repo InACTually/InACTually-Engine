@@ -31,7 +31,7 @@ act::comp::PythonAdaptor::PythonAdaptor(
 {
     try{
         //TODO this should only be called once, refactor to another place maybe PythonAdaptorManager Class 
-        py::scoped_interpreter guard{};
+
 
         auto sys = py::module::import("sys");
 

@@ -37,6 +37,12 @@ namespace act {
 
 			~PythonAdaptor();
 
+			static	std::shared_ptr<PythonAdaptor> create(const std::string& modulePath,
+				const std::string& venvName,
+				const std::string& moduleName,
+				const std::string& functionName) { return std::make_shared<PythonAdaptor>(modulePath,venvName,moduleName,functionName); };
+
+
 			py::object call(py::args args = py::make_tuple(), py::kwargs kwargs = py::dict());
 
 
