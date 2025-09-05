@@ -68,6 +68,7 @@
 #include "LinkerProcNode.hpp"
 #include "SkeletonMovementProcNode.hpp"
 #include "ColorMappingProcNode.hpp"
+#include "MediaPipeProcNode.hpp"
 
 act::proc::ProcNodeRegistry::ProcNodeRegistry()
 {
@@ -82,6 +83,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Utility", "Speed", act::proc::SpeedProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "BackgroundSubstraction", act::proc::BackgroundSubstractionProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Noise", act::proc::NoiseProcNode::create);
+    act::proc::ProcNodeRegistry::add("Utility", "MediaPipe", act::proc::MediaPipeProcNode::create);
 
     act::proc::ProcNodeRegistry::add("Audio", "Audio3D", act::proc::Audio3DProcNode::create);
     act::proc::ProcNodeRegistry::add("Audio", "Audio3DPlayer", act::proc::Audio3DPlayerProcNode::create);
