@@ -274,6 +274,8 @@
     <ClInclude Include="..\include\processing\MovingHeadProcNode.hpp" />
     <ClInclude Include="..\include\processing\MultiBodyPositionsProcNode.hpp" />
     <ClInclude Include="..\include\processing\NetworkProcNode.hpp" />
+    <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp" />
+    <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp" />
     <ClInclude Include="..\include\processing\ProcNodeBase.hpp" />
     <ClInclude Include="..\include\processing\NoiseProcNode.hpp" />
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp" />
@@ -298,6 +300,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\AFSynthProcNode.cpp" />
+    <ClCompile Include="..\src\processing\Audio3DPlayerTimestretchProcNode.cpp" />
     <ClCompile Include="..\src\processing\Audio3DProcNode.cpp" />
     <ClCompile Include="..\src\processing\Audio3DPlayerProcNode.cpp" />
     <ClCompile Include="..\src\processing\AudioInProcNode.cpp" />
@@ -340,6 +343,8 @@
     <ClCompile Include="..\src\processing\MovingHeadProcNode.cpp" />
     <ClCompile Include="..\src\processing\MultiBodyPositionsProcNode.cpp" />
     <ClCompile Include="..\src\processing\NetworkProcNode.cpp" />
+    <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp" />
+    <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp" />
     <ClCompile Include="..\src\processing\NoiseProcNode.cpp" />
     <ClCompile Include="..\src\processing\NumberEnhancerProcNode.cpp" />
