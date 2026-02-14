@@ -68,6 +68,7 @@ act::room::RoomNodeBaseRef act::room::CameraManager::drawMenu()
 		if (ImGui::Button("Cancel")) {
 			ImGui::CloseCurrentPopup();
 			m_doCalibrate = false;
+			addSelectedDevice(m_availableDeviceNames[m_selectedDevice], m_availableDeviceNames[m_selectedDevice]);
 		}
 		ImGui::SameLine();
 		if (m_calibrator->isFinishedCalibrating() && ImGui::Button("Apply")) {
