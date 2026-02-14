@@ -40,8 +40,8 @@ Most of the dependencies are included in this repo (see the third-party notice b
 
 + [Cinder - 0.9.4dev](https://github.com/cinder/Cinder) [Jan'26] (or possibly newer) \
 Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folder (same hierarchy level), so that it can be relatively found. You need to replace the ImGui files with its [docking-branch](https://github.com/ocornut/imgui/tree/docking) [Jan'26]. After that, your want to compile Cinder with dynamic runtime linking (in VisualStudio something like: Proj.-settings -> C/C++ -> CodeGeneration -> runtime lib -> "-DLL"):
-    - for Release "Multithreaded-DLL (/MD)" name the lib "cinder_MD.lib"
-    - for Debug "Multithreaded-Debug-DLL (/MDd)" name the lib "cinder_MDd.lib" likewise
+    - for Release "Multithreaded-DLL (/MD)" name the output folder "Release_MD\..\" (e.g. name the configuration accordingly)
+    - for Debug "Multithreaded-Debug-DLL (/MDd)" name the output folder "Debug_MD\..\" likewise
 
 + [OpenCV 4.10.0](https://github.com/opencv/opencv) (or possibly newer) \
 You need to compile OpenCV, maybe with opencv_contrib and things you like to have.\

@@ -108,7 +108,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world4100d.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\onnxruntime\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\;..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -139,8 +139,8 @@
       <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder_MDd.lib;opencv_world460d.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\3rd\onnxruntime\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\Debug\$(PlatformToolset);..\3rd\OpenCV4\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world460d.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -175,8 +175,8 @@
       <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world4100.lib;OpenGL32.lib;Gdi32.lib;Shell32.lib;Comdlg32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\onnxruntime\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\;..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;opencv_world4100.lib;OpenGL32.lib;Gdi32.lib;Shell32.lib;Comdlg32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
@@ -210,8 +210,8 @@
       <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder_MD.lib;opencv_world460.lib;flann_cpp_s.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\3rd\onnxruntime\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\Release\$(PlatformToolset);..\3rd\OpenCV4\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world460.lib;flann_cpp_s.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
