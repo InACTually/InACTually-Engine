@@ -193,7 +193,7 @@ namespace act {
 			};
 			
 			void draw(int width, bool noCaption = false) override {
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (act::Settings::get().fontSize * 0.5f));
+				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (act::Settings::get().fontSize * 0.5f));
 				ImNodes::BeginOutputAttribute(PortBase::getRuntimeID());
 				if (!noCaption)
 				{
@@ -204,7 +204,7 @@ namespace act {
 					ImGui::Indent(width);
 				}
 				ImNodes::EndOutputAttribute();
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize * 0.5f));
+				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize * 0.5f));
 			}
 			int getListenerCount()
 			{
@@ -255,13 +255,13 @@ namespace act {
 			};
 			
 			void draw(int width, bool noCaption = false) override {
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize * 0.5f));
+				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize * 0.5f));
 				ImNodes::BeginInputAttribute(PortBase::getRuntimeID());
 				ImGui::Indent(0);
 				if (!noCaption)
 					ImGui::Text(PortBase::getCaption().c_str());
 				ImNodes::EndInputAttribute();
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (act::Settings::get().fontSize * 0.5f));
+				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (act::Settings::get().fontSize * 0.5f));
 			}
 
 			void recieve(T data, K context = nullptr) override {

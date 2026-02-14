@@ -59,7 +59,16 @@ void act::proc::ObjectDetectionProcNode::initNetwork() {
 	std::string cfgFile = ci::app::getAssetPath("your-model-here").string();
 	std::string weightsFile = ci::app::getAssetPath("your-model-here").string();
 
-	m_network = cv::dnn::readNetFromDarknet(cfgFile, weightsFile);
+    if (cfgFile.empty() || weightsFile.empty()) {
+        CI_LOG_E("files not avaiable.");
+        return;
+    }
+    try {
+        m_network = cv::dnn::readNetFromDarknet(cfgFile, weightsFile);
+    }
+    catch (cv::Exception exc) {
+        CI_LOG_EXCEPTION("ObjectDetection", exc);
+    }
 
 	//add this for cuda support
 	// 

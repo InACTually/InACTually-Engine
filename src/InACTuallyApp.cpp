@@ -70,7 +70,6 @@ class InACTuallyApp : public App {
 
 void InACTuallyApp::setup()
 {
-
 	RegisterModule(mod::RoomModule);
 	RegisterModule(mod::ProcessingModule);
 	RegisterModule(mod::DisplayModule);

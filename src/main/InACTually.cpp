@@ -286,12 +286,12 @@ void act::InACTually::drawMinimalGUI()
 		ImGui::EndMenu();
 	}
 
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 100);
+	//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 100);
 	std::stringstream fps;
 	fps << "fps: " << (int)m_app->getAverageFps();
 	ImGui::Text(fps.str().c_str(), vec2(10, 10));
 
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30);
+	//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30);
 	m_networkMgr->drawStatusBar();
 
 	ImGui::EndMainMenuBar();
@@ -408,12 +408,12 @@ void act::InACTually::drawFullGUI()
 		ImGui::EndMenu();
 	}
 
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 100);
+	//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 100);
 	std::stringstream fps;
 	fps << "fps: " << (int)m_app->getAverageFps();
 	ImGui::Text(fps.str().c_str(), vec2(10, 10));
 
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30);
+	//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30);
 	m_networkMgr->drawStatusBar();
 
 	ImGui::EndMainMenuBar();

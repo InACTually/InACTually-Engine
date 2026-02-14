@@ -77,7 +77,7 @@ act::room::RoomNodeBaseRef act::room::ObjectManager::drawMenu() {
 	}
 
 	for (auto&& tex : m_feedbackTextures) { 
-		ImGui::Image(tex, tex->getSize() * 0.6f);
+		ImGui::Image(tex, ci::vec2(tex->getSize()) * 0.6f);
 	}
 
 	for (auto&& node : m_nodes) {

@@ -31,14 +31,28 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 	m_faceAvailHeightThreshold = 300;
 	m_faceAvailHistoryMaxSize = 10;
 	m_faceAvailHistoryThreshold = 6;
-	
-	mFaceCascade.load(getAssetPath("3rd/haarcascade_cuda/haarcascade_frontalface_alt.xml").string());
+
 	mFaceHistorySize = 20;
 
 	m_faceImagePort = createImageOutput("biggest face image");
 	m_faceAvailablePort = createBoolOutput("face is available");
 
 	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
+
+
+	std::string path = getAssetPath("3rd/haarcascade_cuda/haarcascade_frontalface_alt.xml").string();
+	
+	if (path.empty()) {
+		CI_LOG_E("file not avaiable.");
+		return;
+	}
+	try {
+		mFaceCascade.load(path);
+	}
+	catch (cv::Exception exc) {
+		CI_LOG_EXCEPTION("FaceDetection", exc);
+	}
+
 }
 
 act::proc::FaceDetectionProcNode::~FaceDetectionProcNode() {

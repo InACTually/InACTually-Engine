@@ -97,7 +97,7 @@ namespace act {
 				drawPorts(width, true, true);
 			}
 			virtual void drawPorts(int width, bool doDrawInputPorts = true, bool doDrawOutputPorts = true) {
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize*0.5f));
+				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize*0.5f));
 				if(doDrawInputPorts)
 					for (auto&& port : m_inputPorts) {
 						port->draw(width);

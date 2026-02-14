@@ -87,7 +87,7 @@ act::room::RoomNodeBaseRef act::room::MarkerManager::drawMenu() {
 	}
 
 	for (auto&& tex : m_feedbackTextures) {
-		ImGui::Image(tex, tex->getSize() * 0.3f);
+		ImGui::Image(tex, ci::vec2(tex->getSize()) * 0.3f);
 	}
 	
 	return nullptr;
