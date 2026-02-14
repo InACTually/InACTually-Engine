@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2025
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -23,11 +23,12 @@
 act::room::MovingHeadRoomNode::MovingHeadRoomNode(DMXProRef dmxInterface, ci::Json description, std::string name, int startAddress, ci::vec3 position, ci::vec3 rotation, float radius, act::UID replyUID)
 	: DMXRoomNodeBase(dmxInterface, description, startAddress), RoomNodeBase("movinghead", position, rotation, radius, replyUID)
 {
-	util::setValueFromJson(description, "panRange",		m_panRange);
-	util::setValueFromJson(description, "tiltRange",	m_tiltRange);
-	util::setValueFromJson(description, "tiltOffset",	m_tiltOffset);
-	util::setValueFromJson(description, "beamAngle",	m_beamAngle);
-	util::setValueFromJson(description, "strobeSpeed",	m_strobeSpeed);
+	util::setValueFromJson(description, "panRange",			m_panRange);
+	util::setValueFromJson(description, "tiltRange",		m_tiltRange);
+	util::setValueFromJson(description, "panCenterOffset",	m_panCenterOffset);
+	util::setValueFromJson(description, "tiltOffset",		m_tiltOffset);
+	util::setValueFromJson(description, "beamAngle",		m_beamAngle);
+	util::setValueFromJson(description, "strobeSpeed",		m_strobeSpeed);
 
 	m_hasFineAdjust = m_channelMapping.find("finePan")	!= m_channelMapping.end() && m_channelMapping.find("fineTilt") != m_channelMapping.end();
 	m_hasWhite		= m_channelMapping.find("W")		!= m_channelMapping.end();
@@ -519,7 +520,7 @@ void act::room::MovingHeadRoomNode::setStrobe(float strobe, bool publish)
 void act::room::MovingHeadRoomNode::home()
 {
 	setDimmer(0.0f);
-	setPanTilt(180, 90);
+	setPanTilt(m_panCenterOffset, 90);
 	setZoom(0.0f);
 }
 
@@ -581,7 +582,7 @@ void act::room::MovingHeadRoomNode::createColorWheelLookUp(ci::Json colorMap)
 
 bool act::room::MovingHeadRoomNode::polarToPanTilt()
 {
-	float tilt	= toDegrees(m_theta)	+ 90	+ m_tiltCenterOffset;	// shift to middle position and add offset
+	float tilt	= toDegrees(m_theta)	+ 90	;	// shift to middle position and add offset
 	float pan	= toDegrees(m_phi)		+ 180	+ m_panCenterOffset;	// shift to middle position and add offset
 
 	if (pan > (m_panCenterOffset + 360.0f))
@@ -589,6 +590,7 @@ bool act::room::MovingHeadRoomNode::polarToPanTilt()
 
 	if (tilt >= 360.0f - m_tiltCenterOffset)
 		tilt = m_theta - (360.0f - m_tiltCenterOffset);
+
 
 	setPanTilt(pan, tilt);
 
@@ -602,8 +604,8 @@ bool act::room::MovingHeadRoomNode::polarToPanTilt()
 
 void act::room::MovingHeadRoomNode::panTiltToPolar()
 {
-	m_theta		= toRadians(m_tilt.getValue() - 90	- m_tiltCenterOffset);
-	m_phi		= toRadians(m_pan.getValue()  - 180 - m_panCenterOffset);
+	m_theta		= toRadians(m_tilt.getValue() - 90);
+	m_phi		= toRadians(m_pan.getValue()  - 180);
 
 	m_yaw		= m_phi;
 	m_pitch		= glm::two_pi<float>() - (m_theta);
@@ -613,7 +615,8 @@ void act::room::MovingHeadRoomNode::panTo(float pan)
 {
 	m_pan.setValue(fmodf(pan, (float)m_panRange));
 	
-	double panRough = ((double)m_pan.getValue() / (double)m_panRange);
+	double panRough = (((double)m_pan.getValue() - (m_panCenterOffset + 0.5)) / (double)m_panRange);
+
 	if (m_isPanFlipped) {
 		panRough = 1.0f - panRough;
 	}
