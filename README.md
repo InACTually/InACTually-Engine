@@ -39,7 +39,7 @@ A CMake workflow would be a dream.
 Most of the dependencies are included in this repo (see the third-party notice below), but you need to setup the bigger dependencies yourself:
 
 + [Cinder - 0.9.4dev](https://github.com/cinder/Cinder) [Jan'26] (or possibly newer) \
-Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folder (same hierarchy level), so that it can be relatively found. You need to replace the ImGui files with its [docking-branch](https://github.com/ocornut/imgui/tree/docking) [Jul'25]. After that, your want to compile Cinder with dynamic runtime linking (in VisualStudio something like: Proj.-settings -> C/C++ -> CodeGeneration -> runtime lib -> "-DLL"):
+Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folder (same hierarchy level), so that it can be relatively found. You need to replace the ImGui files with its [docking-branch](https://github.com/ocornut/imgui/tree/docking) [Jan'26]. After that, your want to compile Cinder with dynamic runtime linking (in VisualStudio something like: Proj.-settings -> C/C++ -> CodeGeneration -> runtime lib -> "-DLL"):
     - for Release "Multithreaded-DLL (/MD)" name the lib "cinder_MD.lib"
     - for Debug "Multithreaded-Debug-DLL (/MDd)" name the lib "cinder_MDd.lib" likewise
 
