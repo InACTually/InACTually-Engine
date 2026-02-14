@@ -35,6 +35,8 @@ act::room::DMXManager::DMXManager()
 	refreshInterfaceNames();
 	loadFixtures();
 	refreshLists();
+
+	changeInterface("COM3");
 }
 
 act::room::DMXManager::~DMXManager()
