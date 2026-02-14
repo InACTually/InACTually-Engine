@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -18,7 +18,7 @@
 #pragma once
 
 #include "ProcNodeBase.hpp"
-#include "WebSocketServer.h"
+#include "server_ws.hpp"
 
 using namespace ci;
 using namespace ci::app;
@@ -26,6 +26,8 @@ using namespace ci::app;
 
 namespace act {
 	namespace proc {
+		using WsServer = SimpleWeb::SocketServer<SimpleWeb::WS>;
+		using WsServerRef = std::shared_ptr<WsServer>;
 
 		class NetworkProcNode : public ProcNodeBase
 		{
@@ -48,12 +50,15 @@ namespace act {
 
 		private:
 
-			WebSocketServer				m_server;
-			unsigned int				m_port;
-			std::string					m_text;
+			WsServerRef				m_server;
+			std::thread				m_serverThread;
+			unsigned int			m_port;
+			bool					m_isConnected;
 
-			void						sendJson(ci::Json json);
-			void						recieveJson(ci::Json json);
+			std::string				m_text;
+
+			void					sendJson(ci::Json json);
+			void					recieveJson(ci::Json json);
 
 		}; using NetworkProcNodeRef = std::shared_ptr<NetworkProcNode>;
 

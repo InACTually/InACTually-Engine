@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -19,7 +19,9 @@
 
 
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
+	#ifndef WIN32_LEAN_AND_MEAN
+		#define WIN32_LEAN_AND_MEAN
+	#endif
 	#include <windows.h>
 #endif
 

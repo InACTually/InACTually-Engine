@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -19,7 +19,7 @@
 
 #include "ModuleBase.hpp"
 #include "ModuleRegistry.hpp"
-#include "WebSocketServer.h"
+#include "server_ws.hpp"
 #include "Connection.hpp"
 
 using namespace ci;
@@ -27,6 +27,8 @@ using namespace ci;
 
 namespace act {
 	namespace net {
+		using WsServer = SimpleWeb::SocketServer<SimpleWeb::WS>;
+		using WsServerRef = std::shared_ptr<WsServer>;
 
 		class WebUIServer : public ConnectionProvider, public UniqueIDBase
 		{
@@ -50,7 +52,8 @@ namespace act {
 		private:
 			MsgRecieverRef		m_reciever;
 
-			WebSocketServer		m_server;
+			WsServerRef			m_server;
+			std::thread			m_serverThread;
 			unsigned int		m_port;
 			bool				m_isConnected;
 

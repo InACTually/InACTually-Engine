@@ -52,16 +52,6 @@ These projects may contain other projects to function. Please refer to their thi
 - Copyright (c) 2018, The Cinder Project
 - Source on [GitHub](https://github.com/cinder/Cinder-PortAudio)
 
-### WebSocketPP
-- License: [modified BSD License](3rd/Cinder-WebSocketPP/src/websocketpp/COPYING)
-- Copyright (c) 2014, Peter Thorson. All rights reserved.
-- Source on [GitHub](https://github.com/zaphoyd/websocketpp)
-
-### Cinder-WebSocketPP
-- License: [modified BSD License](3rd/Cinder-WebSocketPP/LICENSE)
-- Copyright (c) 2015, Wieden+Kennedy
-- Source on [GitHub](https://github.com/wieden-kennedy/Cinder-WebSocketPP)
-
 ### libzmq
 - License: [MPL-2.0 License](3rd/libzmq/LICENSE)
 - [Copyright list](3rd/libzmq/AUTHORS)

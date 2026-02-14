@@ -68,10 +68,10 @@ namespace SimpleWeb {
     return asio::bind_executor(strand, std::forward<handler_type>(handler));
   }
 #else
-  using io_context = asio::io_service;
+  using io_context = asio::io_context;
   using resolver_results = asio::ip::tcp::resolver::iterator;
   using async_connect_endpoint = asio::ip::tcp::resolver::iterator;
-  using strand = asio::io_service::strand;
+  using strand = asio::io_context::strand;
 
   template <typename handler_type>
   inline void post(io_context &context, handler_type &&handler) {

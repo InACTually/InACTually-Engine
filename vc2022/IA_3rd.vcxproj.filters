@@ -4,12 +4,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\Cinder-WebSocketPP">
-      <UniqueIdentifier>{ad94068a-27ab-4fec-915f-6bcd9353657e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Cinder-WebSocketPP\websocketpp">
-      <UniqueIdentifier>{38291436-8c26-4a60-b9f8-26c121e53d0c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\imnodes">
       <UniqueIdentifier>{8a2a34da-1b4e-4fb7-b2e8-cb8d1ae2f1ab}</UniqueIdentifier>
     </Filter>
@@ -81,15 +75,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\3rd\Cinder-WebSocketPP\src\WebSocketClient.cpp">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rd\Cinder-WebSocketPP\src\WebSocketConnection.cpp">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rd\Cinder-WebSocketPP\src\WebSocketServer.cpp">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rd\imnodes\imnodes.cpp">
       <Filter>Source Files\imnodes</Filter>
     </ClCompile>
@@ -251,15 +236,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\3rd\Cinder-WebSocketPP\src\WebSocketClient.h">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rd\Cinder-WebSocketPP\src\WebSocketConnection.h">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rd\Cinder-WebSocketPP\src\WebSocketServer.h">
-      <Filter>Source Files\Cinder-WebSocketPP</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rd\imnodes\imnodes.h">
       <Filter>Source Files\imnodes</Filter>
     </ClInclude>

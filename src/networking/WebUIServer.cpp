@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -35,81 +35,99 @@ act::net::WebUIServer::WebUIServer(MsgRecieverRef reciever)
 	m_isConnected = false;
 	m_text = "Initializing";
 
-	m_server.connectCloseEventHandler([&]() {
-		m_isConnected = false;
-		m_reciever->onDisconnect(getUID());
-		m_text = "Connection closed";
-		CI_LOG_I(m_text);
-	});
+	m_server = std::make_shared<WsServer>();
+	m_server->config.port = m_port;
+	m_server->config.header.insert({ "Access-Control-Allow-Origin", "*" });
 
+	auto& endpoint = m_server->endpoint["^/?$"];
 
-	m_server.connectFailEventHandler([&](std::string err) {
+	endpoint.on_message = [&](std::shared_ptr<WsServer::Connection> connection, std::shared_ptr<WsServer::InMessage> in_message) {
+		auto out_message = in_message->string();
 
-		m_text = "Error";
-		if (!err.empty()) {
-			m_text += ": " + err;
-		}
-		CI_LOG_I(m_text);
-	});
-
-	m_server.connectInterruptEventHandler([&]() {
-		m_isConnected = false;
-		m_reciever->onDisconnect(getUID());
-		m_text = "Connection Interrupted";
-		CI_LOG_I(m_text);
-	});
-
-	m_server.connectMessageEventHandler([&](std::string msg) {
-
-		if (!msg.empty()) {
+		if (!out_message.empty()) {
 
 			try {
-				this->recieveJson(ci::Json::parse(msg));
-				CI_LOG_I("JSON Message Received");
+				this->recieveJson(ci::Json::parse(out_message));
+				// CI_LOG_I("JSON Message Received");
 			}
 			catch (const std::exception& exc)
 			{
-				m_text = "[cannot interprete msg] " + msg + " (string) - " + exc.what();
+				m_text = "[cannot interprete msg] " + out_message + " (string) - " + exc.what();
 				CI_LOG_I(m_text);
 			}
 		}
-	});
 
-	m_server.connectOpenEventHandler([&]() {
+		// reply?
+
+		};
+
+	endpoint.on_open = [&](std::shared_ptr<WsServer::Connection> connection) {
 		m_isConnected = true;
 		m_reciever->onConnect(getUID());
-		m_text = "Connected";
+		m_text = "A WebUI is connected";
 		CI_LOG_I(m_text);
-	});
+		};
 
+	// See RFC 6455 7.4.1. for status codes
+	endpoint.on_close = [&](std::shared_ptr<WsServer::Connection> connection, int status, const std::string& /*reason*/) {
+		if (m_server->get_connections().size() == 0) {
+			m_reciever->onDisconnect(getUID());
+			m_isConnected = false;			
+		}
+		m_text = "Connection closed";
+		CI_LOG_I(m_text);
+		};
 
-	m_server.connectSocketInitEventHandler([&]() {
+	endpoint.on_handshake = [](std::shared_ptr<WsServer::Connection> /*connection*/, SimpleWeb::CaseInsensitiveMultimap& response_header) {
+		//response_header.insert({ "Access-Control-Allow-Origin", "*" });
+		return SimpleWeb::StatusCode::information_switching_protocols; // Upgrade to websocket
+		};
 
-		// This routine reads the address of the incoming connection
-		// and prints it to the log
-		/*asio::ip::tcp::socket* socket = m_server.getSocket();
-		if (socket != nullptr) {
-			asio::ip::address address = socket->remote_endpoint().address();
-			string host = "";
-			if (address.is_v4()) {
-				host += address.to_v4().to_string();
+	endpoint.on_error = [&](std::shared_ptr<WsServer::Connection> connection, const SimpleWeb::error_code& ec) {
+		std::stringstream strstr;
+		strstr << "Error in connection " << connection.get() << ". " << "Error: " << ec << ", error message: " << ec.message();
+		m_text = strstr.str();
+		CI_LOG_I(m_text);
+		};
+
+	std::shared_ptr<std::promise<unsigned short>> server_port = std::make_shared<std::promise<unsigned short>>();
+	auto server_port_future = server_port->get_future();
+	m_serverThread = std::thread([server_port, this]() {
+		try {
+			m_server->start([server_port](unsigned short port) {
+				try {
+					server_port->set_value(port);
+				}
+				catch (...) {
+				}
+				});
+		}
+		catch (...) {
+			try {
+				server_port->set_exception(std::current_exception());
 			}
-			else if (address.is_v6()) {
-				host += address.to_v6().to_string();
+			catch (...) {
 			}
-			else {
-				host += address.to_string();
-			}
-			host += ":" + toString(socket->remote_endpoint().port());
-			CI_LOG_I(host);
-		}*/
+		}
 		});
+	// wait briefly for server to report bound port, avoid blocking indefinitely
+	if (server_port_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
+		try {
+			m_port = server_port_future.get();
+		}
+		catch (const std::exception& e) {
+			CI_LOG_I(std::string("Failed to get server port: ") + e.what());
+		}
+	}
+	else {
+		CI_LOG_I("Server start timed out; continuing with configured port");
+	}
 
-	m_server.listen(m_port);
 	m_text = "Listening";
 }
 
 act::net::WebUIServer::~WebUIServer() {
+	m_serverThread.join();
 }
 
 void act::net::WebUIServer::sendMsg(ci::Json msg) {
@@ -117,7 +135,8 @@ void act::net::WebUIServer::sendMsg(ci::Json msg) {
 		return;
 
 	auto str = msg.dump();
-	m_server.write(str);
+	for (auto& a_connection : m_server->get_connections())
+		a_connection->send(str);
 }
 
 void act::net::WebUIServer::recieveJson(ci::Json json) {
@@ -126,7 +145,6 @@ void act::net::WebUIServer::recieveJson(ci::Json json) {
 
 
 void act::net::WebUIServer::update() {
-	m_server.poll();
 }
 
 void act::net::WebUIServer::draw() {

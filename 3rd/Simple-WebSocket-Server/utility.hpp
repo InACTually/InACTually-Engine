@@ -430,7 +430,7 @@ namespace SimpleWeb {
 #endif
 
 namespace SimpleWeb {
-  /// Makes it possible to for instance cancel Asio handlers without stopping asio::io_service.
+  /// Makes it possible to for instance cancel Asio handlers without stopping asio::io_context.
   class ScopeRunner {
     /// Scope count that is set to -1 if scopes are to be canceled.
     std::atomic<long> count;

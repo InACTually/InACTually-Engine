@@ -46,3 +46,5 @@ logs/
 3rd/libzmq/tools/
 assets/3rd/depth-anything/depth_anything_v2_vitb_dynamic.onnx
 assets/3rd/depth-anything/depth_anything_v2_vits_dynamic.onnx
+3rd/imnodes/example/
+3rd/ImPlot/example/
