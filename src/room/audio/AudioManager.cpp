@@ -98,8 +98,9 @@ act::room::SubwooferRoomNodeRef act::room::AudioManager::addSubwoofer(int channe
 act::room::MicrophoneRoomNodeRef act::room::AudioManager::addMicrophone(int channel)
 {
 	MicrophoneRoomNodeRef mic = room::MicrophoneRoomNode::create(channel, vec3(0.0f, 1.0f, 0.0f), 0.15f);
-
 	m_microphones.push_back(mic);
+	m_nodes.push_back(mic);
+
 	mapMicrophones();
 
 	return mic;
@@ -138,7 +139,7 @@ act::room::RoomNodeBaseRef act::room::AudioManager::drawMenu()
 		m_selectedInputChannel = std::clamp(m_selectedInputChannel, 0, 242);
 	};
 	if (ImGui::Button("add Mic")) {
-		addMicrophone(m_selectedInputChannel);
+		node = addMicrophone(m_selectedInputChannel);
 	}
 
 	return node;
@@ -147,6 +148,8 @@ act::room::RoomNodeBaseRef act::room::AudioManager::drawMenu()
 ci::Json act::room::AudioManager::toJson()
 {
 	auto json = ci::Json::object();
+
+	json["audioDevice"] = m_audioDeviceMgr->toJson();
 
 	auto mixer = ci::Json::object();
 	mixer["type"] = m_mixerMgr->getMixerType();
@@ -165,6 +168,13 @@ ci::Json act::room::AudioManager::toJson()
 		subwoofers.push_back(nodeJson);
 	}
 	json["subwoofers"] = subwoofers;
+
+	ci::Json microphones = ci::Json::array();
+	for (auto&& mic : m_microphones) {
+		auto nodeJson = mic->toJson();
+		microphones.push_back(nodeJson);
+	}
+	json["microphones"] = microphones;
 
 	return json;
 }
@@ -193,6 +203,17 @@ void act::room::AudioManager::fromJson(ci::Json json)
 		}
 	}
 
+	if (json.contains("microphones")) {
+		auto devicesJson = json["microphones"];
+		for (auto&& json : devicesJson) {
+			int channel = 0;
+			util::setValueFromJson(json, "channel", channel);
+			auto mic = addMicrophone(channel);
+
+			mic->fromJson(json);
+		}
+	}
+
 	if (json.contains("mixer")) {
 		auto mixerJson = json["mixer"];
 		int type = aio::MT_DISTANCE;
@@ -200,8 +221,10 @@ void act::room::AudioManager::fromJson(ci::Json json)
 		m_mixerMgr->setMixer((aio::MixerType)type);
 	}
 
-	m_mixerMgr->configure(m_speakers, m_subwoofers, m_sounds);
-	mapMicrophones();
+	if (json.contains("audioDevice")) {
+		auto audioDeviceJson = json["audioDevice"];
+		m_audioDeviceMgr->fromJson(audioDeviceJson);;
+	}
 }
 
 void act::room::AudioManager::onOutputDeviceChange(ci::audio::OutputDeviceNodeRef outputDevice)
@@ -212,7 +235,7 @@ void act::room::AudioManager::onOutputDeviceChange(ci::audio::OutputDeviceNodeRe
 void act::room::AudioManager::onInputDeviceChange(ci::audio::InputDeviceNodeRef inputDevice)
 {
 	auto ctx = audio::Context::master();
-	m_inputDeviceNode = ctx->createInputDeviceNode();
+	m_inputDeviceNode = inputDevice;
 	m_inputRouter = ctx->makeNode(new audio::ChannelRouterNode(audio::Node::Format()
 		.channels(m_inputDeviceNode->getNumChannels())));
 
@@ -247,6 +270,9 @@ void act::room::AudioManager::mapMicrophones()
 		return;
 
 	for (auto mic : m_microphones) {
+		if (mic->getChannel() >= m_inputDeviceNode->getNumChannels())
+			continue;
+
 		m_inputDeviceNode >> m_inputRouter->route(mic->getChannel(), 0) >> mic->getIn();
 
 		std::stringstream strstr;

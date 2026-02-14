@@ -42,7 +42,10 @@ act::proc::MicrophoneProcNode::~MicrophoneProcNode() {
 void act::proc::MicrophoneProcNode::setup(act::room::RoomManagers roomMgrs) {
 	m_audioMgr = roomMgrs.audioMgr;
 
-	//attachMic(m_audioMgr->getMicrophoneByIndex(m_selectedInput));
+	auto mic = m_audioMgr->getMicrophoneByIndex(m_selectedInput);
+	if (mic) {
+		attachMic(mic);
+	}
 }
 
 void act::proc::MicrophoneProcNode::update() {
@@ -95,7 +98,12 @@ void act::proc::MicrophoneProcNode::fromParams(ci::Json json) {
 
 void act::proc::MicrophoneProcNode::attachMic(room::MicrophoneRoomNodeRef mic)
 {
-	m_microphone = mic;
-	if(m_microphone)
+	if (m_microphone) {
+		m_microphone->disconnectExternals();
+	}
+	
+	if (mic) {
+		m_microphone = mic;
 		m_audioNodeOutPort->send(m_microphone->getOut());
+	}
 }

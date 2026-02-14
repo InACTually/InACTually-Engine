@@ -196,11 +196,27 @@ void act::aio::AudioDeviceManager::refreshDeviceList()
 
 ci::Json act::aio::AudioDeviceManager::toJson()
 {
-	return ci::Json();
+	auto json = ci::Json::object();
+
+	if(m_outputDeviceNode)
+		json["outputDevice"] = m_outputDeviceNode->getDevice()->getKey();
+	if (m_inputDeviceNode)
+		json["inputDevice"] = m_inputDeviceNode->getDevice()->getKey();
+
+	return json;
 }
 
 void act::aio::AudioDeviceManager::fromJson(ci::Json json)
 {
+
+	std::string outputDeviceKey = "";
+	util::setValueFromJson(json, "outputDevice", outputDeviceKey);
+	
+	std::string inputDeviceKey = "";
+	util::setValueFromJson(json, "inputDevice", inputDeviceKey);
+
+	setupOutputDevice(outputDeviceKey);
+	setupInputDevice(inputDeviceKey);
 }
 
 void act::aio::AudioDeviceManager::updateInfo()
@@ -251,11 +267,11 @@ void act::aio::AudioDeviceManager::setupOutputDevice(std::string key)
 		CI_LOG_I(str.str());
 		printContextInfo();
 
-		onOutputDeviceChange(m_outputDeviceNode);
-
 		m_outputDeviceNode->enable();
 		ctx->enable();
 		updateInfo();
+
+		onOutputDeviceChange(m_outputDeviceNode);
 	}
 }
 
@@ -265,8 +281,18 @@ void act::aio::AudioDeviceManager::setupInputDevice(std::string key)
 	if (device) {
 		setFormat(device);
 		m_inputDeviceNode = ci::audio::master()->createInputDeviceNode(device, ci::audio::Node::Format().channels(device->getNumInputChannels()));
+		
+		auto ctx = ci::audio::master();
+		ctx->disable();
+		//ctx->disconnectAllNodes();
 
-		CI_LOG_I("Input Device updated: " << m_inNames[m_inSelection]);
+		std::stringstream str;
+		str << "Input Device updated: " << m_inNames[m_inSelection] << std::endl;
+		CI_LOG_I(str.str());
+		printContextInfo();
+
+		m_inputDeviceNode->enable();
+		ctx->enable();
 		updateInfo();
 
 		onInputDeviceChange(m_inputDeviceNode);
@@ -281,8 +307,6 @@ void act::aio::AudioDeviceManager::setDevice(std::string key)
 			m_outSelection = i;
 		}
 	}
-
-	m_inSelection = 0;
 
 	setupOutputDevice(key);
 	setupInputDevice(m_inKeys[m_inSelection]);
