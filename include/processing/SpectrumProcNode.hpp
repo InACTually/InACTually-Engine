@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -46,9 +46,11 @@ namespace act {
 			bool							m_show;
 
 			audio::MonitorSpectralNodeRef	m_monitorSpectralNode;
+			number							m_volume = 0;
 			numberList						m_spectrum;
 			number							m_centroid;
 
+			OutputPortRef<number>			m_volumeOutPort;
 			OutputPortRef<numberList>		m_spectrumOutPort;
 			OutputPortRef<number>			m_centroidOutPort;
 

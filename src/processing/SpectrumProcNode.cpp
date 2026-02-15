@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -26,6 +26,7 @@ act::proc::SpectrumProcNode::SpectrumProcNode() : ProcNodeBase("Spectrum") {
 
 	m_show = false;
 
+	m_volumeOutPort   = createNumberOutput("volume");
 	m_spectrumOutPort = createNumberListOutput("spectrum");
 	m_centroidOutPort = createNumberOutput("centroid");
 
@@ -52,9 +53,11 @@ void act::proc::SpectrumProcNode::setup(act::room::RoomManagers roomMgrs) {
 
 void act::proc::SpectrumProcNode::update() {
 	if (m_monitorSpectralNode && m_monitorSpectralNode->isEnabled()) {
+		m_volume = m_monitorSpectralNode->getVolume();
 		m_spectrum = m_monitorSpectralNode->getMagSpectrum();
 		m_centroid = m_monitorSpectralNode->getSpectralCentroid();
 
+		m_volumeOutPort->send(m_volume);
 		m_spectrumOutPort->send(m_spectrum);
 		m_centroidOutPort->send(m_centroid);
 	}
@@ -87,6 +90,8 @@ void act::proc::SpectrumProcNode::draw() {
 
 		ImPlot::EndPlot();
 	}
+
+	ImGui::SliderFloat("volume", &m_volume, 0.0f, 120.f);
 
 	if (m_show) {
 		gl::pushMatrices();
