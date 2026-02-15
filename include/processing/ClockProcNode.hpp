@@ -53,6 +53,8 @@ namespace act {
 
 			bool m_bang = false;
 
+			void start();
+			void stop();
 		}; using ClockProcNodeRef = std::shared_ptr<ClockProcNode>;
 
 	}
