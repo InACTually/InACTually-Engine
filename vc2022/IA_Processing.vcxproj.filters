@@ -210,6 +210,18 @@
     <ClCompile Include="..\src\processing\AFSynthProcNode.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\DistributorProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\Audio3DPlayerTimestretchProcNode.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\processing\AudioPlayerProcNode.hpp">
@@ -392,7 +404,18 @@
     <ClInclude Include="..\include\processing\ClockProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\Audio3DPlayerTimestretchProcNode.hpp" />
+    <ClInclude Include="..\include\processing\DistributorProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp">
+      <Filter>Source Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp">
+      <Filter>Source Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\Audio3DPlayerTimestretchProcNode.hpp">
+      <Filter>Source Files\audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\PointcloudProcNode.cpp">

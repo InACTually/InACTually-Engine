@@ -73,6 +73,7 @@
 #include "LinkerProcNode.hpp"
 #include "SkeletonMovementProcNode.hpp"
 #include "ColorMappingProcNode.hpp"
+#include "DistributorProcNode.hpp"
 
 act::proc::ProcNodeRegistry::ProcNodeRegistry()
 {
@@ -81,6 +82,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Utility", "Color", act::proc::ColorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "ColorMapping", act::proc::ColorMappingProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "If", act::proc::IfProcNode::create);
+    act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "ImageEnhancer", act::proc::ImageEnhancerProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Position", act::proc::PositionProcNode::create);

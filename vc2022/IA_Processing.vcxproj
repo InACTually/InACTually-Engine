@@ -251,6 +251,7 @@
     <ClInclude Include="..\include\processing\ColorMappingProcNode.hpp" />
     <ClInclude Include="..\include\processing\ColorProcNode.hpp" />
     <ClInclude Include="..\include\processing\ContainerProcNode.hpp" />
+    <ClInclude Include="..\include\processing\DistributorProcNode.hpp" />
     <ClInclude Include="..\include\processing\DMXDimmerProcNode.hpp" />
     <ClInclude Include="..\include\processing\FaceDetectionProcNode.hpp" />
     <ClInclude Include="..\include\processing\FaceEmotionProcNode.hpp" />
@@ -317,6 +318,7 @@
     <ClCompile Include="..\src\processing\ColorMappingProcNode.cpp" />
     <ClCompile Include="..\src\processing\ColorProcNode.cpp" />
     <ClCompile Include="..\src\processing\ContainerProcNode.cpp" />
+    <ClCompile Include="..\src\processing\DistributorProcNode.cpp" />
     <ClCompile Include="..\src\processing\DMXDimmerProcNode.cpp" />
     <ClCompile Include="..\src\processing\FaceDetectionProcNode.cpp" />
     <ClCompile Include="..\src\processing\FaceEmotionProcNode.cpp" />
