@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -62,8 +62,9 @@ void act::proc::IfProcNode::draw() {
 	ImGui::InputText("compare text", &m_compareText);
 	ImGui::InputFloat3("vec3", m_compareVec3);
 	ImGui::SameLine();
-	ImGui::InputFloat("Radius", &precision);
+	ImGui::InputFloat("Radius", &m_precision);
 	ImGui::Checkbox("not", &m_not);
+	ImGui::Checkbox("fireOnlyOnce", &m_fireOnlyOnce);
 	
 	endNodeDraw();
 }
@@ -77,7 +78,8 @@ ci::Json act::proc::IfProcNode::toParams() {
 	json["pos_x"]					= m_compareVec3[0];
 	json["pos_y"]					= m_compareVec3[1];
 	json["pos_z"]					= m_compareVec3[2];
-	json["radius"]					= precision;
+	json["radius"]					= m_precision;
+	json["fireOnlyOnce"]			= m_fireOnlyOnce;
 	return json;
 }
 
@@ -89,7 +91,9 @@ void act::proc::IfProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "pos_x", m_compareVec3[0]); 
 	util::setValueFromJson(json, "pos_y", m_compareVec3[1]); 
 	util::setValueFromJson(json, "pos_z", m_compareVec3[2]);
-	util::setValueFromJson(json, "radius", precision);
+	util::setValueFromJson(json, "pos_z", m_compareVec3[2]);
+	util::setValueFromJson(json, "radius", m_precision);
+	util::setValueFromJson(json, "fireOnlyOnce", m_fireOnlyOnce);
 }
 
 bool act::proc::IfProcNode::compareValue(float number) {
@@ -126,47 +130,61 @@ bool act::proc::IfProcNode::compareText(std::string text) {
 	return false;
 }
 
-void act::proc::IfProcNode::onNumber(float number) {
-	m_resultPort->send(compareValue(number));
-}
-
-void act::proc::IfProcNode::onText(std::string text) {
-	m_resultPort->send(compareText(text));
-}
-
-void act::proc::IfProcNode::onFeature(act::proc::feature f) {
-	m_resultPort->send(compareText(f.first) && compareValue(f.second));
-}
-
-void act::proc::IfProcNode::onFeatures(act::proc::featureList fList) {
-	bool result = false;
-	for(auto&& f : fList) {
-		if(compareText(f.first) && compareValue(f.second)) {
-			result = true;
-			break;
-		}
-	}
-	m_resultPort->send(result);
-}
 bool act::proc::IfProcNode::compareVec(vec3 pos)
 {
 	float x = abs(pos.x - m_compareVec3[0]);
 	float y = abs(pos.y - m_compareVec3[1]);
 	float z = abs(pos.z - m_compareVec3[2]);
-	if(x<precision && y<precision && z<precision)
+	if (x < m_precision && y < m_precision && z < m_precision)
 	{
 		return true;
 	}
 	return false;
 }
 
+void act::proc::IfProcNode::sendResult(bool val)
+{
+	if (m_fireOnlyOnce) {
+		if (val != m_lastCompareResult) {
+			m_resultPort->send(val);
+			m_resultPort_neg->send(!val);
+		}
+	}
+	else {
+		m_resultPort->send(val);
+		m_resultPort_neg->send(!val);
+	}
+	m_lastCompareResult = val;
+}
+
+void act::proc::IfProcNode::onNumber(float number) {
+	bool val = compareValue(number);
+	sendResult(val);
+}
+
+void act::proc::IfProcNode::onText(std::string text) {
+	bool val = compareText(text);
+	sendResult(val);
+}
+
+void act::proc::IfProcNode::onFeature(act::proc::feature f) {
+	bool val = compareText(f.first) && compareValue(f.second);
+	sendResult(val);
+}
+
+void act::proc::IfProcNode::onFeatures(act::proc::featureList fList) {
+	bool val = false;
+	for(auto&& f : fList) {
+		if(compareText(f.first) && compareValue(f.second)) {
+			val = true;
+			break;
+		}
+	}
+	sendResult(val);
+}
+
 void act::proc::IfProcNode::onVec(vec3 pos)
 {
-	bool res = compareVec(pos);
-	m_resultPort->send(res);
-	if (res) {
-		m_resultPort_neg->send(false);
-	}
-	
-
+	bool val = compareVec(pos);
+	sendResult(val);
 }

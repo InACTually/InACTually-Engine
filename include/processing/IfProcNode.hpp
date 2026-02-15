@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -51,10 +51,15 @@ namespace act {
 			std::string		m_compareText;
 			float			m_compareVec3[3] = {0.,0.,0.};
 			bool			m_not;
-			float			precision = 0.1;
+			float			m_precision = 0.1;
+			bool			m_fireOnlyOnce = false;
+			bool			m_lastCompareResult = false;
+
 			bool compareValue(float number);
 			bool compareText(std::string text);
 			bool compareVec(vec3 pos);
+
+			void sendResult(bool val);
 
 			void onNumber(float number);
 			void onText(std::string text);
