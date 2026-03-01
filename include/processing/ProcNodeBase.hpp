@@ -241,12 +241,13 @@ namespace act {
 			InputPortRef<ci::Color>					createColorInput		(std::string label, std::function<void(ci::Color)> cb, bool display = true)				{ auto port = InputPort<ci::Color>::create(PT_COLOR, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<std::vector<ci::Color>>	createColorListInput	(std::string label, std::function<void(std::vector<ci::Color>)> cb, bool display = true){ auto port = InputPort<std::vector<ci::Color>>::create(PT_COLORLIST, label, cb);	if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<std::string>				createTextInput			(std::string label, std::function<void(std::string)> cb, bool display = true)			{ auto port = InputPort<std::string>::create(PT_TEXT, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
-			ImageInputPortRef						createImageInput		(std::string label, std::function<void(image)> cb, bool display = true)					{ auto port = ImageInputPort::create(PT_IMAGE, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
+			ImageInputPortRef						createImageInput		(std::string label, std::function<void(image)> cb, bool display = true)					{ auto port = ImageInputPort::create(PT_IMAGE, label, cb);							if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<ci::audio::BufferRef>		createAudioInput		(std::string label, std::function<void(ci::audio::BufferRef)> cb, bool display = true)	{ auto port = InputPort<ci::audio::BufferRef>::create(PT_AUDIO, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<ci::audio::NodeRef>		createAudioNodeInput	(std::string label, std::function<void(ci::audio::NodeRef)> cb, bool display = true)	{ auto port = InputPort<ci::audio::NodeRef>::create(PT_AUDIONODE, label, cb);		if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<feature>					createFeatureInput		(std::string label, std::function<void(feature)> cb, bool display = true)				{ auto port = InputPort<feature>::create(PT_FEATURE, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<featureList>				createFeatureListInput	(std::string label, std::function<void(featureList)> cb, bool display = true)			{ auto port = InputPort<featureList>::create(PT_FEATURELIST, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
-
+			InputPortRef<room::BodyRef>				createBodyInput			(std::string label, std::function<void(room::BodyRef)> cb, bool display = true)			{ auto port = InputPort<room::BodyRef>::create(PT_BODY, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
+			InputPortRef<room::BodyRefList>			createBodyListInput		(std::string label, std::function<void(room::BodyRefList)> cb, bool display = true)		{ auto port = InputPort<room::BodyRefList>::create(PT_BODYLIST, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
 
 			OutputPortRef<ci::Json>					createJsonOutput		(std::string label, bool display = true) { auto port = OutputPort<ci::Json>::create(PT_JSON, label);					if (display) m_outputPorts.push_back(port); return port; }
 			OutputPortRef<bool>						createBoolOutput		(std::string label, bool display = true) { auto port = OutputPort<bool>::create(PT_BOOL, label);						if (display) m_outputPorts.push_back(port); return port; }
@@ -264,7 +265,9 @@ namespace act {
 			OutputPortRef<ci::audio::BufferRef>		createAudioOutput		(std::string label, bool display = true) { auto port = OutputPort<ci::audio::BufferRef>::create(PT_AUDIO, label);		if (display) m_outputPorts.push_back(port); return port; }
 			OutputPortRef<ci::audio::NodeRef>		createAudioNodeOutput	(std::string label, bool display = true) { auto port = OutputPort<ci::audio::NodeRef>::create(PT_AUDIONODE, label);		if (display) m_outputPorts.push_back(port); return port; }
 			OutputPortRef<feature>					createFeatureOutput		(std::string label, bool display = true) { auto port = OutputPort<feature>::create(PT_FEATURE, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<featureList>				createFeatureListOutput	(std::string label, bool display = true) { auto port = OutputPort<featureList>::create(PT_FEATURELIST, label);			if (display) m_outputPorts.push_back(port); return port; }
+			OutputPortRef<featureList>				createFeatureListOutput	(std::string label, bool display = true) { auto port = OutputPort<featureList>::create(PT_FEATURELIST, label);				if (display) m_outputPorts.push_back(port); return port; }
+			OutputPortRef<room::BodyRef>			createBodyOutput		(std::string label, bool display = true) { auto port = OutputPort<room::BodyRef>::create(PT_BODY, label);				if (display) m_outputPorts.push_back(port); return port; }
+			OutputPortRef<room::BodyRefList>		createBodyListOutput	(std::string label, bool display = true) { auto port = OutputPort<room::BodyRefList>::create(PT_BODYLIST, label);		if (display) m_outputPorts.push_back(port); return port; }
 			
 		private:
 			std::string	m_name;

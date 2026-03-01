@@ -19,6 +19,8 @@ The Engine is InACTually's media server, that should be able to run a show or me
 
 [The Stage](https://github.com/InACTually/InACTually-Stage) (in another repo) is InACTually's frontend, that should be nicer to use and should only give instructions to the Engine what to do. The Stage is meant to be hosted in a venue, to easily access it via a tablet or a Mixed-Reality headset.
 
+[The NodeCreator](https://github.com/InACTually/InACTually-NodeCreator) (in another repo) is InACTually's helper tool to easily create and integrate processing nodes into the InACTually Engine's codebase. The NodeCreator is a submodule for this repository.
+
 <br>
 
 ## 🎭 Gallery
@@ -32,6 +34,8 @@ Some impressions from projects by Fabian Töpfer and Lars Engeln using InACTuall
 <br>
 
 ## 🛠️ Setup – How to compile
+
+If you want to have the [NodeCreator](https://github.com/InACTually/InACTually-NodeCreator) with the Engine, you need to clone `--recursive`, as it is a submodule.
 
 To make it compile... pray.
 At the moment, only a project file for VisualStudio2022 is available.

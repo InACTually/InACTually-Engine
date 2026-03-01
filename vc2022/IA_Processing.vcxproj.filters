@@ -66,16 +66,16 @@
     <ClCompile Include="..\src\processing\SpectrumProcNode.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\KinectProcNode.cpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\SkeletonFilterProcNode.cpp">
+    <ClCompile Include="..\src\processing\HandProcNode.cpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\HeadProcNode.cpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\HandProcNode.cpp">
+    <ClCompile Include="..\src\processing\KinectProcNode.cpp">
+      <Filter>Source Files\azure kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\SkeletonFilterProcNode.cpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\DMXDimmerProcNode.cpp">
@@ -93,13 +93,13 @@
     <ClCompile Include="..\src\processing\OSCMsgProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp">
+    <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\OSCSenderProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp">
+    <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\BlobDetectionProcNode.cpp">
@@ -120,22 +120,16 @@
     <ClCompile Include="..\src\processing\ObjectDetectionProcNode.cpp">
       <Filter>Source Files\object marker</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\BodyTrackingProcNode.cpp">
-      <Filter>Source Files\person</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\BodiesFilterProcNode.cpp">
       <Filter>Source Files\person</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\MultiBodyPositionsProcNode.cpp">
+    <ClCompile Include="..\src\processing\BodyToSoundProcNode.cpp">
       <Filter>Source Files\person</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\SkeletonMovementProcNode.cpp">
+    <ClCompile Include="..\src\processing\BodyTrackingProcNode.cpp">
       <Filter>Source Files\person</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\BoneVectorProcNode.cpp">
-      <Filter>Source Files\person</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\BodyToSoundProcNode.cpp">
       <Filter>Source Files\person</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\FaceDetectionProcNode.cpp">
@@ -144,8 +138,17 @@
     <ClCompile Include="..\src\processing\FaceEmotionProcNode.cpp">
       <Filter>Source Files\person</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\MultiBodyPositionsProcNode.cpp">
+      <Filter>Source Files\person</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\SkeletonMovementProcNode.cpp">
+      <Filter>Source Files\person</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\PointcloudProcNode.cpp">
       <Filter>Source Files\pointcloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\ClockProcNode.cpp">
+      <Filter>Source Files\timeline</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\EasingProcNode.cpp">
       <Filter>Source Files\timeline</Filter>
@@ -153,8 +156,8 @@
     <ClCompile Include="..\src\processing\TriggerListProcNode.cpp">
       <Filter>Source Files\timeline</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\ClockProcNode.cpp">
-      <Filter>Source Files\timeline</Filter>
+    <ClCompile Include="..\src\processing\BackgroundSubstractionProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\ColorProcNode.cpp">
       <Filter>Source Files\utility</Filter>
@@ -162,13 +165,16 @@
     <ClCompile Include="..\src\processing\ColorMappingProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\IfProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\DistributorProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\IfProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\ImageEnhancerProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\NoiseProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\NumberEnhancerProcNode.cpp">
@@ -180,16 +186,13 @@
     <ClCompile Include="..\src\processing\SpeedProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\BackgroundSubstractionProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\NoiseProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
+    <ClCompile Include="..\src\processing\CameraProcNode.cpp">
+      <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\KeyInProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\CameraProcNodeProcNode.cpp">
+    <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\MonitorProcNode.cpp">
@@ -199,9 +202,6 @@
       <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\VideoRecorderProcNode.cpp">
-      <Filter>Source Files\general io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,16 +260,16 @@
     <ClInclude Include="..\include\processing\SpectrumProcNode.hpp">
       <Filter>Source Files\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\KinectProcNode.hpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\SkeletonFilterProcNode.hpp">
+    <ClInclude Include="..\include\processing\HandProcNode.hpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\HeadProcNode.hpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\HandProcNode.hpp">
+    <ClInclude Include="..\include\processing\KinectProcNode.hpp">
+      <Filter>Source Files\azure kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\SkeletonFilterProcNode.hpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\DMXDimmerProcNode.hpp">
@@ -287,13 +287,13 @@
     <ClInclude Include="..\include\processing\OSCMsgProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp">
+    <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\OSCSenderProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp">
+    <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\BlobDetectionProcNode.hpp">
@@ -314,22 +314,16 @@
     <ClInclude Include="..\include\processing\ObjectDetectionProcNode.hpp">
       <Filter>Source Files\object marker</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\BodyTrackingProcNode.hpp">
-      <Filter>Source Files\person</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\BodiesFilterProcNode.hpp">
       <Filter>Source Files\person</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\MultiBodyPositionsProcNode.hpp">
+    <ClInclude Include="..\include\processing\BodyToSoundProcNode.hpp">
       <Filter>Source Files\person</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\SkeletonMovementProcNode.hpp">
+    <ClInclude Include="..\include\processing\BodyTrackingProcNode.hpp">
       <Filter>Source Files\person</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\BoneVectorProcNode.hpp">
-      <Filter>Source Files\person</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\BodyToSoundProcNode.hpp">
       <Filter>Source Files\person</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\FaceDetectionProcNode.hpp">
@@ -338,8 +332,17 @@
     <ClInclude Include="..\include\processing\FaceEmotionProcNode.hpp">
       <Filter>Source Files\person</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\MultiBodyPositionsProcNode.hpp">
+      <Filter>Source Files\person</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\SkeletonMovementProcNode.hpp">
+      <Filter>Source Files\person</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\PointcloudProcNode.hpp">
       <Filter>Source Files\pointcloud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\ClockProcNode.hpp">
+      <Filter>Source Files\timeline</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\EasingProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
@@ -347,8 +350,8 @@
     <ClInclude Include="..\include\processing\TriggerListProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\ClockProcNode.hpp">
-      <Filter>Source Files\timeline</Filter>
+    <ClInclude Include="..\include\processing\BackgroundSubstractionProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\ColorProcNode.hpp">
       <Filter>Source Files\utility</Filter>
@@ -356,13 +359,16 @@
     <ClInclude Include="..\include\processing\ColorMappingProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\IfProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\DistributorProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\IfProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\ImageEnhancerProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\NoiseProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp">
@@ -374,16 +380,13 @@
     <ClInclude Include="..\include\processing\SpeedProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\BackgroundSubstractionProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\NoiseProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
+    <ClInclude Include="..\include\processing\CameraProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\KeyInProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\CameraProcNodeProcNode.hpp">
+    <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\MonitorProcNode.hpp">
@@ -393,9 +396,6 @@
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
   </ItemGroup>

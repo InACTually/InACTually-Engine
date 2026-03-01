@@ -1,0 +1,3 @@
+[submodule "tools/NodeCreator"]
+	path = tools/NodeCreator
+	url = git@github.com:InACTually/InACTually-NodeCreator.git

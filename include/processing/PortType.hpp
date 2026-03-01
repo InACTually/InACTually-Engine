@@ -29,7 +29,11 @@ namespace act {
 		using feature = std::pair<std::string, float>;
 		using featureList = std::vector<feature>;
 
+#ifdef CV_VERSION
 		using image = cv::UMat;
+#else
+		class image {};
+#endif
 
 		//## Note that the types are mapped by portTypeToString in the Stage!
 		enum PortType {
