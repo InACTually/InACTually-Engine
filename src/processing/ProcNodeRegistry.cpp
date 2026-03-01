@@ -52,11 +52,12 @@
 #include "OSCRecieverProcNode.hpp"
 
 // Object & Marker
+#include "BlobDetectionProcNode.hpp"
 #include "FlowDetectionProcNode.hpp"
+#include "MarkerProcNode.hpp"
 #include "MarkerDetectionProcNode.hpp"
 #include "MovementDetectionProcNode.hpp"
 #include "ObjectDetectionProcNode.hpp"
-#include "BlobDetectionProcNode.hpp"
 
 // Person
 #include "BodyTrackingProcNode.hpp"
@@ -94,7 +95,6 @@
 #include "MonitorProcNode.hpp"
 #include "VideoPlayerProcNode.hpp"
 #include "VideoRecorderProcNode.hpp"
-#include "MarkerProcNode.hpp"
 #include "MicrophoneProcNode.hpp"
 
 act::proc::ProcNodeRegistry::ProcNodeRegistry()
@@ -128,11 +128,12 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Network", "OSCSender", act::proc::OSCSenderProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "OSCReciever", act::proc::OSCRecieverProcNode::create);
 
+    act::proc::ProcNodeRegistry::add("Object & Marker", "BlobDetection", act::proc::BlobDetectionProcNode::create);
     act::proc::ProcNodeRegistry::add("Object & Marker", "FlowDetection", act::proc::FlowDetectionProcNode::create);
+    act::proc::ProcNodeRegistry::add("Object & Marker", "Marker", act::proc::MarkerProcNode::create);
     act::proc::ProcNodeRegistry::add("Object & Marker", "MarkerDetection", act::proc::MarkerDetectionProcNode::create);
     act::proc::ProcNodeRegistry::add("Object & Marker", "MovementDetection", act::proc::MovementDetectionProcNode::create);
     act::proc::ProcNodeRegistry::add("Object & Marker", "ObjectDetection", act::proc::ObjectDetectionProcNode::create);
-    act::proc::ProcNodeRegistry::add("Object & Marker", "BlobDetection", act::proc::BlobDetectionProcNode::create);
 
     act::proc::ProcNodeRegistry::add("Person", "BodyTracking", act::proc::BodyTrackingProcNode::create);
     act::proc::ProcNodeRegistry::add("Person", "BodiesFilter", act::proc::BodiesFilterProcNode::create);
@@ -161,11 +162,10 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Utility", "Noise", act::proc::NoiseProcNode::create);
 
     act::proc::ProcNodeRegistry::add("general IO", "KeyIn", act::proc::KeyInProcNode::create);
-    act::proc::ProcNodeRegistry::add("general IO", "CameraProcNode", act::proc::CameraProcNode::create);
+    act::proc::ProcNodeRegistry::add("general IO", "Camera", act::proc::CameraProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Monitor", act::proc::MonitorProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "VideoPlayer", act::proc::VideoPlayerProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "VideoRecorder", act::proc::VideoRecorderProcNode::create);
-    act::proc::ProcNodeRegistry::add("general IO", "Marker", act::proc::MarkerProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Microphone", act::proc::MicrophoneProcNode::create);
 
 }

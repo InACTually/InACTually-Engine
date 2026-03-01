@@ -33,6 +33,9 @@
     <ClCompile Include="..\src\processing\procpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\MatToBase64.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\LinkerProcNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +66,6 @@
     <ClCompile Include="..\src\processing\SpectrumProcNode.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\TestAuProcNode.cpp">
-      <Filter>Source Files\audio</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\KinectProcNode.cpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\processing\JsonMsgProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\NetworkProcNode.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\OSCMsgProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
@@ -99,7 +102,13 @@
     <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\BlobDetectionProcNode.cpp">
+      <Filter>Source Files\object marker</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\FlowDetectionProcNode.cpp">
+      <Filter>Source Files\object marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\MarkerProcNode.cpp">
       <Filter>Source Files\object marker</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\MarkerDetectionProcNode.cpp">
@@ -109,9 +118,6 @@
       <Filter>Source Files\object marker</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\ObjectDetectionProcNode.cpp">
-      <Filter>Source Files\object marker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\BlobDetectionProcNode.cpp">
       <Filter>Source Files\object marker</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\BodyTrackingProcNode.cpp">
@@ -183,31 +189,19 @@
     <ClCompile Include="..\src\processing\KeyInProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\CameraProcNodeProcNode.cpp">
+      <Filter>Source Files\general io</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\MonitorProcNode.cpp">
+      <Filter>Source Files\general io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\VideoPlayerProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\VideoRecorderProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\MarkerProcNode.cpp">
-      <Filter>Source Files\general io</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp">
-      <Filter>Source Files\general io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\ContainerProcNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\NetworkProcNode.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\VideoPlayerProcNode.cpp">
-      <Filter>Source Files\general io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\MatToBase64.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\CameraProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
   </ItemGroup>
@@ -232,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="..\include\processing\procpch.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MatToBase64.hpp">
+      <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\LinkerProcNode.hpp">
       <Filter>Source Files</Filter>
@@ -263,9 +260,6 @@
     <ClInclude Include="..\include\processing\SpectrumProcNode.hpp">
       <Filter>Source Files\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\TestAuProcNode.hpp">
-      <Filter>Source Files\audio</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\KinectProcNode.hpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
@@ -287,6 +281,9 @@
     <ClInclude Include="..\include\processing\JsonMsgProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\NetworkProcNode.hpp">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\OSCMsgProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
@@ -299,7 +296,13 @@
     <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\BlobDetectionProcNode.hpp">
+      <Filter>Source Files\object marker</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\FlowDetectionProcNode.hpp">
+      <Filter>Source Files\object marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MarkerProcNode.hpp">
       <Filter>Source Files\object marker</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\MarkerDetectionProcNode.hpp">
@@ -309,9 +312,6 @@
       <Filter>Source Files\object marker</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\ObjectDetectionProcNode.hpp">
-      <Filter>Source Files\object marker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\BlobDetectionProcNode.hpp">
       <Filter>Source Files\object marker</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\BodyTrackingProcNode.hpp">
@@ -383,32 +383,20 @@
     <ClInclude Include="..\include\processing\KeyInProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\CameraProcNodeProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\MonitorProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\MarkerProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\MatToBase64.hpp">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\ContainerProcNode.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\CameraProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\VideoPlayerProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\NetworkProcNode.hpp">
-      <Filter>Source Files\network</Filter>
+    <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
