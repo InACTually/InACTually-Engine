@@ -25,7 +25,8 @@
     <Filter Include="Source Files\network" />
     <Filter Include="Source Files\object marker" />
     <Filter Include="Source Files\person" />
-  </ItemGroup>
+      <Filter Include="Source Files\literal" />
+</ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp">
       <Filter>Source Files</Filter>
@@ -203,6 +204,21 @@
     </ClCompile>
     <ClCompile Include="..\src\processing\VideoRecorderProcNode.cpp">
       <Filter>Source Files\general io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\BooleanProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\NumberProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\StringProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\Vector2ProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\Vector3ProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +413,21 @@
     </ClInclude>
     <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
       <Filter>Source Files\general io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\BooleanProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\NumberProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\StringProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\Vector2ProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\Vector3ProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -97,6 +97,13 @@
 #include "VideoPlayerProcNode.hpp"
 #include "VideoRecorderProcNode.hpp"
 
+// literal
+#include "BooleanProcNode.hpp"
+#include "NumberProcNode.hpp"
+#include "StringProcNode.hpp"
+#include "Vector2ProcNode.hpp"
+#include "Vector3ProcNode.hpp"
+
 act::proc::ProcNodeRegistry::ProcNodeRegistry()
 {
 
@@ -167,6 +174,12 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("general IO", "Monitor", act::proc::MonitorProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "VideoPlayer", act::proc::VideoPlayerProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "VideoRecorder", act::proc::VideoRecorderProcNode::create);
+
+    act::proc::ProcNodeRegistry::add("literal", "Boolean", act::proc::BooleanProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "Number", act::proc::NumberProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "String", act::proc::StringProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "Vector2", act::proc::Vector2ProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "Vector3", act::proc::Vector3ProcNode::create);
 
 }
 

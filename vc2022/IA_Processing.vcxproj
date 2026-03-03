@@ -245,6 +245,7 @@
     <ClInclude Include="..\include\processing\BodyToSoundProcNode.hpp" />
     <ClInclude Include="..\include\processing\BodyTrackingProcNode.hpp" />
     <ClInclude Include="..\include\processing\BoneVectorProcNode.hpp" />
+    <ClInclude Include="..\include\processing\BooleanProcNode.hpp" />
     <ClInclude Include="..\include\processing\CameraProcNode.hpp" />
     <ClInclude Include="..\include\processing\CircleMovementProcNode.hpp" />
     <ClInclude Include="..\include\processing\ClockProcNode.hpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="..\include\processing\MovingHeadProcNode.hpp" />
     <ClInclude Include="..\include\processing\MultiBodyPositionsProcNode.hpp" />
     <ClInclude Include="..\include\processing\NetworkProcNode.hpp" />
+    <ClInclude Include="..\include\processing\NumberProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp" />
     <ClInclude Include="..\include\processing\ProcNodeBase.hpp" />
@@ -289,6 +291,9 @@
     <ClInclude Include="..\include\processing\PortMsg.hpp" />
     <ClInclude Include="..\include\processing\PortType.hpp" />
     <ClInclude Include="..\include\processing\PositionProcNode.hpp" />
+    <ClInclude Include="..\include\processing\StringProcNode.hpp" />
+    <ClInclude Include="..\include\processing\Vector2ProcNode.hpp" />
+    <ClInclude Include="..\include\processing\Vector3ProcNode.hpp" />
     <ClInclude Include="..\include\processing\procpch.hpp" />
     <ClInclude Include="..\include\processing\SkeletonFilterProcNode.hpp" />
     <ClInclude Include="..\include\processing\SkeletonMovementProcNode.hpp" />
@@ -312,6 +317,7 @@
     <ClCompile Include="..\src\processing\BodyToSoundProcNode.cpp" />
     <ClCompile Include="..\src\processing\BodyTrackingProcNode.cpp" />
     <ClCompile Include="..\src\processing\BoneVectorProcNode.cpp" />
+    <ClCompile Include="..\src\processing\BooleanProcNode.cpp" />
     <ClCompile Include="..\src\processing\CameraProcNode.cpp" />
     <ClCompile Include="..\src\processing\CircleMovementProcNode.cpp" />
     <ClCompile Include="..\src\processing\ClockProcNode.cpp" />
@@ -345,6 +351,7 @@
     <ClCompile Include="..\src\processing\MovingHeadProcNode.cpp" />
     <ClCompile Include="..\src\processing\MultiBodyPositionsProcNode.cpp" />
     <ClCompile Include="..\src\processing\NetworkProcNode.cpp" />
+    <ClCompile Include="..\src\processing\NumberProcNode.cpp" />
     <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp" />
     <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp" />
@@ -356,6 +363,9 @@
     <ClCompile Include="..\src\processing\PathMovementProcNode.cpp" />
     <ClCompile Include="..\src\processing\PointcloudProcNode.cpp" />
     <ClCompile Include="..\src\processing\PositionProcNode.cpp" />
+    <ClCompile Include="..\src\processing\StringProcNode.cpp" />
+    <ClCompile Include="..\src\processing\Vector2ProcNode.cpp" />
+    <ClCompile Include="..\src\processing\Vector3ProcNode.cpp" />
     <ClCompile Include="..\src\processing\procpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">Create</PrecompiledHeader>
