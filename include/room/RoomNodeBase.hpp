@@ -139,10 +139,8 @@ namespace act {
 			FilterBaseRef<glm::vec3>m_rotFlt;
 			FilterBaseRef<glm::quat>m_orientFlt;
 
-			ci::TriMeshRef			m_triMesh;
 			ci::gl::BatchRef		m_mesh;
 			ci::AxisAlignedBox		m_bounds;
-
 			
 			void					publishChanges();
 			void					publishChanges(std::string key, ci::Json data, net::PublishType type = act::net::PublishType::PT_ROOMNODE_UPDATE, act::UID replyUID = "");
@@ -159,6 +157,8 @@ namespace act {
 			std::string				m_name;
 			act::UID				m_replyUID = "";
 			static act::net::NetworkPublisherRef m_publisher;
+
+			ci::TriMeshRef			m_triMesh;
 
 			bool					m_isHovered = false; // used directly by interacting with the roomNode
 			bool					m_isHighlighted = false; // used directly from 'outside', i.e. procNode
