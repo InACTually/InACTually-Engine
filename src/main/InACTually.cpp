@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -26,6 +26,9 @@
 
 #include "ModuleBase.hpp"
 #include "WindowData.hpp"
+
+#include "cinder/audio/ContextPortAudio.h"
+#include "cinder/audio/DeviceManagerPortAudio.h"
 
 using namespace act;
 
@@ -46,6 +49,14 @@ InACTually::InACTually(ci::app::App* app)
 	getWindow()->getSignalClose().connect([&]() {
 		onClose();
 	});
+
+	// make ContextPortAudio the master context, overriding cinder's default
+	try {
+		ci::audio::ContextPortAudio::setAsMaster();
+	}
+	catch (...) {
+
+	}
 
 	m_splashScreenTex = gl::Texture::create(*Surface::create(loadImage(getAssetPath("design/splash.png"))));
 }

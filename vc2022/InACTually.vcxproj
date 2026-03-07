@@ -92,7 +92,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=0;PA_USE_ASIO=1;PA_USE_MME=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -139,7 +139,7 @@
       <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;cinder.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world460d.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;cinder.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;opencv_world460d.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -156,7 +156,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;PA_USE_MME=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -210,7 +210,7 @@
       <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;cinder.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;cinder.lib;opencv_world460.lib;flann_cpp_s.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IA_3rd.lib;IA_System.lib;IA_Room.lib;IA_Processing.lib;cinder.lib;onnxruntime.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_cuda.lib;libcrypto.lib;libssl.lib;opencv_world460.lib;flann_cpp_s.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib\$(Configuration)\;.\packages\zeroc.openssl.v143.1.1.1.3\build\native\lib\$(PlatformTarget)\$(Configuration);..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)_MD\$(PlatformToolset)\;..\3rd\onnxruntime\lib;..\3rd\OpenCV4\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>

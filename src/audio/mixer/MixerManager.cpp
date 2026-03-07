@@ -94,6 +94,9 @@ void act::aio::MixerManager::setMixer(MixerType type) {
 			break;
 
 	}
+
+	if (!mixer)
+		return;
 	
 	if (m_mixer)
 		m_mixer->clear();

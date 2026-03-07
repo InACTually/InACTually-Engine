@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -38,16 +38,6 @@ act::aio::AudioDeviceManager::~AudioDeviceManager()
 
 void act::aio::AudioDeviceManager::init()
 {
-	// make ContextPortAudio the master context, overriding cinder's default
-#if PA_USE_ASIO 
-	try {
-		//ci::audio::ContextPortAudio::setAsMaster();
-	}
-	catch (...) {
-
-	}
-#endif
-
 	refreshDeviceList();
 	updateInfo();
 

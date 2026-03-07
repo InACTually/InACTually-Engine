@@ -58,6 +58,7 @@ void act::aio::Mixer2d::update()
 			[soundPos](const PanningPair& panPair) {
 				return panPair.collider.contains(soundPos);
 			});
+
 		if (activePan != end(m_panningPairs)) {
 			currentPan = *activePan;
 		}
@@ -67,6 +68,7 @@ void act::aio::Mixer2d::update()
 				[scaledSoundPos](const PanningPair& panPair) {
 					return panPair.collider.contains(scaledSoundPos);
 				});
+
 			if (activePan != end(m_panningPairs)) {
 				currentPan = *activePan;
 				foundOutside = true;

@@ -33,7 +33,6 @@ namespace act {
 
 		enum MixerType {
 			MT_DISTANCE = 0,
-			MT_GRAPH,
 			MT_NEAREST,
 			MT_2D,
 			MT_3D
