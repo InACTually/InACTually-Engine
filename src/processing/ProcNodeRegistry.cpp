@@ -92,6 +92,7 @@
 // general IO
 #include "CameraProcNode.hpp"
 #include "KeyInProcNode.hpp"
+#include "LLMProcNode.hpp"
 #include "MicrophoneProcNode.hpp"
 #include "MonitorProcNode.hpp"
 #include "VideoPlayerProcNode.hpp"
@@ -170,6 +171,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
 
     act::proc::ProcNodeRegistry::add("general IO", "Camera", act::proc::CameraProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "KeyIn", act::proc::KeyInProcNode::create);
+    act::proc::ProcNodeRegistry::add("general IO", "LLM", act::proc::LLMProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Microphone", act::proc::MicrophoneProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Monitor", act::proc::MonitorProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "VideoPlayer", act::proc::VideoPlayerProcNode::create);

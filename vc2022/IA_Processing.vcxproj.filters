@@ -193,6 +193,9 @@
     <ClCompile Include="..\src\processing\KeyInProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\LLMProcNode.cpp">
+      <Filter>Source Files\general io</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
@@ -400,6 +403,9 @@
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\KeyInProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\LLMProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
