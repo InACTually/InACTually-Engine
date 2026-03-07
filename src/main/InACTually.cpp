@@ -41,9 +41,7 @@ InACTually::InACTually(ci::app::App* app)
 	getWindow()->setUserData(new WindowData());
 	m_mainWindowUID = getWindow()->getUserData<WindowData>()->getUID();
 	getWindow()->setBorderless();
-	ivec2 size = ivec2(400, 200);
-	getWindow()->setSize(size);
-	getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
+	getWindow()->setSize(ivec2(0, 0));
 	getWindow()->setTitle("InACTually");
 
 	getWindow()->getSignalClose().connect([&]() {
@@ -57,6 +55,10 @@ InACTually::InACTually(ci::app::App* app)
 	catch (...) {
 
 	}
+
+	ivec2 size = ivec2(400, 200);
+	getWindow()->setSize(size);
+	getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
 
 	m_splashScreenTex = gl::Texture::create(*Surface::create(loadImage(getAssetPath("design/splash.png"))));
 }
@@ -97,14 +99,14 @@ void InACTually::init()
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	initStyle();
-
 	ImNodes::CreateContext();
 	//ImNodes::LoadCurrentEditorStateFromIniFile(app::getAssetPath("editor.ini").string().c_str());
 
 	ImPlot::CreateContext();
 	//ImPlot::GetStyle().AntiAliasedLines = true;
 	ImPlot::PushColormap(ImPlotColormap_Deep);
+
+	initStyle();
 
 	m_roomMgrs.positionMgr		= room::PositionManager::create();
 	m_roomMgrs.cameraMgr		= room::CameraManager::create();
@@ -552,54 +554,54 @@ void InACTually::initStyle() {
 	ImVec4 secondary = ImVec4(util::Design::secondaryColor().r, util::Design::secondaryColor().g, util::Design::secondaryColor().b, 1.000f);
 	ImVec4 additional = ImVec4(util::Design::additionalColor().r, util::Design::additionalColor().g, util::Design::additionalColor().b, 1.000f);
 
-	colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
-	colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-	colors[ImGuiCol_ChildBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-	colors[ImGuiCol_Border] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
-	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	colors[ImGuiCol_FrameBg] = bg;
-	colors[ImGuiCol_FrameBgHovered] = bg;
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
-	colors[ImGuiCol_TitleBg] = ImVec4(0.09f, 0.12f, 0.14f, 0.65f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-	colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.39f);
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabActive] = primary;
-	colors[ImGuiCol_CheckMark] = primary;
-	colors[ImGuiCol_SliderGrab] = primary;
-	colors[ImGuiCol_SliderGrabActive] = highlight;
-	colors[ImGuiCol_Button] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.40f, 0.45f, 0.49f, 1.00f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 1.00f);
-	colors[ImGuiCol_Header] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-	colors[ImGuiCol_Separator] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.78f);
-	colors[ImGuiCol_SeparatorActive] = primary;
-	colors[ImGuiCol_ResizeGrip] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.25f);
-	colors[ImGuiCol_ResizeGripHovered] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.67f);
-	colors[ImGuiCol_ResizeGripActive] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.95f);
-	colors[ImGuiCol_Tab] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
-	colors[ImGuiCol_TabHovered] = ImVec4(0.40f, 0.45f, 0.49f, 1.00f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.30f, 0.35f, 0.39f, 1.00f);
-	colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-	colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-	colors[ImGuiCol_PlotLinesHovered] = secondary;
-	colors[ImGuiCol_PlotHistogram] = primary;
-	colors[ImGuiCol_PlotHistogramHovered] = highlight;
-	colors[ImGuiCol_TextSelectedBg] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.35f);
-	colors[ImGuiCol_DragDropTarget] = secondary;
-	colors[ImGuiCol_NavHighlight] = primary;
-	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.70f);
-	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	colors[ImGuiCol_Text]					= ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
+	colors[ImGuiCol_TextDisabled]			= ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
+	colors[ImGuiCol_WindowBg]				= ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_ChildBg]				= ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+	colors[ImGuiCol_PopupBg]				= ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+	colors[ImGuiCol_Border]					= ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+	colors[ImGuiCol_BorderShadow]			= ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_FrameBg]				= bg;
+	colors[ImGuiCol_FrameBgHovered]			= bg;
+	colors[ImGuiCol_FrameBgActive]			= ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
+	colors[ImGuiCol_TitleBg]				= ImVec4(0.09f, 0.12f, 0.14f, 0.65f);
+	colors[ImGuiCol_TitleBgActive]			= ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed]		= ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+	colors[ImGuiCol_MenuBarBg]				= ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+	colors[ImGuiCol_ScrollbarBg]			= ImVec4(0.02f, 0.02f, 0.02f, 0.39f);
+	colors[ImGuiCol_ScrollbarGrab]			= ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabHovered]	= ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabActive]	= primary;
+	colors[ImGuiCol_CheckMark]				= primary;
+	colors[ImGuiCol_SliderGrab]				= primary;
+	colors[ImGuiCol_SliderGrabActive]		= highlight;
+	colors[ImGuiCol_Button]					= ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+	colors[ImGuiCol_ButtonHovered]			= ImVec4(0.40f, 0.45f, 0.49f, 1.00f);
+	colors[ImGuiCol_ButtonActive]			= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 1.00f);
+	colors[ImGuiCol_Header]					= ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+	colors[ImGuiCol_HeaderHovered]			= ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_HeaderActive]			= ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_Separator]				= ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_SeparatorHovered]		= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.78f);
+	colors[ImGuiCol_SeparatorActive]		= primary;
+	colors[ImGuiCol_ResizeGrip]				= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.25f);
+	colors[ImGuiCol_ResizeGripHovered]		= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.67f);
+	colors[ImGuiCol_ResizeGripActive]		= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.95f);
+	colors[ImGuiCol_Tab]					= ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+	colors[ImGuiCol_TabHovered]				= ImVec4(0.40f, 0.45f, 0.49f, 1.00f);
+	colors[ImGuiCol_TabActive]				= ImVec4(0.30f, 0.35f, 0.39f, 1.00f);
+	colors[ImGuiCol_TabUnfocused]			= ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_TabUnfocusedActive]		= ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_PlotLines]				= ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+	colors[ImGuiCol_PlotLinesHovered]		= secondary;
+	colors[ImGuiCol_PlotHistogram]			= primary;
+	colors[ImGuiCol_PlotHistogramHovered]	= highlight;
+	colors[ImGuiCol_TextSelectedBg]			= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.35f);
+	colors[ImGuiCol_DragDropTarget]			= secondary;
+	colors[ImGuiCol_NavHighlight]			= primary;
+	colors[ImGuiCol_NavWindowingHighlight]	= ImVec4(util::Design::primaryColor().r, util::Design::primaryColor().g, util::Design::primaryColor().b, 0.70f);
+	colors[ImGuiCol_NavWindowingDimBg]		= ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+	colors[ImGuiCol_ModalWindowDimBg]		= ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
 	style.PopupRounding = 3;
 	style.WindowPadding = ImVec2(4, 4);
@@ -634,4 +636,43 @@ void InACTually::initStyle() {
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 #endif
+
+
+	auto toU32 = [](const ci::ColorA& c) {
+		return IM_COL32(
+			(int)(c.r * 255), (int)(c.g * 255), (int)(c.b * 255), (int)(c.a * 255));
+		};
+
+	// ImNodes color styling
+	ImNodesStyle& nodesStyle = ImNodes::GetStyle();
+
+	nodesStyle.Colors[ImNodesCol_NodeBackground]				= IM_COL32(28,  38,  43, 255);
+	nodesStyle.Colors[ImNodesCol_NodeBackgroundHovered]			= IM_COL32(38,  52,  59, 255);
+	nodesStyle.Colors[ImNodesCol_NodeBackgroundSelected]		= IM_COL32(38,  52,  59, 255);
+	nodesStyle.Colors[ImNodesCol_NodeOutline]					= IM_COL32(20,  26,  30, 255);
+	nodesStyle.Colors[ImNodesCol_TitleBar]						= toU32(util::Design::primaryColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_TitleBarHovered]				= toU32(util::Design::highlightColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_TitleBarSelected]				= toU32(util::Design::highlightColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_Link]							= toU32(util::Design::secondaryColor(0.78f));
+	nodesStyle.Colors[ImNodesCol_LinkHovered]					= toU32(util::Design::secondaryColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_LinkSelected]					= toU32(util::Design::highlightColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_Pin]							= toU32(util::Design::primaryColor(0.7f));
+	nodesStyle.Colors[ImNodesCol_PinHovered]					= toU32(util::Design::primaryColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_BoxSelector]					= toU32(util::Design::primaryColor(0.12f));
+	nodesStyle.Colors[ImNodesCol_BoxSelectorOutline]			= toU32(util::Design::primaryColor(0.59f));
+	nodesStyle.Colors[ImNodesCol_GridBackground]				= toU32(util::Design::backgroundColor(0.78f));
+	nodesStyle.Colors[ImNodesCol_GridLine]						= IM_COL32(200, 200, 200, 40);
+	nodesStyle.Colors[ImNodesCol_GridLinePrimary]				= IM_COL32(200, 200, 200, 80);
+	nodesStyle.Colors[ImNodesCol_MiniMapBackground]				= toU32(util::Design::backgroundColor(0.59f));
+	nodesStyle.Colors[ImNodesCol_MiniMapBackgroundHovered]		= toU32(util::Design::backgroundColor(0.78f));
+	nodesStyle.Colors[ImNodesCol_MiniMapOutline]				= IM_COL32(150, 150, 150, 100);
+	nodesStyle.Colors[ImNodesCol_MiniMapOutlineHovered]			= IM_COL32(150, 150, 150, 200);
+	nodesStyle.Colors[ImNodesCol_MiniMapNodeBackground]			= IM_COL32(38,  52,  59, 200);
+	nodesStyle.Colors[ImNodesCol_MiniMapNodeBackgroundHovered]	= toU32(util::Design::primaryColor(0.78f));
+	nodesStyle.Colors[ImNodesCol_MiniMapNodeBackgroundSelected]	= toU32(util::Design::primaryColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_MiniMapNodeOutline]			= IM_COL32(150, 150, 150, 100);
+	nodesStyle.Colors[ImNodesCol_MiniMapLink]					= toU32(util::Design::primaryColor(0.78f));
+	nodesStyle.Colors[ImNodesCol_MiniMapLinkSelected]			= toU32(util::Design::highlightColor(1.0f));
+	nodesStyle.Colors[ImNodesCol_MiniMapCanvas]					= IM_COL32(200, 200, 200, 25);
+	nodesStyle.Colors[ImNodesCol_MiniMapCanvasOutline]			= IM_COL32(200, 200, 200, 200);
 }
