@@ -27,13 +27,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -44,6 +44,8 @@
 #ifndef PA_UNIX_UTIL_H
 #define PA_UNIX_UTIL_H
 
+#include "pa_util.h"
+#include "pa_pthread_util.h"
 #include "pa_cpuload.h"
 #include <assert.h>
 #include <pthread.h>
@@ -64,31 +66,40 @@ extern "C"
 #define UNLIKELY(expr) (expr)
 #endif
 
-#define STRINGIZE_HELPER(expr) #expr
-#define STRINGIZE(expr) STRINGIZE_HELPER(expr)
-
-#define PA_UNLESS(expr, code) \
+#define PA_UNLESS_ON_ERROR(expr, code, _on_error) \
     do { \
         if( UNLIKELY( (expr) == 0 ) ) \
         { \
-            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " PA_STRINGIZE( __LINE__ ) "\n" )); \
             result = (code); \
-            goto error; \
+            _on_error; \
         } \
     } while (0);
+
+/* Do not call this after an "error:" label because it will loop forever! */
+#define PA_UNLESS(expr, code) PA_UNLESS_ON_ERROR(expr, code, goto error)
+
+/* This is safe to call after an "error:" label. */
+#define PA_UNLESS_NO_GOTO(expr, code) PA_UNLESS_ON_ERROR(expr, code, (void)0)
 
 static PaError paUtilErr_;          /* Used with PA_ENSURE */
 
 /* Check PaError */
-#define PA_ENSURE(expr) \
+#define PA_ENSURE_ON_ERROR(expr, _on_error) \
     do { \
         if( UNLIKELY( (paUtilErr_ = (expr)) < paNoError ) ) \
         { \
-            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " PA_STRINGIZE( __LINE__ ) "\n" )); \
             result = paUtilErr_; \
-            goto error; \
+            _on_error; \
         } \
     } while (0);
+
+/* Do not call this after an "error:" label because it will loop forever! */
+#define PA_ENSURE(expr) PA_ENSURE_ON_ERROR(expr, goto error)
+
+/* This is safe to call after an "error:" label. */
+#define PA_ENSURE_NO_GOTO(expr) PA_ENSURE_ON_ERROR(expr, (void)0)
 
 #define PA_ASSERT_CALL(expr, success) \
     paUtilErr_ = (expr); \
@@ -103,7 +114,7 @@ static PaError paUtilErr_;          /* Used with PA_ENSURE */
             { \
                 PaUtil_SetLastHostErrorInfo( paALSA, paUtilErr_, strerror( paUtilErr_ ) ); \
             } \
-            PaUtil_DebugPrint( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" ); \
+            PaUtil_DebugPrint( "Expression '" #expr "' failed in '" __FILE__ "', line: " PA_STRINGIZE( __LINE__ ) "\n" ); \
             result = paUnanticipatedHostError; \
             goto error; \
         } \
@@ -152,12 +163,13 @@ typedef struct
     int locked;
     PaUnixMutex mtx;
     pthread_cond_t cond;
+    PaUtilClockId condClockId;
     volatile sig_atomic_t stopRequest;
 } PaUnixThread;
 
 /** Initialize global threading state.
  */
-PaError PaUnixThreading_Initialize();
+PaError PaUnixThreading_Initialize( void );
 
 /** Perish, passing on eventual error code.
  *
@@ -182,7 +194,7 @@ PaError PaUnixThreading_Initialize();
 /** Spawn a thread.
  *
  * Intended for spawning the callback thread from the main thread. This function can even block (for a certain
- * time or indefinitely) untill notified by the callback thread (using PaUnixThread_NotifyParent), which can be
+ * time or indefinitely) until notified by the callback thread (using PaUnixThread_NotifyParent), which can be
  * useful in order to make sure that callback has commenced before returning from Pa_StartStream.
  * @param threadFunc: The function to be executed in the child thread.
  * @param waitForChild: If not 0, wait for child thread to call PaUnixThread_NotifyParent. Less than 0 means
@@ -195,7 +207,7 @@ PaError PaUnixThread_New( PaUnixThread* self, void* (*threadFunc)( void* ), void
 
 /** Terminate thread.
  *
- * @param wait: If true, request that background thread stop and wait untill it does, else cancel it.
+ * @param wait: If true, request that background thread stop and wait until it does, else cancel it.
  * @param exitResult: If non-null this will upon return contain the exit status of the thread.
  */
 PaError PaUnixThread_Terminate( PaUnixThread* self, int wait, PaError* exitResult );

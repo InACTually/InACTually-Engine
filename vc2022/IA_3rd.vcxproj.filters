@@ -73,6 +73,9 @@
     <Filter Include="Source Files\filter">
       <UniqueIdentifier>{75084c31-09ff-43d5-90db-a53444e78387}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Cinder-PortAudio\lib\asio">
+      <UniqueIdentifier>{84e8743c-b410-4cc3-88f8-3e39fe3e71ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rd\imnodes\imnodes.cpp">
@@ -233,6 +236,21 @@
     </ClCompile>
     <ClCompile Include="..\3rd\dmx\DMXPro.cpp">
       <Filter>Source Files\dmx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\Cinder-PortAudio\lib\portaudio\src\hostapi\asio\pa_asio.cpp">
+      <Filter>Source Files\Cinder-PortAudio\lib\portaudio\src\hostapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\Cinder-PortAudio\lib\ASIOSDK\common\asio.cpp">
+      <Filter>Source Files\Cinder-PortAudio\lib\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\asiodrivers.cpp">
+      <Filter>Source Files\Cinder-PortAudio\lib\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc\asiolist.cpp">
+      <Filter>Source Files\Cinder-PortAudio\lib\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win\pa_win_version.c">
+      <Filter>Source Files\Cinder-PortAudio\lib\portaudio\src\hostapi\win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
