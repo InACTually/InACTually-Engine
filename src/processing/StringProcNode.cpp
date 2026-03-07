@@ -35,15 +35,10 @@ void act::proc::StringProcNode::update() {
 void act::proc::StringProcNode::draw() {
 	beginNodeDraw();
 
-	bool prvntDrag = false;
-
 	ImGui::SetNextItemWidth(m_drawSize.x);
-	if (ImGui::InputText("text", &m_text)) {
+	if (ImGui::InputText("text", &m_text, ImGuiInputTextFlags_EnterReturnsTrue)) {
 		m_outPort->send(m_text);
-		prvntDrag = true;
 	}
-
-	preventDrag(prvntDrag);
 
 	endNodeDraw();
 }

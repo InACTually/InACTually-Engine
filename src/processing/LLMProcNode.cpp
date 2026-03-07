@@ -117,14 +117,12 @@ void act::proc::LLMProcNode::draw() {
 	// Host & Port
 	{
 		ImGui::SetNextItemWidth(m_drawSize.x - 80);
-		if (ImGui::InputText("##host", &m_ollamaHost)) {
-			prvntDrag = true;
-		}
+		ImGui::InputText("##host", &m_ollamaHost);
+
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(70);
-		if (ImGui::InputInt("##port", &m_ollamaPort, 0, 0)) {
-			prvntDrag = true;
-		}
+		ImGui::InputInt("##port", &m_ollamaPort, 0, 0);
+		
 	}
 
 	// System Prompt
@@ -177,9 +175,7 @@ void act::proc::LLMProcNode::draw() {
 	{
 		ImGui::SetNextItemWidth(m_drawSize.x - 60);
 		bool enterPressed = ImGui::InputText("##input", &m_inputBuffer, ImGuiInputTextFlags_EnterReturnsTrue);
-		if (enterPressed || ImGui::IsItemDeactivatedAfterEdit()) {
-			prvntDrag = true;
-		}
+
 		ImGui::SameLine();
 		bool canSend = !m_isProcessing && !m_inputBuffer.empty();
 		if (!canSend) ImGui::BeginDisabled();
