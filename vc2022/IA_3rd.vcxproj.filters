@@ -76,6 +76,15 @@
     <Filter Include="Source Files\Cinder-PortAudio\lib\asio">
       <UniqueIdentifier>{84e8743c-b410-4cc3-88f8-3e39fe3e71ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\LDRobot">
+      <UniqueIdentifier>{67da2b98-39d6-4733-a417-46ff7fbdc3d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LDRobot\src">
+      <UniqueIdentifier>{ba999d94-45e5-46b1-a973-14f2d8debff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LDRobot\include">
+      <UniqueIdentifier>{15c57027-a284-42bf-b86c-e729ed37d70b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rd\imnodes\imnodes.cpp">
@@ -252,6 +261,21 @@
     <ClCompile Include="..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win\pa_win_version.c">
       <Filter>Source Files\Cinder-PortAudio\lib\portaudio\src\hostapi\win</Filter>
     </ClCompile>
+    <ClCompile Include="..\3rd\ldlidar\src\ldlidar_driver.cpp">
+      <Filter>Source Files\LDRobot\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\ldlidar\src\lipkg.cpp">
+      <Filter>Source Files\LDRobot\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\ldlidar\src\log_module.cpp">
+      <Filter>Source Files\LDRobot\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\ldlidar\src\tofbf.cpp">
+      <Filter>Source Files\LDRobot\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\ldlidar\src\serial_interface_win.cpp">
+      <Filter>Source Files\LDRobot\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\3rd\imnodes\imnodes.h">
@@ -406,6 +430,24 @@
     </ClInclude>
     <ClInclude Include="..\3rd\dmx\DMXPro.hpp">
       <Filter>Source Files\dmx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\ldlidar_datatype.h">
+      <Filter>Source Files\LDRobot\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\ldlidar_driver.h">
+      <Filter>Source Files\LDRobot\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\lipkg.h">
+      <Filter>Source Files\LDRobot\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\log_module.h">
+      <Filter>Source Files\LDRobot\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\tofbf.h">
+      <Filter>Source Files\LDRobot\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\ldlidar\include\serial_interface_win.h">
+      <Filter>Source Files\LDRobot\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -127,6 +127,11 @@ These projects may contain other projects to function. Please refer to their thi
 - License: [MIT License](3rd/k4a2mat.hpp)
 - Copyright (c) 2019 Tsukasa Sugiura <t.sugiura0204@gmail.com>
 
+### LD lidar 
+- License: [MIT License](3rd/LDlidar/LICENSE)
+- Copyright (c) 2020-2024 LDROBOT Co., Ltd.
+- modified to run on Windows (and removed network code)
+
 ### OpenSLL 1.1.1t
 - License: [OpenSSL License](./3rd/nuget-packages/OpenSSL/LICENSE.txt)
 - Copyright (c) 1998-2019 The OpenSSL Project.  All rights reserved.

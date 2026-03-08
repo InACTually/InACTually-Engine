@@ -50,6 +50,11 @@
     <ClCompile Include="..\3rd\ImPlot\implot.cpp" />
     <ClCompile Include="..\3rd\ImPlot\implot_demo.cpp" />
     <ClCompile Include="..\3rd\ImPlot\implot_items.cpp" />
+    <ClCompile Include="..\3rd\ldlidar\src\ldlidar_driver.cpp" />
+    <ClCompile Include="..\3rd\ldlidar\src\lipkg.cpp" />
+    <ClCompile Include="..\3rd\ldlidar\src\log_module.cpp" />
+    <ClCompile Include="..\3rd\ldlidar\src\serial_interface_win.cpp" />
+    <ClCompile Include="..\3rd\ldlidar\src\tofbf.cpp" />
     <ClCompile Include="..\3rd\OSC\src\cinder\osc\Osc.cpp" />
     <ClCompile Include="..\3rd\smbPitchShift\smbPitchShift.cpp" />
     <ClCompile Include="..\3rd\Zdepth\src\zdepth.cpp" />
@@ -92,6 +97,12 @@
     <ClInclude Include="..\3rd\ImPlot\implot.h" />
     <ClInclude Include="..\3rd\ImPlot\implot_internal.h" />
     <ClInclude Include="..\3rd\k4a2mat.hpp" />
+    <ClInclude Include="..\3rd\ldlidar\include\ldlidar_datatype.h" />
+    <ClInclude Include="..\3rd\ldlidar\include\ldlidar_driver.h" />
+    <ClInclude Include="..\3rd\ldlidar\include\lipkg.h" />
+    <ClInclude Include="..\3rd\ldlidar\include\log_module.h" />
+    <ClInclude Include="..\3rd\ldlidar\include\serial_interface_win.h" />
+    <ClInclude Include="..\3rd\ldlidar\include\tofbf.h" />
     <ClInclude Include="..\3rd\OpenCV4\include\CinderOpenCV.h" />
     <ClInclude Include="..\3rd\OpenCV4\include\opencv2\cvconfig.h" />
     <ClInclude Include="..\3rd\OpenCV4\include\opencv2\opencv.hpp" />
@@ -210,7 +221,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;ASIO_STANDALONE;PA_USE_ASIO=1;PA_USE_WASAPI=1;PA_USE_WMME=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -243,7 +254,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;ASIO_STANDALONE;PA_USE_ASIO=0;PA_USE_WASAPI=1;PA_USE_WMME=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -276,7 +287,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;ASIO_STANDALONE;PA_USE_ASIO=1;PA_USE_WASAPI=1;PA_USE_WMME=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
@@ -313,7 +324,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\Simple-WebSocket-Server;..\3rd\Cinder-WebSocketPP\src;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;ASIO_STANDALONE;PA_USE_ASIO=0;PA_USE_WASAPI=1;PA_USE_WMME=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
