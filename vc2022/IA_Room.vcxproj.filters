@@ -43,6 +43,9 @@
     <Filter Include="Source Files\projector">
       <UniqueIdentifier>{2763d18f-4f75-4745-800c-d9fe624b79e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\lidar">
+      <UniqueIdentifier>{7def88a3-e5f1-4eec-b164-094bf3f33b5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\modules\RoomManagers.hpp">
@@ -177,10 +180,25 @@
     <ClInclude Include="..\include\room\projector\ProjectorRoomNode.hpp">
       <Filter>Source Files\projector</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\room\lidar\LidarRoomNodeBase.hpp">
+      <Filter>Source Files\lidar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\room\lidar\LDLidarRoomNode.hpp">
+      <Filter>Source Files\lidar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\room\lidar\LidarManager.hpp">
+      <Filter>Source Files\lidar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="IA_Room_ClassDiagram.cd" />
     <None Include="packages.config" />
+    <None Include="..\assets\dmx\fixtures.json">
+      <Filter>Source Files\dmx</Filter>
+    </None>
+    <None Include="..\assets\lidar\fixtures.json">
+      <Filter>Source Files\lidar</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\room\RoomNodeBase.cpp">
@@ -299,6 +317,15 @@
     </ClCompile>
     <ClCompile Include="..\src\room\projector\ProjectorRoomNode.cpp">
       <Filter>Source Files\projector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\room\lidar\LDLidarRoomNode.cpp">
+      <Filter>Source Files\lidar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\room\lidar\LidarManager.cpp">
+      <Filter>Source Files\lidar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\room\lidar\LidarRoomNodeBase.cpp">
+      <Filter>Source Files\lidar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -119,6 +119,7 @@ void InACTually::init()
 	m_roomMgrs.computerMgr		= room::ComputerManager::create();
 	m_roomMgrs.actionspaceMgr	= room::ActionspaceManager::create();
 	m_roomMgrs.projectorMgr		= room::ProjectorManager::create();
+	m_roomMgrs.lidarMgr			= room::LidarManager::create();
 
 	m_roomMgrs.bodyTrackingMgr	= room::BodyTrackingManager::create(m_roomMgrs.kinectMgr);
 
@@ -134,6 +135,7 @@ void InACTually::init()
 	m_roomMgrs.list.push_back(m_roomMgrs.audioMgr);
 	m_roomMgrs.list.push_back(m_roomMgrs.displayMgr);
 	m_roomMgrs.list.push_back(m_roomMgrs.computerMgr);
+	m_roomMgrs.list.push_back(m_roomMgrs.lidarMgr);
 
 	m_networkMgr = net::NetworkManager::create(m_roomMgrs);
 	m_networkMgr->setup();

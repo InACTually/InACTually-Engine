@@ -30,6 +30,7 @@
 #include "computer/ComputerManager.hpp"
 #include "actionspace/ActionspaceManager.hpp"
 #include "projector/ProjectorManager.hpp"
+#include "lidar/LidarManager.hpp"
 
 namespace act {
 	namespace room {
@@ -48,6 +49,7 @@ namespace act {
 			act::room::ComputerManagerRef		computerMgr;
 			act::room::ActionspaceManagerRef	actionspaceMgr;
 			act::room::ProjectorManagerRef		projectorMgr;
+			act::room::LidarManagerRef			lidarMgr;
 
 			std::vector<act::room::RoomNodeManagerBaseRef> list;
 

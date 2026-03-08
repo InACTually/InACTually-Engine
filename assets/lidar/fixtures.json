@@ -1,0 +1,10 @@
+{
+    "devices": [
+        {
+            "name": "FHL-LD19",
+            "baudrate": 230400,
+            "type": "LD19",
+            "distance": 12
+        }
+    ]
+}

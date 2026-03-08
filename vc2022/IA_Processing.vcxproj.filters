@@ -25,8 +25,8 @@
     <Filter Include="Source Files\network" />
     <Filter Include="Source Files\object marker" />
     <Filter Include="Source Files\person" />
-      <Filter Include="Source Files\literal" />
-</ItemGroup>
+    <Filter Include="Source Files\literal" />
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp">
       <Filter>Source Files</Filter>
@@ -222,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="..\src\processing\Vector3ProcNode.cpp">
       <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\ContainerProcNode.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -435,6 +438,7 @@
     <ClInclude Include="..\include\processing\Vector3ProcNode.hpp">
       <Filter>Source Files\literal</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\ContainerProcNode.hpp" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

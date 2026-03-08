@@ -294,7 +294,6 @@
     <ClInclude Include="..\include\networking\WebUIServer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\dmx\fixtures.json" />
     <None Include="IA_System_ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>

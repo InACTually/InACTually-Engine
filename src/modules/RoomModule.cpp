@@ -438,6 +438,13 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 		node = m_roomMgrs.dmxMgr->addDevice(name, fixtureIndex, startAdress);
 	}
 
+	if (roomNodeName == "lidar") {
+		std::string fixtureName = "";
+		util::setValueFromJson(params, "fixtureName", fixtureName);
+
+		node = m_roomMgrs.lidarMgr->addDevice(fixtureName);
+	}
+
 	return node;
 }
 bool act::mod::RoomModule::updateRoomNode(ci::Json data, act::UID replyUID) {
