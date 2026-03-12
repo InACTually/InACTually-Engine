@@ -49,8 +49,12 @@ Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folde
 
 + [OpenCV 4.10.0](https://github.com/opencv/opencv) (or possibly newer) \
 You need to compile OpenCV, maybe with opencv_contrib and things you like to have.\
-Place OpenCV in `./3rd/OpenCV4` – care the include folder is `./3rd/OpenCV4/include/opencv`.\
+Place OpenCV in `./3rd/OpenCV4` – care: the include folder is `./3rd/OpenCV4/include/opencv`.\
 You need to place/copy the corresponding *.dll's in `vc2022\bin\Release|Debug`.
+
++ [ASIOSDK 2.3](https://www.steinberg.net/developers/asiosdk-open/) (or possibly newer) \
+For optional multi-channel audio support, place the ASIOSDK in `./3rd/Cinder-PortAudio/lib/ASIOSDK` - care about the license. \
+Build configurations for not including/using ASIO are available.
 
 <br>
 

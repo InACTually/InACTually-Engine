@@ -387,10 +387,10 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.targets" Condition="Exists('packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.targets')" />
     <Import Project="packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.targets" Condition="Exists('packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.targets')" />
+    <Import Project="packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets" Condition="Exists('packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets')" />
     <Import Project="packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\native\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets" Condition="Exists('packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\native\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets')" />
     <Import Project="packages\Microsoft.Azure.Kinect.Sensor.1.4.2\build\native\Microsoft.Azure.Kinect.Sensor.targets" Condition="Exists('packages\Microsoft.Azure.Kinect.Sensor.1.4.2\build\native\Microsoft.Azure.Kinect.Sensor.targets')" />
     <Import Project="packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\build\native\Microsoft.Azure.Kinect.BodyTracking.targets" Condition="Exists('packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\build\native\Microsoft.Azure.Kinect.BodyTracking.targets')" />
-    <Import Project="packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets" Condition="Exists('packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets')" />
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
@@ -403,9 +403,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.0.9.1\build\native\Microsoft.Azure.Kinect.BodyTracking.Dependencies.cuDNN.targets'))" />
+    <Error Condition="!Exists('packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\native\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\native\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Azure.Kinect.Sensor.1.4.2\build\native\Microsoft.Azure.Kinect.Sensor.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.Kinect.Sensor.1.4.2\build\native\Microsoft.Azure.Kinect.Sensor.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\build\native\Microsoft.Azure.Kinect.BodyTracking.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\build\native\Microsoft.Azure.Kinect.BodyTracking.targets'))" />
-    <Error Condition="!Exists('packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zeroc.openssl.v143.1.1.1.3\build\native\zeroc.openssl.v143.targets'))" />
   </Target>
 </Project>

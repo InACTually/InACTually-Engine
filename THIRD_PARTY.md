@@ -15,6 +15,7 @@ These projects may contain other projects to function. Please refer to their thi
 - License: [modified BSD License](https://github.com/cinder/Cinder/blob/master/COPYING)  
 - Copyright (c) 2010, The Cinder Project
 - Source on [GitHub](https://github.com/cinder/Cinder)
+- Notes: not included, but needed
 
 ### Cinder OSC
 - License: [BSD 2-Clause License](3rd/OSC/LICENSE)
@@ -30,6 +31,7 @@ These projects may contain other projects to function. Please refer to their thi
 - License: [Apache License Version 2.0](3rd/OpenCV4/LICENSE)
 - [Copyright list](3rd/OpenCV4/COPYRIGHT)
 - Source on [GitHub](https://github.com/opencv/opencv)
+- Notes: not included, but needed
 
 ### ByteTrack
 - License: [MIT License](3rd/ByteTrack/LICENSE)
@@ -42,15 +44,21 @@ These projects may contain other projects to function. Please refer to their thi
 - Copyright (c) 2021 Andrei
 - Source on [GitHub](https://github.com/Aoderus/OpenCV_CameraList_MSMF)
 
+### Cinder-PortAudio
+- License: [MIT License](3rd/Cinder-PortAudio/LICENSE)
+- Copyright (c) 2018, The Cinder Project
+- Source on [GitHub](https://github.com/cinder/Cinder-PortAudio)
+
 ### PortAudio
 - License: [MIT License](3rd/Cinder-PortAudio/lib/portaudio/LICENSE)
 - Copyright (c) 1999-2006 Ross Bencina and Phil Burk
 - Source on [GitHub](https://github.com/PortAudio/portaudio)
 
-### Cinder-PortAudio
-- License: [MIT License](3rd/Cinder-PortAudio/LICENSE)
-- Copyright (c) 2018, The Cinder Project
-- Source on [GitHub](https://github.com/cinder/Cinder-PortAudio)
+### ASIOSDK
+- License: [GPL 3.0](https://www.steinberg.net/developers/asiosdk-open/)
+- Copyright (c) 2025, Steinberg Media Technologies GmbH
+- Source on [here](https://www.steinberg.net/developers/asiosdk-open/)
+- Notes: not included; build-configs for not including the ASIOSDK are available
 
 ### libzmq
 - License: [MPL-2.0 License](3rd/libzmq/LICENSE)

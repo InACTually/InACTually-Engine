@@ -438,7 +438,9 @@
     <ClInclude Include="..\include\processing\Vector3ProcNode.hpp">
       <Filter>Source Files\literal</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\ContainerProcNode.hpp" />
+    <ClInclude Include="..\include\processing\ContainerProcNode.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
