@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -90,6 +90,10 @@ namespace act {
 			int m_beamAngleMin		= 10;
 			int m_beamAngleMax		= 10;
 			int m_strobeSpeed		= 25;
+
+			int m_panShift			= 0;
+			int m_tiltShift			= 0;
+
 
 			FilterBaseRef<glm::vec3>	m_lookAtFlt;
 

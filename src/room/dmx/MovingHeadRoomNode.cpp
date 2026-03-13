@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021, 2025
+	This file is created and substantially modified: 2021, 2025-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -265,6 +265,14 @@ void act::room::MovingHeadRoomNode::drawSpecificSettings()
 		setColor(color);
 	}
 
+	ImGui::SetNextItemWidth(120);
+	if (ImGui::DragInt("pan shift", &m_panShift, 1, -255, 255))
+		panTo(m_pan.getValue());
+	
+	ImGui::SetNextItemWidth(120);
+	if (ImGui::DragInt("tilt shift", &m_tiltShift, 1, -255, 255))
+		tiltTo(m_tilt.getValue());
+
 	ImGui::NewLine();
 	ImGui::BeginDisabled();
 	ImGui::SetNextItemWidth(120);
@@ -303,6 +311,8 @@ ci::Json act::room::MovingHeadRoomNode::toParams()
 	json["startAddress"]    = getStartAddress();
 	json["fixtureName"]		= getFixtureName();
 	json["lookAt"]			= util::valueToJson(m_lookAt);
+	json["panShift"]		= m_panShift;
+	json["tiltShift"]		= m_tiltShift;
 
 	if (m_hasGobo) {
 		json["gobo"]		= m_gobo.getValue();
@@ -324,6 +334,8 @@ void act::room::MovingHeadRoomNode::fromParams(ci::Json json)
 	util::setValueFromJson(json, "uv",				m_UV.value);
 	util::setValueFromJson(json, "isPanFlipped",	m_isPanFlipped);
 	util::setValueFromJson(json, "isTiltFlipped",	m_isTiltFlipped);
+	util::setValueFromJson(json, "panShift",		m_panShift);
+	util::setValueFromJson(json, "tiltShift",		m_tiltShift);
 	
 	int startAdress = 0; 
 	if (util::setValueFromJson(json, "startAddress", startAdress)) {
@@ -621,6 +633,7 @@ void act::room::MovingHeadRoomNode::panTo(float pan)
 		panRough = 1.0f - panRough;
 	}
 	panRough *= 255;
+	panRough += m_panShift;
 	setValue("pan", (int)floor(panRough));
 
 	if (m_hasFineAdjust) {
@@ -640,6 +653,7 @@ void act::room::MovingHeadRoomNode::tiltTo(float tilt)
 	}
 
 	tiltRough *= 255;
+	tiltRough += m_tiltShift;
 	setValue("tilt", (int)floor(tiltRough));
 
 	if (m_hasFineAdjust) {
