@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!--
     Extends Microsoft Azure Kinect NuGet packages to support custom build configurations.
-    The official NuGet .targets files only handle 'Debug' and 'Release' configurations.
+    The official NuGet .targets files only handle 'Debug_withASIO' and 'Release_withASIO' configurations.
     This file is committed to source control and survives NuGet package restore.
 
     $(MSBuildThisFileDirectory) resolves to the vc2022\ directory where this file lives,
@@ -10,19 +10,19 @@
   -->
 
   <!-- Microsoft.Azure.Kinect.BodyTracking: lib dependencies for noASIO configs -->
-  <ItemDefinitionGroup Condition="('$(Configuration)' == 'Debug_noASIO' Or '$(Configuration)' == 'Release_noASIO') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking)' == ''">
+  <ItemDefinitionGroup Condition="('$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking)' == ''">
     <Link>
       <AdditionalDependencies>$(MSBuildThisFileDirectory)packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\lib\native\amd64\release\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 
   <!-- Microsoft.Azure.Kinect.BodyTracking: DLL copy for noASIO configs -->
-  <ItemGroup Condition="('$(Configuration)' == 'Debug_noASIO' Or '$(Configuration)' == 'Release_noASIO') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking)' == ''">
+  <ItemGroup Condition="('$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking)' == ''">
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\lib\native\amd64\release\*.dll" />
   </ItemGroup>
 
   <!-- Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime: DLL copy for noASIO configs -->
-  <ItemGroup Condition="('$(Configuration)' == 'Debug_noASIO' Or '$(Configuration)' == 'Release_noASIO') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking-ONNXRuntime)' == ''">
+  <ItemGroup Condition="('$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release') And '$(Platform)' == 'x64' And '$(Disable-Microsoft-Azure-Kinect-BodyTracking-ONNXRuntime)' == ''">
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\lib\native\amd64\release\*.dll" />
   </ItemGroup>
 

@@ -1,19 +1,19 @@
 ﻿<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug_noASIO|x64">
-      <Configuration>Debug_noASIO</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_noASIO|x64">
-      <Configuration>Release_noASIO</Configuration>
+    <ProjectConfiguration Include="Debug_withASIO|x64">
+      <Configuration>Debug_withASIO</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_withASIO|x64">
+      <Configuration>Release_withASIO</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -24,6 +24,13 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -31,12 +38,11 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -44,53 +50,49 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">
-    <OutDir>$(SolutionDir)\bin\Debug\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_withoutASIO</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">
-    <OutDir>$(SolutionDir)\bin\Release\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_withoutASIO</TargetName>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\bin\Debug\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\bin\Release\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
+    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)\bin\Debug\</OutDir>
+    <TargetName>$(ProjectName)_withASIO</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
+    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)\bin\Release\</OutDir>
+    <TargetName>$(ProjectName)_withASIO</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -122,7 +124,7 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -155,7 +157,7 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;PA_USE_MME=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -192,7 +194,7 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -247,6 +249,7 @@
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="vc2022\change-config-names.ps1" />
     <None Include="vc2022\k4a_custom_configs.targets" />
   </ItemGroup>
   <ItemGroup />

@@ -1,16 +1,8 @@
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Microsoft.ML.OnnxRuntime.1.18.1\build\native\Microsoft.ML.OnnxRuntime.props" Condition="Exists('packages\Microsoft.ML.OnnxRuntime.1.18.1\build\native\Microsoft.ML.OnnxRuntime.props')" />
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug_noASIO|x64">
-      <Configuration>Debug_noASIO</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_noASIO|x64">
-      <Configuration>Release_noASIO</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
@@ -32,20 +24,7 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -56,72 +35,24 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">
-    <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">
-    <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;..\3rd\Simple-WebSocket-Server;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <PrecompiledHeaderFile>procpch.hpp</PrecompiledHeaderFile>
-    </ClCompile>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Link>
-      <AdditionalDependencies>cinder_MDd.lib;opencv_world460d.lib;pcl_commond.lib;pcl_featuresd.lib;pcl_filtersd.lib;pcl_kdtreed.lib;pcl_keypointsd.lib;pcl_iod.lib;pcl_io_plyd.lib;pcl_recognitiond.lib;pcl_registrationd.lib;pcl_segmentationd.lib;pcl_searchd.lib;pcl_surfaced.lib;pcl_visualizationd.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Cinder\lib\msw\$(PlatformTarget);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention />
-      <IgnoreSpecificDefaultLibraries>LIBCMT;LIBCPMT</IgnoreSpecificDefaultLibraries>
-    </Link>
-    <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\$(PlatformTarget)\lib\$(Configuration)</AdditionalLibraryDirectories>
-    </Lib>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;..\3rd\Simple-WebSocket-Server;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc</AdditionalIncludeDirectories>
@@ -155,43 +86,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>..\include;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;..\3rd\Simple-WebSocket-Server;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PrecompiledHeaderFile>procpch.hpp</PrecompiledHeaderFile>
-    </ClCompile>
-    <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-    </ProjectReference>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Link>
-      <AdditionalDependencies>cinder_MD.lib;opencv_world460.lib;pcl_common.lib;pcl_features.lib;pcl_filters.lib;pcl_kdtree.lib;pcl_keypoints.lib;pcl_io.lib;pcl_io_ply.lib;pcl_recognition.lib;pcl_registration.lib;pcl_segmentation.lib;pcl_search.lib;pcl_surface.lib;pcl_visualization.lib;flann_cpp_s.lib;OpenGL32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Cinder\lib\msw\$(PlatformTarget);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\OpenCV4\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding />
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention />
-    </Link>
-    <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\$(PlatformTarget)\lib\$(Configuration)</AdditionalLibraryDirectories>
-    </Lib>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\include;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;..\3rd\Simple-WebSocket-Server;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -343,9 +237,7 @@
     <ClCompile Include="..\src\processing\MarkerProcNode.cpp" />
     <ClCompile Include="..\src\processing\MatToBase64.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp" />
     <ClCompile Include="..\src\processing\MonitorProcNode.cpp" />
@@ -370,9 +262,7 @@
     <ClCompile Include="..\src\processing\Vector3ProcNode.cpp" />
     <ClCompile Include="..\src\processing\procpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_noASIO|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_noASIO|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\processing\SkeletonFilterProcNode.cpp" />
     <ClCompile Include="..\src\processing\SkeletonMovementProcNode.cpp" />

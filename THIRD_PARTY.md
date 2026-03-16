@@ -9,7 +9,7 @@ or lovely models and resources to be found in ./assets/3rd/ (eventually needed w
 <br>
 
 ## Lovely Frameworks and Code-snippets
-These projects may contain other projects to function. Please refer to their third party notice and further licenses.
+These third party projects may contain other projects to function. Please refer to their third party notice and further licenses.
 
 ### Cinder
 - License: [modified BSD License](https://github.com/cinder/Cinder/blob/master/COPYING)  
@@ -53,12 +53,6 @@ These projects may contain other projects to function. Please refer to their thi
 - License: [MIT License](3rd/Cinder-PortAudio/lib/portaudio/LICENSE)
 - Copyright (c) 1999-2006 Ross Bencina and Phil Burk
 - Source on [GitHub](https://github.com/PortAudio/portaudio)
-
-### ASIOSDK
-- License: [GPL 3.0](https://www.steinberg.net/developers/asiosdk-open/)
-- Copyright (c) 2025, Steinberg Media Technologies GmbH
-- Source on [here](https://www.steinberg.net/developers/asiosdk-open/)
-- Notes: not included; build-configs for not including the ASIOSDK are available
 
 ### libzmq
 - License: [MPL-2.0 License](3rd/libzmq/LICENSE)
@@ -157,6 +151,15 @@ These projects may contain other projects to function. Please refer to their thi
 - Source|Installer on [here](https://www.microsoft.com/en-us/download/details.aspx?id=104221)
 - Notes: Proprietary license. Not redistributed with this project. Users must download separately. It is included as [nuget-package](https://www.nuget.org/packages/Microsoft.Azure.Kinect.BodyTracking/1.1.2?_src=template). \
  The package has dependencies under same license terms (with-in the same package namespace) to  `.Dependencies`, `.Dependencies.cuDNN`, and `.ONNXRuntime`.
+
+## Optional Frameworks
+The optional frameworks are not included in the sources but can be added on own behalf.
+
+### ASIOSDK
+- License: [Propiretary | GPL 3.0](https://www.steinberg.net/developers/asiosdk-open/)
+- Copyright (c) 2025, Steinberg Media Technologies GmbH
+- Source on [here](https://www.steinberg.net/developers/asiosdk-open/)
+- Notes: not included, considere the license if you need it; build-configs for including the ASIOSDK are available
 
 <br>
 
