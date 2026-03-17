@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -96,7 +96,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=0;PA_USE_ASIO=1;PA_USE_MME=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -128,7 +128,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_WINDOWS;NOMINMAX;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -160,7 +160,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;PA_USE_MME=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -197,7 +197,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\computing;$(SolutionDir)..\include\room;$(SolutionDir)..\include\dmx;$(SolutionDir)..\include\processing;$(SolutionDir)..\include\utils;$(SolutionDir)..\include\networking;$(SolutionDir)..\include\modules;$(SolutionDir)..\include\input;$(SolutionDir)..\include\audio;$(SolutionDir)..\include\main;$(SolutionDir)..\..\Cinder\include;$(SolutionDir)..\..\Cinder\include\imgui;$(SolutionDir)..\..\Cinder\include\asio;$(SolutionDir)..\3rd;$(SolutionDir)..\3rd\ByteTrack\include;$(SolutionDir)..\3rd\OpenCV4\include;$(SolutionDir)..\vc2022\packages\zeroc.openssl.v143.1.1.1.3\build\native\include\;$(SolutionDir)..\3rd\Simple-WebSocket-Server;$(SolutionDir)..\3rd\ImGui-Node-Editor;$(SolutionDir)..\3rd\imnodes;$(SolutionDir)..\3rd\ImPlot;$(SolutionDir)..\3rd\ldlidar\include;$(SolutionDir)..\3rd\libzmq\src;$(SolutionDir)..\3rd\libzmq\include;$(SolutionDir)..\3rd\Zdepth\zstd\include;$(SolutionDir)..\3rd\Zdepth\include;$(SolutionDir)..\3rd\cppzmq;$(SolutionDir)..\3rd\OSC\src;$(SolutionDir)..\3rd\OSC\src\cinder\osc;$(SolutionDir)..\3rd\Cinder-PortAudio\src;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\include;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;$(SolutionDir)..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;_WINDOWS;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -236,9 +236,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\settings.json" />
-    <None Include="..\3rd\libzmq\src\libzmq.pc.in" />
-    <None Include="..\3rd\libzmq\src\libzmq.vers" />
-    <None Include="..\3rd\libzmq\src\version.rc.in" />
     <None Include="IA_Room.vcxproj" />
     <None Include="InActually_ClassDiagram.cd" />
     <None Include="dnn_model_2_0.onnx" />
@@ -254,159 +251,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ClInclude Include="..\3rd\libzmq\src\address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\array.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\atomic_counter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\atomic_ptr.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\blob.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\channel.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\client.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\clock.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\command.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\compat.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\condition_variable.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\config.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ctx.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\curve_client.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\curve_client_tools.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\curve_mechanism_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\curve_server.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\dbuffer.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\dealer.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\decoder_allocators.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\devpoll.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\dgram.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\dish.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\dist.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\endpoint.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\epoll.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\err.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\fd.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\fq.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\gather.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\generic_mtrie.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\generic_mtrie_impl.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\gssapi_client.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\gssapi_mechanism_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\gssapi_server.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\io_object.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\io_thread.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ip.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ipc_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ipc_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ipc_listener.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ip_resolver.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\i_decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\i_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\i_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\i_mailbox.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\i_poll_events.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\kqueue.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\lb.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\likely.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\macros.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mailbox.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mailbox_safe.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mechanism.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mechanism_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\metadata.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\msg.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mtrie.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\mutex.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\norm_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\null_mechanism.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\object.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\options.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\own.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pair.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\peer.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pgm_receiver.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pgm_sender.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pgm_socket.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pipe.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\plain_client.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\plain_common.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\plain_server.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\poll.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\poller.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\poller_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\polling_util.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pollset.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\precompiled.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\proxy.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pub.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\pull.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\push.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\radio.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\radix_tree.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\random.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\raw_decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\raw_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\raw_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\reaper.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\rep.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\req.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\router.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\scatter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\secure_allocator.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\select.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\server.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\session_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\signaler.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\socket_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\socket_poller.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\socks.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\socks_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\stdint.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\stream.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\stream_connecter_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\stream_engine_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\stream_listener_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\sub.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tcp.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tcp_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tcp_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tcp_listener.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\thread.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\timers.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tipc_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tipc_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\tipc_listener.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\trie.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\udp_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\udp_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v1_decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v1_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v2_decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v2_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v2_protocol.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\v3_1_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\vmci.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\vmci_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\vmci_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\vmci_listener.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\windows.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\wire.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\wss_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\wss_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_address.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_connecter.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_decoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_encoder.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_engine.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_listener.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ws_protocol.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\xpub.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\xsub.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ypipe.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ypipe_base.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\ypipe_conflate.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\yqueue.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\zap_client.hpp" />
-    <ClInclude Include="..\3rd\libzmq\src\zmq_draft.h" />
-    <ClInclude Include="..\3rd\libzmq\src\zmtp_engine.hpp" />
     <ClInclude Include="..\include\main\CallbackDrawable.hpp" />
     <ClInclude Include="..\include\main\DrawableBase.hpp" />
     <ClInclude Include="..\include\main\InACTually.hpp" />
@@ -428,117 +272,6 @@
     <ClInclude Include="..\include\utils\UniqueIDBase.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\3rd\libzmq\src\address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\channel.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\client.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\clock.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ctx.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\curve_client.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\curve_mechanism_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\curve_server.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\dealer.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\decoder_allocators.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\devpoll.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\dgram.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\dish.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\dist.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\endpoint.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\epoll.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\err.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\fq.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\gather.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\gssapi_client.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\gssapi_mechanism_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\gssapi_server.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\io_object.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\io_thread.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ip.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ipc_address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ipc_connecter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ipc_listener.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\ip_resolver.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\kqueue.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\lb.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\mailbox.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\mailbox_safe.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\mechanism.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\mechanism_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\metadata.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\msg.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\mtrie.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\norm_engine.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\null_mechanism.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\object.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\options.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\own.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pair.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\peer.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pgm_receiver.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pgm_sender.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pgm_socket.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pipe.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\plain_client.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\plain_server.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\poll.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\poller_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\polling_util.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pollset.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\precompiled.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\proxy.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pub.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\pull.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\push.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\radio.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\radix_tree.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\random.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\raw_decoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\raw_encoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\raw_engine.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\reaper.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\rep.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\req.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\router.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\scatter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\select.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\server.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\session_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\signaler.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\socket_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\socket_poller.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\socks.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\socks_connecter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\stream.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\stream_connecter_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\stream_engine_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\stream_listener_base.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\sub.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tcp.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tcp_address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tcp_connecter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tcp_listener.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\thread.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\timers.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tipc_address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tipc_connecter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\tipc_listener.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\trie.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\udp_address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\udp_engine.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\v1_decoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\v1_encoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\v2_decoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\v2_encoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\v3_1_encoder.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\vmci.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\vmci_address.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\vmci_connecter.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\vmci_listener.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\xpub.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\xsub.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\zap_client.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\zmq.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\zmq_utils.cpp" />
-    <ClCompile Include="..\3rd\libzmq\src\zmtp_engine.cpp" />
     <ClCompile Include="..\src\InACTuallyApp.cpp" />
     <ClCompile Include="..\src\main\InACTually.cpp" />
     <ClCompile Include="..\src\main\ModuleRegistry.cpp" />

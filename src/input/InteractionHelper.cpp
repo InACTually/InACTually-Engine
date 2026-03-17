@@ -96,7 +96,7 @@ bool act::ia::InteractionHelper::evaluateMouseButton(MouseButton btn)
 	}
 
 	ci::app::MouseEvent evt = ci::app::MouseEvent(getWindow(), 0, m_mousePos.x, m_mousePos.y, modifier, m_wheelIncrement, modifier);
-	evt.setPos(vec2(m_mousePos.x, m_mousePos.y));
+	evt.setPos(ivec2(m_mousePos.x, m_mousePos.y));
 	if (ImGui::IsMouseDown(btn)) {
 		if (ImGui::IsMouseDragging(btn) && m_isDragging) {
 			this->onMouseDrag(evt);
