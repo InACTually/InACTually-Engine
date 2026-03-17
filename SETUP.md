@@ -22,5 +22,5 @@ You need to place/copy the corresponding *.dll's in `vc2022\bin\Release|Debug`.
 ## Optional ones
 
 + [ASIOSDK 2.3](https://www.steinberg.net/developers/asiosdk-open/) (or possibly newer) \
-For optional multi-channel audio support, place the ASIOSDK in `./3rd/Cinder-PortAudio/lib/ASIOSDK` – care about the proprietary license. \
-Standard build configurations are compiling without optional ASIOSDK, for including/using the ASIOSDK specific build targets are available.
+This project does not distribute the ASIOSDK. Required only for optional ASIO/multi‑channel audio support.
+To enable the optional ASIO support, download the ASIOSDK from Steinberg and place it in `./3rd/Cinder-PortAudio/lib/ASIOSDK.`. Binaries built with the ASIOSDK for ASIO support must not be redistributed unless you comply with Steinberg’s license. Standard build configurations are compiling without optional ASIOSDK, for including/using the ASIOSDK specific build configurations are available.

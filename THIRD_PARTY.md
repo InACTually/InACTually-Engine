@@ -156,10 +156,10 @@ These third party projects may contain other projects to function. Please refer 
 The optional frameworks are not included in the sources but can be added on own behalf.
 
 ### ASIOSDK
-- License: [Propiretary | GPL 3.0](https://www.steinberg.net/developers/asiosdk-open/)
+- License: [Proprietary | GPL 3.0](https://www.steinberg.net/developers/asiosdk-open/)
 - Copyright (c) 2025, Steinberg Media Technologies GmbH
 - Source on [here](https://www.steinberg.net/developers/asiosdk-open/)
-- Notes: not included, considere the license if you need it; build-configs for including the ASIOSDK are available
+- Notes: This project does not distribute the ASIOSDK. Required only for optional ASIO/multi‑channel audio support. Users must include this themselves. Binaries built with the ASIOSDK for ASIO support must not be redistributed unless you comply with Steinberg’s license. Standard build configurations are compiling without optional ASIOSDK, for including/using the ASIOSDK specific build configurations are available.
 
 <br>
 

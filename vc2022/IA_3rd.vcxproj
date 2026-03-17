@@ -225,10 +225,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
     <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)_withASIO</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
     <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)_withASIO</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
     <ClCompile>
