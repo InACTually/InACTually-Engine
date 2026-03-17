@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2024-
+	This file is created and substantially modified: 2024-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -70,37 +70,68 @@ act::net::WebUISecureServer::WebUISecureServer(MsgRecieverRef reciever)
 
 	// See RFC 6455 7.4.1. for status codes
 	endpoint.on_close = [&](std::shared_ptr<WssServer::Connection> connection, int status, const std::string& /*reason*/) {
+		std::stringstream strstr;
+		strstr << "Closed connection " << connection->remote_endpoint().address().to_string() << ":" << connection->remote_endpoint().port() << ". ";
+		CI_LOG_I(strstr.str());
+		m_text = "Connection closed";
 		if (m_server->get_connections().size() == 0) {
 			m_reciever->onDisconnect(getUID());
 			m_isConnected = false;
+			strstr.clear();
+			strstr.str("");
+			strstr << "Listening on " << m_port;
+			m_text = strstr.str();
 		}
 	};
 
-	endpoint.on_handshake = [](std::shared_ptr<WssServer::Connection> /*connection*/, SimpleWeb::CaseInsensitiveMultimap& response_header) {
+	endpoint.on_handshake = [&](std::shared_ptr<WssServer::Connection> connection, SimpleWeb::CaseInsensitiveMultimap& response_header) {
 		//response_header.insert({ "Access-Control-Allow-Origin", "*" });
+		std::stringstream strstr;
+		strstr << "Shaking hands with " << connection->remote_endpoint().address().to_string() << ":" << connection->remote_endpoint().port() << ". ";
+		CI_LOG_I(strstr.str());
 		return SimpleWeb::StatusCode::information_switching_protocols; // Upgrade to websocket
 	};
 
 	endpoint.on_error = [&](std::shared_ptr<WssServer::Connection> connection, const SimpleWeb::error_code& ec) {
 		std::stringstream strstr;
-		strstr << "Error in connection " << connection.get() << ". " << "Error: " << ec << ", error message: " << ec.message();
+		strstr << "Error in connection " << connection->remote_endpoint().address().to_string() << ":" << connection->remote_endpoint().port() << ". " << "Error: " << ec << ", error message: " << ec.message();
 		m_text = strstr.str();
-		CI_LOG_I(m_text);
+		CI_LOG_E(m_text);
 	};
 
-	std::promise<unsigned short> server_port;
-	m_serverThread = std::thread([&]() {
-		m_server->start([&server_port](unsigned short port) {
-			server_port.set_value(port);
-			});
+	auto server_port = std::make_shared<std::promise<unsigned short>>();
+	auto server_port_future = server_port->get_future();
+	m_serverThread = std::thread([server_port, this]() {
+		try {
+			m_server->start([server_port](unsigned short port) {
+				try { server_port->set_value(port); }
+				catch (...) {}
+				});
+		}
+		catch (const std::exception& e) {
+			CI_LOG_E(std::string("WssServer start failed: ") + e.what());
+			try { server_port->set_exception(std::current_exception()); }
+			catch (...) {}
+		}
 	});
-	std::stringstream strstr;
-	strstr << "Listening on " << server_port.get_future().get();
-	m_text = strstr.str();
-	CI_LOG_I("WebUI " + strstr.str());
+	// wait briefly for server to report bound port
+	if (server_port_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
+		try { 
+			m_port = server_port_future.get(); 
+			std::stringstream strstr;
+			strstr << "Listening on " << m_port;
+			m_text = strstr.str();
+			CI_LOG_I("WebUI " + strstr.str());
+		}
+		catch (const std::exception& e) { CI_LOG_E(std::string("Failed to get server port: ") + e.what()); }
+	}
+	else {
+		CI_LOG_E("WebUISecureServer start timed out.");
+	}
 }
 
 act::net::WebUISecureServer::~WebUISecureServer() {
+	m_server->stop();
 	m_serverThread.join();
 }
 
