@@ -35,9 +35,8 @@ Some impressions from projects by Fabian Töpfer and Lars Engeln using InACTuall
 
 ## 🛠️ Setup – How to compile
 
-If you want to have the [NodeCreator](https://github.com/InACTually/InACTually-NodeCreator) with the Engine, you need to clone `--recursive`, as it is a submodule.
-
-To make it compile... pray and see the [SETUP.md](./SETUP.md) for some details.
+If you want to have the [NodeCreator](https://github.com/InACTually/InACTually-NodeCreator) with the Engine, you need to clone `--recursive`, as it is a submodule. \
+To make the InACTually Engine compile... pray and see the [SETUP.md](./SETUP.md) for some details.
 
 <br>
 
