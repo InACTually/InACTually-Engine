@@ -5,16 +5,8 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_withASIO|x64">
-      <Configuration>Debug_withASIO</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_withASIO|x64">
-      <Configuration>Release_withASIO</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -26,25 +18,12 @@
     <ProjectName>IA_Room</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -54,13 +33,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
@@ -69,10 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
@@ -82,53 +53,11 @@
     <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
-    <IntDir>$(SolutionDir)\build\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)\lib\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_withASIO|x64'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include\computing;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\onnxruntime\include;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;.\..\3rd\LeapSDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <PrecompiledHeaderFile>roompch.hpp</PrecompiledHeaderFile>
-    </ClCompile>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Link>
-      <AdditionalDependencies>cinder_MDd.lib;opencv_world460d.lib;pcl_commond.lib;pcl_featuresd.lib;pcl_filtersd.lib;pcl_kdtreed.lib;pcl_keypointsd.lib;pcl_iod.lib;pcl_io_plyd.lib;pcl_recognitiond.lib;pcl_registrationd.lib;pcl_segmentationd.lib;pcl_searchd.lib;pcl_surfaced.lib;pcl_visualizationd.lib;flann_cpp_s-gd.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Cinder\lib\msw\$(PlatformTarget);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\OpenCV4\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention />
-      <IgnoreSpecificDefaultLibraries>LIBCMT;LIBCPMT</IgnoreSpecificDefaultLibraries>
-    </Link>
-    <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-    </Lib>
-    <Lib>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include\computing;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\onnxruntime\include;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;.\..\3rd\LeapSDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -159,49 +88,10 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_withASIO|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>..\include;..\include\computing;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\onnxruntime\include;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;.\..\3rd\LeapSDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PrecompiledHeaderFile>roompch.hpp</PrecompiledHeaderFile>
-    </ClCompile>
-    <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-    </ProjectReference>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\Cinder\include";..\include</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Link>
-      <AdditionalDependencies>cinder_MD.lib;opencv_world460.lib;pcl_common.lib;pcl_features.lib;pcl_filters.lib;pcl_kdtree.lib;pcl_keypoints.lib;pcl_io.lib;pcl_io_ply.lib;pcl_recognition.lib;pcl_registration.lib;pcl_segmentation.lib;pcl_search.lib;pcl_surface.lib;pcl_visualization.lib;flann_cpp_s.lib;OpenGL32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Cinder\lib\msw\$(PlatformTarget);..\3rd\PCL\3rdParty\FLANN\lib;..\3rd\PCL\lib;..\..\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);..\3rd\OpenCV4\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding />
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention />
-    </Link>
-    <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-    </Lib>
-    <Lib>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\include;..\include\computing;..\include\room;..\include\dmx;..\include\processing;..\include\utils;..\include\networking;..\include\modules;..\include\input;..\include\audio;..\include\main;..\..\Cinder\include;..\..\Cinder\include\imgui;..\..\Cinder\include\asio;..\3rd;..\3rd\dmx;..\3rd\ByteTrack\include;..\3rd\OpenCV4\include;..\3rd\onnxruntime\include;..\3rd\ImGui-Node-Editor;..\3rd\imnodes;..\3rd\ImPlot;..\3rd\ldlidar\include;..\3rd\libzmq\src;..\3rd\libzmq\include;..\3rd\Zdepth\zstd\include;..\3rd\Zdepth\include;..\3rd\cppzmq;..\3rd\OSC\src;..\3rd\OSC\src\cinder\osc;.\..\3rd\Cinder-PortAudio\src;.\..\3rd\Cinder-PortAudio\lib\portaudio\include;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\common;.\..\3rd\Cinder-PortAudio\lib\portaudio\src\os\win;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\common;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host;.\..\3rd\Cinder-PortAudio\lib\ASIOSDK\host\pc;.\..\3rd\LeapSDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;PA_USE_WASAPI=1;PA_USE_ASIO=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
