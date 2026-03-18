@@ -115,15 +115,8 @@
     <None Include="..\assets\settings.json">
       <Filter>Source Files\main</Filter>
     </None>
-    <None Include="dnn_model_2_0.onnx" />
-    <None Include="dnn_model_2_0_op11.onnx" />
-    <None Include="dnn_model_2_0_lite_op11.onnx" />
     <None Include="InActually_ClassDiagram.cd" />
-    <None Include="packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\content\dnn_model_2_0_op11.onnx" />
-    <None Include="IA_Room.vcxproj" />
     <None Include="packages.config" />
-    <None Include="vc2022\change-config-names.ps1" />
-    <None Include="vc2022\k4a_custom_configs.targets" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\InACTuallyApp.cpp">

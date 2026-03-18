@@ -236,18 +236,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\settings.json" />
-    <None Include="IA_Room.vcxproj" />
     <None Include="InActually_ClassDiagram.cd" />
-    <None Include="dnn_model_2_0.onnx" />
-    <None Include="dnn_model_2_0_lite_op11.onnx" />
-    <None Include="dnn_model_2_0_op11.onnx" />
     <None Include="packages.config" />
-    <None Include="packages\Microsoft.Azure.Kinect.BodyTracking.1.1.2\content\dnn_model_2_0_op11.onnx">
-      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="vc2022\change-config-names.ps1" />
-    <None Include="vc2022\k4a_custom_configs.targets" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
