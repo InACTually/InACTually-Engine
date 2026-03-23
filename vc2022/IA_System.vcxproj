@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Microsoft.ML.OnnxRuntime.1.18.1\build\native\Microsoft.ML.OnnxRuntime.props" Condition="Exists('packages\Microsoft.ML.OnnxRuntime.1.18.1\build\native\Microsoft.ML.OnnxRuntime.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -142,8 +142,11 @@
     <ClCompile Include="..\src\input\KeyInput.cpp" />
     <ClCompile Include="..\src\input\MouseInput.cpp" />
     <ClCompile Include="..\src\input\TouchInput.cpp" />
+    <ClCompile Include="..\src\llm\LLMLightTools.cpp" />
+    <ClCompile Include="..\src\llm\LLMToolManager.cpp" />
     <ClCompile Include="..\src\networking\Message.cpp" />
     <ClCompile Include="..\src\networking\Middleware.cpp" />
+    <ClCompile Include="..\src\llm\LLMConnector.cpp" />
     <ClCompile Include="..\src\networking\NetworkManager.cpp" />
     <ClCompile Include="..\src\networking\OSCServer.cpp" />
     <ClCompile Include="..\src\networking\TCPSocket.cpp" />
@@ -177,9 +180,12 @@
     <ClInclude Include="..\include\input\MouseRawListener.hpp" />
     <ClInclude Include="..\include\input\TouchInput.hpp" />
     <ClInclude Include="..\include\input\TouchRawListener.hpp" />
+    <ClInclude Include="..\include\llm\LLMLightTools.hpp" />
+    <ClInclude Include="..\include\llm\LLMToolManager.hpp" />
     <ClInclude Include="..\include\networking\Connection.hpp" />
     <ClInclude Include="..\include\networking\Message.hpp" />
     <ClInclude Include="..\include\networking\Middleware.hpp" />
+    <ClInclude Include="..\include\llm\LLMConnector.hpp" />
     <ClInclude Include="..\include\networking\NetworkManager.hpp" />
     <ClInclude Include="..\include\networking\NetworkPublisher.hpp" />
     <ClInclude Include="..\include\networking\OSCReciever.hpp" />

@@ -260,6 +260,7 @@
     <ClInclude Include="..\include\modules\ModuleBase.hpp" />
     <ClInclude Include="..\include\modules\DisplayModule.hpp" />
     <ClInclude Include="..\include\modules\NetworkModule.hpp" />
+    <ClInclude Include="..\include\modules\LLMModule.hpp" />
     <ClInclude Include="..\include\modules\RoomModule.hpp" />
     <ClInclude Include="..\include\processing\ProcNodeRegistry.hpp" />
     <ClInclude Include="..\include\utils\ColorGradient.hpp" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\src\modules\ModuleBase.cpp" />
     <ClCompile Include="..\src\modules\DisplayModule.cpp" />
     <ClCompile Include="..\src\modules\NetworkModule.cpp" />
+    <ClCompile Include="..\src\modules\LLMModule.cpp" />
     <ClCompile Include="..\src\modules\RoomModule.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeRegistry.cpp" />
     <ClCompile Include="..\src\utils\Logger.cpp" />

@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -9,7 +8,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -64,6 +63,7 @@ class InACTuallyApp : public App {
 #include "modules/RoomModule.hpp"
 #include "modules/DisplayModule.hpp"
 #include "modules/NetworkModule.hpp"
+#include "modules/LLMModule.hpp"
 
 #include "processing/CameraProcNode.hpp"
 
@@ -74,6 +74,7 @@ void InACTuallyApp::setup()
 	RegisterModule(mod::ProcessingModule);
 	RegisterModule(mod::DisplayModule);
 	RegisterModule(mod::NetworkModule);
+	RegisterModule(mod::LLMModule);
 
 	inACTually = make_shared<InACTually>(this);
 	inACTually->setRawListener(mouseRawListener);

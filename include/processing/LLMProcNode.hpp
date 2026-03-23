@@ -16,9 +16,10 @@
 #pragma once
 
 #include "ProcNodeBase.hpp"
-#include <thread>
-#include <atomic>
+#include "llm/LLMConnector.hpp"
+
 #include <mutex>
+#include <atomic>
 
 using namespace ci;
 using namespace ci::app;
@@ -43,43 +44,26 @@ namespace act {
 			void fromParams(ci::Json json) override;
 
 		private:
-			void sendRequest(const std::string& userMessage);
-			void httpPostStreaming(const std::string& host, int port, const std::string& path, const std::string& body);
-			std::string httpGet(const std::string& host, int port, const std::string& path);
-			void fetchAvailableModels();
+			act::llm::LLMConnectorRef	m_llmConnector;
 
-			std::string m_model;
-			std::string m_systemPrompt;
-			std::string m_ollamaHost;
-			int			m_ollamaPort;
-
-			std::vector<std::string>	m_availableModels;
-			int							m_selectedModelIndex;
-
-			struct ChatMessage {
-				std::string role;
-				std::string content;
-				std::string thinking;
-			};
-			std::vector<ChatMessage>	m_chatHistory;
 			std::string					m_inputBuffer;
 			std::string					m_lastResponse;
 			std::string					m_statusText;
 
-			std::thread					m_thread;
-			std::atomic<bool>			m_isProcessing;
-			std::atomic<bool>			m_isProcessingDone;
+			// Stream accumulation (written from worker thread)
 			std::mutex					m_streamMutex;
 			std::string					m_streamBuffer;
 			std::string					m_streamThinking;
 			std::string					m_streamError;
-			bool						m_isThinking;
-			bool						m_showThinking;
-			bool						m_scrollToBottom;
+			std::atomic<bool>			m_isProcessingDone	= false;
+			bool						m_showThinking		= false;
+			bool						m_showToolUse		= false;
+			bool						m_scrollToBottom	= false;
 
 			OutputPortRef<std::string>	m_responsePort;
 			OutputPortRef<bool>			m_busyPort;
 
+			void sendRequest(const std::string& userMessage);
 		}; using LLMProcNodeRef = std::shared_ptr<LLMProcNode>;
 
 	}

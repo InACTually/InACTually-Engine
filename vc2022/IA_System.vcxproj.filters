@@ -22,6 +22,9 @@
     <Filter Include="Source Files\computing">
       <UniqueIdentifier>{36ff4bdb-b1ef-4d55-b0ea-a65c463ff52e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\llm">
+      <UniqueIdentifier>{1991e163-586a-456e-882f-33a6dfe1bbb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\audio\AudioDeviceManager.cpp">
@@ -101,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="..\src\audio\TimeStretchingNode.cpp">
       <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\llm\LLMConnector.cpp">
+      <Filter>Source Files\llm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\llm\LLMLightTools.cpp">
+      <Filter>Source Files\llm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\llm\LLMToolManager.cpp">
+      <Filter>Source Files\llm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +226,15 @@
     </ClInclude>
     <ClInclude Include="..\include\audio\TimeStretchingNode.hpp">
       <Filter>Source Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\llm\LLMConnector.hpp">
+      <Filter>Source Files\llm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\llm\LLMLightTools.hpp">
+      <Filter>Source Files\llm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\llm\LLMToolManager.hpp">
+      <Filter>Source Files\llm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

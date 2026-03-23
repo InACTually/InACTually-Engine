@@ -34,6 +34,9 @@
     <ClCompile Include="..\src\InACTuallyApp.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\modules\LLMModule.cpp">
+      <Filter>Source Files\modules</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\modules\RoomModule.cpp">
       <Filter>Source Files\modules</Filter>
     </ClCompile>
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="..\include\main\CallbackDrawable.hpp">
       <Filter>Source Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\modules\LLMModule.hpp">
+      <Filter>Source Files\modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
