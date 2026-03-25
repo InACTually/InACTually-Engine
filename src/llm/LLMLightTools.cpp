@@ -33,7 +33,7 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			for (int i = 0; i < (int)names.size(); i++) {
 				ci::Json e = ci::Json::object();
 				e["index"] = i;
-				e["name"]  = names[i];
+				//e["name"]  = names[i];
 
 				auto dimmer = roomMgrs.dmxMgr->getDimmerByIndex(i);
 				if (dimmer) {
@@ -42,8 +42,8 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 				} else {
 					auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(i);
 					if (mh) {
-						e["type"]  = "movingHead";
-						e["state"] = mh->toJson();
+						e["type"]  = "light";
+						e["color"] = mh->toJson()["params"]["color"];
 					}
 				}
 				arr.push_back(e);
@@ -55,7 +55,7 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 	definitions.push_back({
 		ToolDefinition{
 			"get_light",
-			"Returns the full current state of a single DMX fixture by its zero-based index.",
+			"Returns the full current state of a single light by its zero-based index.",
 			{
 				{ "index", "number", "Zero-based index of the fixture.", true }
 			}
@@ -86,7 +86,7 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			return "{\"error\":\"No fixture found at index " + std::to_string(index) + "\"}";
 		}
 	});
-
+	/*
 	definitions.push_back({
 		ToolDefinition{
 			"set_dimmer",
@@ -109,10 +109,10 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 		}
 	});
 
-
+	*/
 	definitions.push_back({
 		ToolDefinition{
-			"set_moving_head_dimmer",
+			"set_light_dimmer",
 			"Sets the brightness (dimmer) of a moving head fixture. Dimmer is 0.0 (off) to 1.0 (full).",
 			{
 				{ "index",      "number", "Zero-based index of the moving head fixture.",        true },
@@ -131,14 +131,14 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			return "{\"ok\":true,\"id\":\"" + call.id + "\",\"dimmer\":" + std::to_string(dimmer) + "}";
 		}
 	});
-
+	
 
 	definitions.push_back({
 		ToolDefinition{
-			"set_moving_head_color",
-			"Sets the RGB color of a moving head fixture. Each channel is 0.0 to 1.0.",
+			"set_light_color",
+			"Sets the RGB color of a single light identified by the index. Each channel is 0.0 to 1.0 as number.",
 			{
-				{ "index", "number", "Zero-based index of the moving head fixture.", true },
+				{ "index", "number", "Zero-based index of ONE light.", true },
 				{ "r",     "number", "Red channel 0.0-1.0.",                         true },
 				{ "g",     "number", "Green channel 0.0-1.0.",                       true },
 				{ "b",     "number", "Blue channel 0.0-1.0.",                        true }
@@ -159,11 +159,39 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 		}
 	});
 
+	definitions.push_back({
+		ToolDefinition{
+			"set_all_light_color",
+			"Sets the RGB color of ALL lights. Each channel is 0.0 to 1.0 as number.",
+			{
+				{ "r",     "number", "Red channel 0.0-1.0.",                         true },
+				{ "g",     "number", "Green channel 0.0-1.0.",                       true },
+				{ "b",     "number", "Blue channel 0.0-1.0.",                        true }
+			}
+		},
+		[roomMgrs](const ToolCall& call) -> std::string {
+			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			int   index = call.arguments.value("index", 0);
+			float r = std::clamp(static_cast<float>(call.arguments.value("r", 1.0)), 0.0f, 1.0f);
+			float g = std::clamp(static_cast<float>(call.arguments.value("g", 1.0)), 0.0f, 1.0f);
+			float b = std::clamp(static_cast<float>(call.arguments.value("b", 1.0)), 0.0f, 1.0f);
+
+			auto nodes = roomMgrs.dmxMgr->getNodes();
+			for (int i = 0; i < (int)nodes.size(); i++) {
+				auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(i);
+				if (!mh)
+					continue;
+				mh->setColor(ci::Color(r, g, b));
+			}
+			return "{\"ok\":true,\"id\":\"" + call.id + "\"}";
+		}
+		});
+
 
 	definitions.push_back({
 		ToolDefinition{
-			"set_moving_head_look_at",
-			"Points a moving head at a world-space position (x, y, z) in metres. Use the position data from the room to point at objects.",
+			"set_light_lookat",
+			"Points a light at a world-space position (x, y, z) in metres. Use the position data from the room to point at objects.",
 			{
 				{ "index", "number", "Zero-based index of the moving head fixture.", true },
 				{ "x",     "number", "Target X coordinate in metres.",               true },
