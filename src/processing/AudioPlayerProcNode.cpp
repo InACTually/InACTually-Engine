@@ -36,7 +36,8 @@ act::proc::AudioPlayerProcNode::AudioPlayerProcNode() : ProcNodeBase("AudioPlaye
 	m_isFading		= false;
 	m_falseCount	= 0;
 	m_countFalseUpTo = 5;
-	m_normalized = false;
+	m_normalized	= false;
+	m_channel		= 0;
 
 	m_playEvent = false; // will be altered by front end
 	m_stopEvent = false; // will be altered by front end
@@ -59,8 +60,9 @@ act::proc::AudioPlayerProcNode::AudioPlayerProcNode() : ProcNodeBase("AudioPlaye
 
 	m_bufferPlayer	= ctx->makeNode(new audio::BufferPlayerNode());
 	m_gain			= ctx->makeNode(new audio::GainNode(audio::decibelToLinear(m_volume.value())));
-	m_bufferPlayer >> m_gain >> ctx->getOutput();
-
+	m_router		= ctx->makeNode(new audio::ChannelRouterNode());
+	m_bufferPlayer >> m_gain;
+	route();
 }
 
 act::proc::AudioPlayerProcNode::~AudioPlayerProcNode() {
@@ -138,6 +140,13 @@ void act::proc::AudioPlayerProcNode::draw() {
 	}
 
 	bool prvntDrag = false;
+
+	ImGui::SameLine();
+	if(ImGui::InputInt("channel", &m_channel, 1, 2)) {
+		m_channel = std::clamp(m_channel, 0, 127);
+		route();
+		prvntDrag = true;
+	}
 	
 	ImGui::SetNextItemWidth(m_drawSize.x);
 	if (ImGui::SliderFloat("volume", &m_toVolume, 0.0f, 120.f)) {
@@ -279,6 +288,21 @@ void act::proc::AudioPlayerProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "stopEvent", m_stopEvent);
 
 	init();
+}
+
+void act::proc::AudioPlayerProcNode::route()
+{
+	m_router->disconnectAll();
+	auto ctx = audio::Context::master();
+
+	int inputChannel = m_buffer->getNumChannels();
+	int outputChannel = ctx->getOutput()->getNumChannels();
+	
+	for(int in = 0; in < inputChannel; in++) {
+		int out = (in + m_channel);
+		if (out < outputChannel)
+			m_gain >> m_router->route(in, out) >> ctx->getOutput();
+	}
 }
 
 void act::proc::AudioPlayerProcNode::setPlaySpeed(float speed)

@@ -57,6 +57,8 @@ namespace act {
 			ci::audio::BufferRef			m_buffer;
 			ci::audio::BufferPlayerNodeRef	m_bufferPlayer;
 			ci::audio::GainNodeRef			m_gain;
+			int								m_channel;
+			ci::audio::ChannelRouterNodeRef	m_router;
 			aio::TimeStrechingNodeRef		m_stretch;
 			bool							m_isStretching;
 			float							m_playSpeed;
@@ -68,6 +70,8 @@ namespace act {
 
 			bool							m_playEvent;
 			bool							m_stopEvent;
+
+			void route();
 
 			void setPlaySpeed(float speed);
 
