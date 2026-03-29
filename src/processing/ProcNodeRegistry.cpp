@@ -78,16 +78,17 @@
 #include "TriggerListProcNode.hpp"
 
 // Utility
-#include "BackgroundSubstractionProcNode.hpp"
-#include "ColorProcNode.hpp"
-#include "ColorMappingProcNode.hpp"
 #include "DistributorProcNode.hpp"
 #include "IfProcNode.hpp"
-#include "ImageEnhancerProcNode.hpp"
-#include "NoiseProcNode.hpp"
 #include "NumberEnhancerProcNode.hpp"
-#include "PositionProcNode.hpp"
 #include "SpeedProcNode.hpp"
+
+// Video & Image
+#include "BackgroundSubstractionProcNode.hpp"
+#include "ImageEnhancerProcNode.hpp"
+#include "VideoMixerProcNode.hpp"
+#include "VideoPlayerProcNode.hpp"
+#include "VideoRecorderProcNode.hpp"
 
 // general IO
 #include "CameraProcNode.hpp"
@@ -95,12 +96,14 @@
 #include "LLMProcNode.hpp"
 #include "MicrophoneProcNode.hpp"
 #include "MonitorProcNode.hpp"
-#include "VideoPlayerProcNode.hpp"
-#include "VideoRecorderProcNode.hpp"
+#include "NoiseProcNode.hpp"
 
 // literal
 #include "BooleanProcNode.hpp"
+#include "ColorProcNode.hpp"
+#include "ColorMappingProcNode.hpp"
 #include "NumberProcNode.hpp"
+#include "PositionProcNode.hpp"
 #include "StringProcNode.hpp"
 #include "Vector2ProcNode.hpp"
 #include "Vector3ProcNode.hpp"
@@ -158,27 +161,29 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Timeline", "Easing", act::proc::EasingProcNode::create);
     act::proc::ProcNodeRegistry::add("Timeline", "TriggerList", act::proc::TriggerListProcNode::create);
 
-    act::proc::ProcNodeRegistry::add("Utility", "BackgroundSubstraction", act::proc::BackgroundSubstractionProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "Color", act::proc::ColorProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "ColorMapping", act::proc::ColorMappingProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "If", act::proc::IfProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "ImageEnhancer", act::proc::ImageEnhancerProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "Noise", act::proc::NoiseProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "Position", act::proc::PositionProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Speed", act::proc::SpeedProcNode::create);
+
+    act::proc::ProcNodeRegistry::add("Video & Image", "BackgroundSubstraction", act::proc::BackgroundSubstractionProcNode::create);
+    act::proc::ProcNodeRegistry::add("Video & Image", "ImageEnhancer", act::proc::ImageEnhancerProcNode::create);
+    act::proc::ProcNodeRegistry::add("Video & Image", "VideoMixer", act::proc::VideoMixerProcNode::create);
+    act::proc::ProcNodeRegistry::add("Video & Image", "VideoPlayer", act::proc::VideoPlayerProcNode::create);
+    act::proc::ProcNodeRegistry::add("Video & Image", "VideoRecorder", act::proc::VideoRecorderProcNode::create);
 
     act::proc::ProcNodeRegistry::add("general IO", "Camera", act::proc::CameraProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "KeyIn", act::proc::KeyInProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "LLM", act::proc::LLMProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Microphone", act::proc::MicrophoneProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Monitor", act::proc::MonitorProcNode::create);
-    act::proc::ProcNodeRegistry::add("general IO", "VideoPlayer", act::proc::VideoPlayerProcNode::create);
-    act::proc::ProcNodeRegistry::add("general IO", "VideoRecorder", act::proc::VideoRecorderProcNode::create);
+    act::proc::ProcNodeRegistry::add("general IO", "Noise", act::proc::NoiseProcNode::create);
 
     act::proc::ProcNodeRegistry::add("literal", "Boolean", act::proc::BooleanProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "Color", act::proc::ColorProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "ColorMapping", act::proc::ColorMappingProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Number", act::proc::NumberProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "Position", act::proc::PositionProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "String", act::proc::StringProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Vector2", act::proc::Vector2ProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Vector3", act::proc::Vector3ProcNode::create);
