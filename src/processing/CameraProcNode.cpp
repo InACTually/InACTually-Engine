@@ -27,8 +27,8 @@ act::proc::CameraProcNode::CameraProcNode() : ProcNodeBase("Camera", NT_INPUT) {
 	m_selectedCamera = 0;
 
 	m_cameraImageInPort = createImageInput("cameraImage", [&](cv::UMat image) {
-		if(m_cameraRoomNode)
-			m_cameraImageOutPort->send(image, m_cameraRoomNode);
+		if (m_cameraRoomNode)
+			m_cameraImageOutPort->send(image); // , m_cameraRoomNode);
 
 		if (m_show) {
 			m_captureTexture = gl::Texture2d::create(fromOcv(image));
