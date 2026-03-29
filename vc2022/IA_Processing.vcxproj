@@ -160,6 +160,7 @@
     <ClInclude Include="..\include\processing\KeyInProcNode.hpp" />
     <ClInclude Include="..\include\processing\KinectProcNode.hpp" />
     <ClInclude Include="..\include\processing\LLMProcNode.hpp" />
+    <ClInclude Include="..\include\processing\LidarProcNode.hpp" />
     <ClInclude Include="..\include\processing\LinkerProcNode.hpp" />
     <ClInclude Include="..\include\processing\MarkerDetectionProcNode.hpp" />
     <ClInclude Include="..\include\processing\MarkerProcNode.hpp" />
@@ -233,6 +234,7 @@
     <ClCompile Include="..\src\processing\JsonMsgProcNode.cpp" />
     <ClCompile Include="..\src\processing\KinectProcNode.cpp" />
     <ClCompile Include="..\src\processing\LLMProcNode.cpp" />
+    <ClCompile Include="..\src\processing\LidarProcNode.cpp" />
     <ClCompile Include="..\src\processing\LinkerProcNode.cpp" />
     <ClCompile Include="..\src\processing\MarkerDetectionProcNode.cpp" />
     <ClCompile Include="..\src\processing\MarkerProcNode.cpp" />

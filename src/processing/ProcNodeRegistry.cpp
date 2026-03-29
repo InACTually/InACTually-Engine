@@ -94,6 +94,7 @@
 #include "CameraProcNode.hpp"
 #include "KeyInProcNode.hpp"
 #include "LLMProcNode.hpp"
+#include "LiDARProcNode.hpp"
 #include "MicrophoneProcNode.hpp"
 #include "MonitorProcNode.hpp"
 #include "NoiseProcNode.hpp"
@@ -175,6 +176,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("general IO", "Camera", act::proc::CameraProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "KeyIn", act::proc::KeyInProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "LLM", act::proc::LLMProcNode::create);
+    act::proc::ProcNodeRegistry::add("general IO", "Lidar", act::proc::LidarProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Microphone", act::proc::MicrophoneProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Monitor", act::proc::MonitorProcNode::create);
     act::proc::ProcNodeRegistry::add("general IO", "Noise", act::proc::NoiseProcNode::create);

@@ -26,6 +26,7 @@
     <Filter Include="Source Files\object marker" />
     <Filter Include="Source Files\person" />
     <Filter Include="Source Files\literal" />
+    <Filter Include="Source Files\video image" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp">
@@ -157,35 +158,32 @@
     <ClCompile Include="..\src\processing\TriggerListProcNode.cpp">
       <Filter>Source Files\timeline</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\BackgroundSubstractionProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\ColorProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\ColorMappingProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\DistributorProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\IfProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\ImageEnhancerProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\NoiseProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\NumberEnhancerProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\PositionProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\SpeedProcNode.cpp">
       <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\BackgroundSubstractionProcNode.cpp">
+      <Filter>Source Files\video image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\ImageEnhancerProcNode.cpp">
+      <Filter>Source Files\video image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\VideoMixerProcNode.cpp">
+      <Filter>Source Files\video image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\VideoPlayerProcNode.cpp">
+      <Filter>Source Files\video image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\VideoRecorderProcNode.cpp">
+      <Filter>Source Files\video image</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\CameraProcNode.cpp">
       <Filter>Source Files\general io</Filter>
@@ -196,22 +194,31 @@
     <ClCompile Include="..\src\processing\LLMProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\LidarProcNode.cpp">
+      <Filter>Source Files\general io</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\MonitorProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\VideoPlayerProcNode.cpp">
-      <Filter>Source Files\general io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\VideoRecorderProcNode.cpp">
+    <ClCompile Include="..\src\processing\NoiseProcNode.cpp">
       <Filter>Source Files\general io</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\BooleanProcNode.cpp">
       <Filter>Source Files\literal</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\ColorProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\ColorMappingProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\NumberProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\PositionProcNode.cpp">
       <Filter>Source Files\literal</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\StringProcNode.cpp">
@@ -372,35 +379,32 @@
     <ClInclude Include="..\include\processing\TriggerListProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\BackgroundSubstractionProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\ColorProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\ColorMappingProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\DistributorProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\IfProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\ImageEnhancerProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\NoiseProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\PositionProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\SpeedProcNode.hpp">
       <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\BackgroundSubstractionProcNode.hpp">
+      <Filter>Source Files\video image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\ImageEnhancerProcNode.hpp">
+      <Filter>Source Files\video image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\VideoMixerProcNode.hpp">
+      <Filter>Source Files\video image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\VideoPlayerProcNode.hpp">
+      <Filter>Source Files\video image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
+      <Filter>Source Files\video image</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\CameraProcNode.hpp">
       <Filter>Source Files\general io</Filter>
@@ -411,22 +415,31 @@
     <ClInclude Include="..\include\processing\LLMProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\LidarProcNode.hpp">
+      <Filter>Source Files\general io</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\MonitorProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\VideoPlayerProcNode.hpp">
-      <Filter>Source Files\general io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\VideoRecorderProcNode.hpp">
+    <ClInclude Include="..\include\processing\NoiseProcNode.hpp">
       <Filter>Source Files\general io</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\BooleanProcNode.hpp">
       <Filter>Source Files\literal</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\ColorProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\ColorMappingProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\NumberProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\PositionProcNode.hpp">
       <Filter>Source Files\literal</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\StringProcNode.hpp">
