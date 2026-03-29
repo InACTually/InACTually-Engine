@@ -51,4 +51,6 @@ ci::Json act::proc::StringProcNode::toParams() {
 
 void act::proc::StringProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "text", m_text);
+
+	m_outPort->send(m_text);
 }

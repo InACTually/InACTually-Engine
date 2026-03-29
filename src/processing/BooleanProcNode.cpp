@@ -55,4 +55,6 @@ ci::Json act::proc::BooleanProcNode::toParams() {
 
 void act::proc::BooleanProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "boolean", m_boolean);
+
+	m_outPort->send(m_boolean);
 }

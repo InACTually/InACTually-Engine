@@ -56,4 +56,6 @@ ci::Json act::proc::Vector3ProcNode::toParams() {
 
 void act::proc::Vector3ProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "vector", m_vector);
+
+	m_outPort->send(m_vector);
 }

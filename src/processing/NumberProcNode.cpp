@@ -56,4 +56,6 @@ ci::Json act::proc::NumberProcNode::toParams() {
 
 void act::proc::NumberProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "number", m_number);
+
+	m_outPort->send(m_number);
 }
