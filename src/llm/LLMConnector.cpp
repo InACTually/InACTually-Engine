@@ -246,6 +246,9 @@ void act::llm::LLMConnector::fetchAvailableModels() {
 		CI_LOG_W("[LLMConnector] fetchAvailableModels failed: " << e.what());
 	}
 
+	m_availableModels.push_back("minimax-m2.7:cloud");
+	m_availableModels.push_back("minimax-m2:cloud");
+
 	bool found = false;
 	for (auto& name : m_availableModels) {
 		if (name == m_model) { found = true; break; }
