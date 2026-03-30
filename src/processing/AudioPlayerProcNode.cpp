@@ -62,7 +62,6 @@ act::proc::AudioPlayerProcNode::AudioPlayerProcNode() : ProcNodeBase("AudioPlaye
 	m_gain			= ctx->makeNode(new audio::GainNode(audio::decibelToLinear(m_volume.value())));
 	m_router		= ctx->makeNode(new audio::ChannelRouterNode());
 	m_bufferPlayer >> m_gain;
-	route();
 }
 
 act::proc::AudioPlayerProcNode::~AudioPlayerProcNode() {
@@ -118,7 +117,7 @@ void act::proc::AudioPlayerProcNode::update() {
 	}
 
 	if (m_bufferPlayer && m_isPlaying) { 
-		m_audioOut->send(m_bufferPlayer);
+		//m_audioOut->send(m_bufferPlayer);
 	} 
 	
 	m_isPlayingOut->send(m_isPlaying);
@@ -142,7 +141,7 @@ void act::proc::AudioPlayerProcNode::draw() {
 	bool prvntDrag = false;
 
 	ImGui::SameLine();
-	if(ImGui::InputInt("channel", &m_channel, 1, 2)) {
+	if (ImGui::DragInt("channel", &m_channel, 1, 2)) {
 		m_channel = std::clamp(m_channel, 0, 127);
 		route();
 		prvntDrag = true;
@@ -222,43 +221,40 @@ void act::proc::AudioPlayerProcNode::loadSound(std::string path) {
 	}
 
 	m_gain->disconnectAll();
+	
+	m_buffer = m_sourceFile->loadBuffer();
+	m_bufferPlayer->setBuffer(m_buffer);
 
-	if (!m_isStretching) {
-		m_buffer = m_sourceFile->loadBuffer();
-		m_bufferPlayer->setBuffer(m_buffer);
+	m_normalized = false;
+	m_bufferPlayer->stop(); //required to push 0s to outputPort, otherwise the track has to be silent for a few frames
+	m_isPlaying = false;
+	m_bufferPlayer->seek(0);
 
-		m_normalized = false;
-		m_bufferPlayer->stop(); //required to push 0s to outputPort, otherwise the track has to be silent for a few frames
-		m_isPlaying = false;
-		m_bufferPlayer->seek(0);
+	auto waveform = WaveformPlot();
+	waveform.load(m_buffer, Rectf(vec2(0, 0), m_drawSize));
 
-		auto ctx = audio::Context::master();
-		m_bufferPlayer >> m_gain >> ctx->getOutput();
+	gl::Fbo::Format format;
+	format.setSamples(4);
+	auto fbo = gl::Fbo::create(m_drawSize.x, m_drawSize.y, format);
+	{
+		gl::ScopedFramebuffer fbScp(fbo);
+		gl::ScopedViewport scpVp(ivec2(0), fbo->getSize());
 
-		auto waveform = WaveformPlot();
-		waveform.load(m_buffer, Rectf(vec2(0, 0), m_drawSize));
+		gl::ScopedMatrices scpMatrices;
+		gl::setMatricesWindow(fbo->getSize(), true);
 
-		gl::Fbo::Format format;
-		format.setSamples(4);
-		auto fbo = gl::Fbo::create(m_drawSize.x, m_drawSize.y, format);
-		{
-			gl::ScopedFramebuffer fbScp(fbo);
-			gl::ScopedViewport scpVp(ivec2(0), fbo->getSize());
+		gl::clear(util::Design::backgroundColor());
 
-			gl::ScopedMatrices scpMatrices;
-			gl::setMatricesWindow(fbo->getSize(), true);
-
-			gl::clear(util::Design::backgroundColor());
-
-			waveform.draw();
-		}
-		m_waveformTex = fbo->getColorTexture();	
+		waveform.draw();
 	}
-	else {
+	m_waveformTex = fbo->getColorTexture();	
+	
+	if (m_isStretching) {
 		auto ctx = audio::Context::master();
 		m_stretch = ctx->makeNode(new aio::TimeStretchingNode(m_sourceFile, 120));
-		m_stretch >> m_gain >> ctx->getOutput();
 	}
+
+	route();
 
 }
 
@@ -292,17 +288,32 @@ void act::proc::AudioPlayerProcNode::fromParams(ci::Json json) {
 
 void act::proc::AudioPlayerProcNode::route()
 {
-	m_router->disconnectAll();
-	auto ctx = audio::Context::master();
+	if (!m_buffer)
+		return;
 
+	m_router->disconnectAll();
+	m_gain->disconnectAll();
+	m_bufferPlayer->disconnectAll();
+
+	if (m_isStretching) {
+		m_bufferPlayer >> m_stretch >> m_gain;
+	}
+	else {
+		m_bufferPlayer >> m_gain;
+	}
+
+	auto ctx = audio::Context::master();
 	int inputChannel = m_buffer->getNumChannels();
 	int outputChannel = ctx->getOutput()->getNumChannels();
 	
 	for(int in = 0; in < inputChannel; in++) {
 		int out = (in + m_channel);
+
 		if (out < outputChannel)
 			m_gain >> m_router->route(in, out) >> ctx->getOutput();
 	}
+
+	ctx->enable();
 }
 
 void act::proc::AudioPlayerProcNode::setPlaySpeed(float speed)
