@@ -81,6 +81,7 @@
 #include "DistributorProcNode.hpp"
 #include "IfProcNode.hpp"
 #include "NumberEnhancerProcNode.hpp"
+#include "NumberSwitchProcNode.hpp"
 #include "SpeedProcNode.hpp"
 
 // Video & Image
@@ -165,6 +166,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "If", act::proc::IfProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);
+    act::proc::ProcNodeRegistry::add("Utility", "NumberSwitch", act::proc::NumberSwitchProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Speed", act::proc::SpeedProcNode::create);
 
     act::proc::ProcNodeRegistry::add("Video & Image", "BackgroundSubstraction", act::proc::BackgroundSubstractionProcNode::create);

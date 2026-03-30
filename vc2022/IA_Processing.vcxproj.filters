@@ -167,6 +167,9 @@
     <ClCompile Include="..\src\processing\NumberEnhancerProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\NumberSwitchProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\SpeedProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
@@ -386,6 +389,9 @@
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\NumberSwitchProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\SpeedProcNode.hpp">
