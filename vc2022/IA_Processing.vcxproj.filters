@@ -158,6 +158,9 @@
     <ClCompile Include="..\src\processing\TriggerListProcNode.cpp">
       <Filter>Source Files\timeline</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\BooleanImpulsProcNode.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\DistributorProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
@@ -381,6 +384,9 @@
     </ClInclude>
     <ClInclude Include="..\include\processing\TriggerListProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\BooleanImpulsProcNode.hpp">
+      <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\DistributorProcNode.hpp">
       <Filter>Source Files\utility</Filter>

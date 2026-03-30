@@ -78,6 +78,7 @@
 #include "TriggerListProcNode.hpp"
 
 // Utility
+#include "BooleanImpulsProcNode.hpp"
 #include "DistributorProcNode.hpp"
 #include "IfProcNode.hpp"
 #include "NumberEnhancerProcNode.hpp"
@@ -163,6 +164,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Timeline", "Easing", act::proc::EasingProcNode::create);
     act::proc::ProcNodeRegistry::add("Timeline", "TriggerList", act::proc::TriggerListProcNode::create);
 
+    act::proc::ProcNodeRegistry::add("Utility", "BooleanImpuls", act::proc::BooleanImpulsProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "If", act::proc::IfProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);

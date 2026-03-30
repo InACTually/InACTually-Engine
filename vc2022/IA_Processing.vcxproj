@@ -139,6 +139,7 @@
     <ClInclude Include="..\include\processing\BodyToSoundProcNode.hpp" />
     <ClInclude Include="..\include\processing\BodyTrackingProcNode.hpp" />
     <ClInclude Include="..\include\processing\BoneVectorProcNode.hpp" />
+    <ClInclude Include="..\include\processing\BooleanImpulsProcNode.hpp" />
     <ClInclude Include="..\include\processing\BooleanProcNode.hpp" />
     <ClInclude Include="..\include\processing\CameraProcNode.hpp" />
     <ClInclude Include="..\include\processing\CircleMovementProcNode.hpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="..\include\processing\MultiBodyPositionsProcNode.hpp" />
     <ClInclude Include="..\include\processing\NetworkProcNode.hpp" />
     <ClInclude Include="..\include\processing\NumberProcNode.hpp" />
+    <ClInclude Include="..\include\processing\NumberSwitchProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp" />
     <ClInclude Include="..\include\processing\ProcNodeBase.hpp" />
@@ -214,6 +216,7 @@
     <ClCompile Include="..\src\processing\BodyToSoundProcNode.cpp" />
     <ClCompile Include="..\src\processing\BodyTrackingProcNode.cpp" />
     <ClCompile Include="..\src\processing\BoneVectorProcNode.cpp" />
+    <ClCompile Include="..\src\processing\BooleanImpulsProcNode.cpp" />
     <ClCompile Include="..\src\processing\BooleanProcNode.cpp" />
     <ClCompile Include="..\src\processing\CameraProcNode.cpp" />
     <ClCompile Include="..\src\processing\CircleMovementProcNode.cpp" />
@@ -249,6 +252,7 @@
     <ClCompile Include="..\src\processing\MultiBodyPositionsProcNode.cpp" />
     <ClCompile Include="..\src\processing\NetworkProcNode.cpp" />
     <ClCompile Include="..\src\processing\NumberProcNode.cpp" />
+    <ClCompile Include="..\src\processing\NumberSwitchProcNode.cpp" />
     <ClCompile Include="..\src\processing\OSCRecieverProcNode.cpp" />
     <ClCompile Include="..\src\processing\OSCSplitterProcNode.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp" />
