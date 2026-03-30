@@ -140,7 +140,7 @@ void act::aio::AudioDeviceManager::refreshDeviceList()
 		case 1: // key: x - driver - name
 			{
 				std::vector<std::string> entries = util::splitString(line, " - ");
-				device.key		= util::splitString(entries[0], ": ")[1];
+				device.key = util::splitString(line, ": ")[1]; // util::splitString(entries[0], ": ")[1];
 				if(entries.size() > 1)
 					device.driver	= entries[1];
 				if(entries.size() > 2)
@@ -241,6 +241,7 @@ void act::aio::AudioDeviceManager::setFormat(ci::audio::DeviceRef device)
 
 void act::aio::AudioDeviceManager::setupOutputDevice(std::string key)
 {
+	auto dvMgr = ci::audio::master()->deviceManager();
 	ci::audio::DeviceRef device = ci::audio::master()->deviceManager()->findDeviceByKey(key);// , false, true);
 	if (device) {
 		setFormat(device);
