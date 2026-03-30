@@ -94,7 +94,7 @@
 #include "CameraProcNode.hpp"
 #include "KeyInProcNode.hpp"
 #include "LLMProcNode.hpp"
-#include "LiDARProcNode.hpp"
+#include "LidarProcNode.hpp"
 #include "MicrophoneProcNode.hpp"
 #include "MonitorProcNode.hpp"
 #include "NoiseProcNode.hpp"
