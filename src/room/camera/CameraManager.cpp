@@ -23,7 +23,7 @@
 act::room::CameraManager::CameraManager()
 	: RoomNodeManagerBase("cameraManager")
 {
-	m_selectedDevice = 0;
+	m_selectedDevice = -1;
 	m_usedDevicesNames = std::vector<std::string>(0);
 	refreshLists();
 	
@@ -89,7 +89,7 @@ void act::room::CameraManager::update()
 	for (auto&& node : m_nodes) {
 		node->update();
 	}
-	if (m_selectedDevice != m_prevSelectedDevice) {
+	if (m_selectedDevice > 0 && m_selectedDevice != m_prevSelectedDevice) {
 		if(m_availableDeviceNames.size() > 0) {
 			setCameraByDeviceName(m_availableDeviceNames[m_selectedDevice]);
 
