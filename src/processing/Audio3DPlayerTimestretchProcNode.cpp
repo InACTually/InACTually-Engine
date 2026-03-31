@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2025
+	This file is created and substantially modified: 2022-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -113,6 +113,8 @@ void act::proc::Audio3DPlayerTimestretchProcNode::update() {
 
 void act::proc::Audio3DPlayerTimestretchProcNode::draw() {
 	beginNodeDraw();
+
+	ImGui::Text(m_filename.c_str());
 
 	if(ImGui::Button("load")) {
 		m_isOpenDialog = true;
@@ -258,11 +260,14 @@ void act::proc::Audio3DPlayerTimestretchProcNode::setPlaySpeed(float speed)
 void act::proc::Audio3DPlayerTimestretchProcNode::loadSound(std::filesystem::path path) {
 	if(path != "") {
 		try {
-			m_soundRoomNode = m_audioMgr->createSoundFile(m_3DPosition, path, 0.2f, path.filename().string(), true);
+			m_filename = path.filename().string();
+			m_soundRoomNode = m_audioMgr->createSoundFile(m_3DPosition, path, 0.2f, m_filename, true);
 			
 			m_soundRoomNode->setVolume(m_toVolume);
 			m_soundRoomNode->setFadeIn(m_fadeInPosition);
 			m_soundRoomNode->setFadeOut(m_fadeOutPosition);
+			m_soundRoomNode->loop(m_isLooping);
+		
 			set3DPosition(m_3DPosition);
 			
 
@@ -298,12 +303,13 @@ void act::proc::Audio3DPlayerTimestretchProcNode::loadSound(std::filesystem::pat
 ci::Json act::proc::Audio3DPlayerTimestretchProcNode::toParams() {
 	ci::Json json = ci::Json::object();
 	json["path"]			= m_path;
+	json["filename"]		= m_filename;
 	json["isPlaying"]		= m_isPlaying;
 	json["showWaveform"]	= m_showWaveform;
 	json["isCollapsed"]		= m_isCollapsed;
 	json["toVolume"]		= m_toVolume;
 	json["volume"]			= m_volume.value();
-	json["looping"]			= m_isLooping;
+	json["isLooping"]			= m_isLooping;
 	json["fadeInPosition"]  = m_fadeInPosition;
 	json["fadeOutPosition"] = m_fadeOutPosition;
 	json["playPosition"]	= m_playPosition;
@@ -366,7 +372,10 @@ void act::proc::Audio3DPlayerTimestretchProcNode::fromParams(ci::Json json) {
 		if (m_soundRoomNode)
 			m_soundRoomNode->setFadeOut(m_fadeOutPosition);
 	};
-	util::setValueFromJson(json, "looping", m_isLooping);
+	if (util::setValueFromJson(json, "isLooping", m_isLooping)) {
+		if (m_soundRoomNode)
+			m_soundRoomNode->loop(m_isLooping);
+	}
 	util::setValueFromJson(json, "showWaveform", m_showWaveform);
 	util::setValueFromJson(json, "isCollapsed", m_isCollapsed);
 }

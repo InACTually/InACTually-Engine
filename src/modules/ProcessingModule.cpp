@@ -281,10 +281,11 @@ void act::mod::ProcessingModule::saveToFile(fs::path path) {
 
 ci::Json act::mod::ProcessingModule::getFullDescription()
 {
-	ci::Json nodeConfiguration = ci::Json::object();
+	ci::Json description = ci::Json::object();
 	
-	auto containers = ci::Json::array();
+	description["isActive"] = m_isActive;
 
+	auto containers = ci::Json::array();
 	for (auto&& container : m_containers) {
 		auto containerJson = ci::Json::object();
 		containerJson["uid"] = container->getUID();
@@ -295,9 +296,9 @@ ci::Json act::mod::ProcessingModule::getFullDescription()
 
 		containers.push_back(containerJson);
 	}
-
-	nodeConfiguration["containers"] = containers;
-	return nodeConfiguration;
+	description["containers"] = containers;
+	
+	return description;
 }
 
 void act::mod::ProcessingModule::load(std::filesystem::path path)
@@ -341,12 +342,18 @@ void act::mod::ProcessingModule::deleteNodeByUID(act::UID uid) {
 //TODO Refactor. put that stuff to container node from JSON
 void act::mod::ProcessingModule::loadFromFile(fs::path path) { 
 	
-	ci::Json nodeConfiguration = ci::loadJson(loadFile(path));
+	ci::Json description = ci::loadJson(loadFile(path));
+
+	util::setValueFromJson(description, "isActive", m_isActive);
+
+	if (!description.contains("containers"))
+		return;
+
 	std::vector<std::pair<proc::ContainerProcNodeRef, act::UID>> containerToContainerMap;
 	std::vector<std::pair<proc::ContainerProcNodeRef, std::pair<std::string, std::string>>> containerToLinkMap;
 	std::vector<std::pair<proc::ContainerProcNodeRef, ci::Json>> containerToParamsMap;
 
-	for (auto&& container : nodeConfiguration["containers"]) {
+	for (auto&& container : description["containers"]) {
 		act::UID containerUid = container["uid"];
 		std::string name = container["name"];
 

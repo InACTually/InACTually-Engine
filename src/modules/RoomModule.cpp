@@ -334,16 +334,32 @@ void act::mod::RoomModule::saveToFile(fs::path path) {
 
 ci::Json act::mod::RoomModule::getFullDescription()
 {
-	auto roomConfiguration = ci::Json::object();
+	auto description = ci::Json::object();
 
-	roomConfiguration["stage"] = m_stage->toJson();
+	description["isActive"] = m_isActive;
+	description["stage"] = m_stage->toJson();
+	description["roomParams"] = toParams();
+
 	for (auto&& mgr : m_roomMgrs.list)
-		roomConfiguration[mgr->getName()] = mgr->toJson();
+		description[mgr->getName()] = mgr->toJson();
 
-	roomConfiguration["roomParams"] = toParams();
-
-	return roomConfiguration;
+	return description;
 }
+
+void act::mod::RoomModule::loadFromFile(fs::path path) {
+	ci::Json description = ci::loadJson(loadFile(path));
+
+	util::setValueFromJson(description, "isActive", m_isActive);
+	m_stage->fromJson(description["stage"]);
+	if (description.contains("roomParams"))
+		fromParams(description["roomParams"]);
+
+	for (auto&& mgr : m_roomMgrs.list) {
+		if (description.contains(mgr->getName()))
+			mgr->fromJson(description[mgr->getName()]);
+	}
+}
+
 
 std::vector<std::string> act::mod::RoomModule::getNodeNames()
 {
@@ -353,19 +369,6 @@ std::vector<std::string> act::mod::RoomModule::getNodeNames()
 	}
 	return nodeNames;
 }
-
-void act::mod::RoomModule::loadFromFile(fs::path path) {
-	ci::Json roomConfiguration = ci::loadJson(loadFile(path));
-
-	m_stage->fromJson(roomConfiguration["stage"]);
-	for (auto&& mgr : m_roomMgrs.list) {
-		if (roomConfiguration.contains(mgr->getName()))
-			mgr->fromJson(roomConfiguration[mgr->getName()]);
-	}
-	if (roomConfiguration.contains("roomParams"))
-		fromParams(roomConfiguration["roomParams"]);
-}
-
 
 bool act::mod::RoomModule::hasNodeWithUID(act::UID uid)
 {

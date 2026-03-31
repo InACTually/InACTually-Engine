@@ -224,3 +224,17 @@ void act::room::SoundFileRoomNode::setVolume(float volume, float rampDuration)
 		m_gain->setValue(audio::decibelToLinear(m_volume));
 	});
 }
+
+ci::Json act::room::SoundFileRoomNode::toParams() {
+	ci::Json json = SoundRoomNode::toParams();
+	json["speed"] = m_speed;
+	json["isLooping"] = m_isLooping;
+	json["noTimestretch"] = m_noTimestretch;
+	return json;
+}
+
+void act::room::SoundFileRoomNode::fromParams(ci::Json json) {
+	util::setValueFromJson(json, "speed", m_speed);
+	util::setValueFromJson(json, "isLooping", m_isLooping);
+	util::setValueFromJson(json, "noTimestretch", m_noTimestretch);
+}

@@ -55,6 +55,7 @@ namespace act {
 			room::AudioManagerRef			m_audioMgr;
 
 			std::string						m_path;
+			std::string						m_filename;
 			ci::Anim<float>					m_volume;
 			float							m_toVolume;
 

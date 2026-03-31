@@ -87,19 +87,22 @@ void act::mod::NetworkModule::saveToFile(fs::path path) {
 
 ci::Json act::mod::NetworkModule::getFullDescription()
 {
-	ci::Json networkInformation = ci::Json::object();
+	ci::Json description = ci::Json::object();
 
-	networkInformation["network"] = m_networkMgr->toJson(); // networkManager:
+	description["isActive"] = m_isActive;
+	description["network"] = m_networkMgr->toJson(); // networkManager:
 
-	return networkInformation;
+	return description;
 }
 
 void act::mod::NetworkModule::loadFromFile(fs::path path) {
 
-	ci::Json networkInformation = ci::loadJson(loadFile(path));
+	ci::Json description = ci::loadJson(loadFile(path));
 
-	if (networkInformation.contains("networkManager")) {
-		m_networkMgr->fromJson(networkInformation["networkManager"]);
+	util::setValueFromJson(description, "isActive", m_isActive);
+
+	if (description.contains("networkManager")) {
+		m_networkMgr->fromJson(description["networkManager"]);
 	}
 	
 }

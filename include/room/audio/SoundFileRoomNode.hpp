@@ -46,6 +46,9 @@ namespace act {
 			void stop();
 			void loop(bool isLooping = true);
 
+			ci::Json toParams() override;
+			void fromParams(ci::Json json) override;
+
 			std::function<void()> finishedLoadingFn = []() {};
 			std::function<void()> finishedPlayingFn = []() {};
 

@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021,2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -111,15 +111,27 @@ void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 
 ci::Json act::proc::VideoPlayerProcNode::toParams() {
 	ci::Json json = ci::Json::object();
+
+	json["path"] = m_path;
+	json["resuming"] = m_isResuming;
+	json["looping"] = m_isLooping;
+
 	return json;
 }
 
 void act::proc::VideoPlayerProcNode::fromParams(ci::Json json) {
+	util::setValueFromJson(json, "path", m_path);
+	util::setValueFromJson(json, "resuming", m_isResuming);
+	util::setValueFromJson(json, "looping", m_isLooping);
 
+	loadVideo(m_path);
 }
 
 void act::proc::VideoPlayerProcNode::loadVideo(std::string path)
 {
+	if (path == "")
+		return;
+
 	m_path = path;
 	 m_inputVideo = cv::VideoCapture(path);              // Open input
 	if (!m_inputVideo.isOpened())

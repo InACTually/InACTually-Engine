@@ -80,13 +80,7 @@ void act::mod::DisplayModule::drawGUI() {
 
 	ImGui::End();
 }
-void act::mod::DisplayModule::loadFromFile(fs::path path) {
 
-	ci::Json description = ci::loadJson(loadFile(path));
-
-	/*for (auto&& childs : nodeConfiguration.getChild("monitoring").getChildren()) {
-	}*/
-}
 void act::mod::DisplayModule::saveToFile(fs::path path) {
 	ci::writeJson(path, getFullDescription());
 }
@@ -94,7 +88,16 @@ void act::mod::DisplayModule::saveToFile(fs::path path) {
 ci::Json act::mod::DisplayModule::getFullDescription()
 {
 	ci::Json description = ci::Json::object();
-	description["params"]["something"] = "";
+	description["isActive"] = m_isActive;
 
 	return description;
+}
+
+void act::mod::DisplayModule::loadFromFile(fs::path path) {
+
+	ci::Json description = ci::loadJson(loadFile(path));
+
+	util::setValueFromJson(description, "isActive", m_isActive);
+	/*for (auto&& childs : nodeConfiguration.getChild("monitoring").getChildren()) {
+	}*/
 }

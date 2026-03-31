@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2025
+	This file is created and substantially modified: 2022-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -47,7 +47,7 @@ act::proc::Audio3DPlayerProcNode::Audio3DPlayerProcNode() : ProcNodeBase("Audio3
 	addRPC("stop", [&]() { return stop(); });
 	
 	auto trigger	= createBoolInput("fire",		[&](bool event)  { this->onTrigger(event); });
-	auto gain		= createNumberInput("gain",		[&](float event)  { m_soundRoomNode->setVolume(audio::linearToDecibel(event)); });
+	auto gain		= createNumberInput("gain",		[&](float event)  { if(m_soundRoomNode) m_soundRoomNode->setVolume(audio::linearToDecibel(event)); });
 	auto position	= createVec3Input("position",	[&](vec3 event)  { set3DPosition(event); });
 	auto speed		= createNumberInput("speed",	[&](float event) { setPlaySpeed(event); });
 	
@@ -267,6 +267,8 @@ void act::proc::Audio3DPlayerProcNode::loadSound(std::filesystem::path path) {
 			m_soundRoomNode->setVolume(m_toVolume);
 			m_soundRoomNode->setFadeIn(m_fadeInPosition);
 			m_soundRoomNode->setFadeOut(m_fadeOutPosition);
+			m_soundRoomNode->loop(m_isLooping);
+
 			set3DPosition(m_3DPosition);
 			
 

@@ -324,9 +324,7 @@ void act::mod::LLMModule::sendRequest(const std::string& userMessage) {
 	);
 }
 
-ci::Json act::mod::LLMModule::getFullDescription() {
-	return m_llmConnector->toJson();
-}
+
 
 void act::mod::LLMModule::load(std::filesystem::path path) {
 	loadFromFile(path);
@@ -336,15 +334,29 @@ void act::mod::LLMModule::save(std::filesystem::path path) {
 	saveToFile(path);
 }
 
+void act::mod::LLMModule::saveToFile(std::filesystem::path path) {
+	ci::writeJson(path, getFullDescription());
+}
+
+ci::Json act::mod::LLMModule::getFullDescription() {
+	auto description = ci::Json::object(); 
+
+	description["isActive"] = m_isActive;
+	description["connector"] = m_llmConnector->toJson();
+
+	return description;
+}
+
 void act::mod::LLMModule::loadFromFile(std::filesystem::path path) {
 	try {
-		m_llmConnector->fromJson(ci::loadJson(loadFile(path)));
+		ci::Json description = ci::loadJson(loadFile(path));
+
+		util::setValueFromJson(description, "isActive", m_isActive);
+		if(description.contains("connector"))
+			m_llmConnector->fromJson(description["connector"]);
 	}
 	catch (...) {
 		CI_LOG_W("[LLMModule] could not load from file: " << path.string());
 	}
 }
 
-void act::mod::LLMModule::saveToFile(std::filesystem::path path) {
-	ci::writeJson(path, getFullDescription());
-}
