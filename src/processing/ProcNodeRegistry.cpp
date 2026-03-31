@@ -43,6 +43,13 @@
 #include "DMXDimmerProcNode.hpp"
 #include "MovingHeadProcNode.hpp"
 
+// Math & Logic
+#include "AddProcNode.hpp"
+#include "BooleanImpulsProcNode.hpp"
+#include "IfProcNode.hpp"
+#include "MultiplyProcNode.hpp"
+#include "notProcNode.hpp"
+
 // Network
 #include "JsonMsgProcNode.hpp"
 #include "NetworkProcNode.hpp"
@@ -78,9 +85,7 @@
 #include "TriggerListProcNode.hpp"
 
 // Utility
-#include "BooleanImpulsProcNode.hpp"
 #include "DistributorProcNode.hpp"
-#include "IfProcNode.hpp"
 #include "NumberEnhancerProcNode.hpp"
 #include "NumberSwitchProcNode.hpp"
 #include "SpeedProcNode.hpp"
@@ -135,6 +140,12 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Light", "DMXDimmer", act::proc::DMXDimmerProcNode::create);
     act::proc::ProcNodeRegistry::add("Light", "MovingHead", act::proc::MovingHeadProcNode::create);
 
+    act::proc::ProcNodeRegistry::add("Math & Logic", "Add", act::proc::AddProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "BooleanImpuls", act::proc::BooleanImpulsProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "If", act::proc::IfProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "Multiply", act::proc::MultiplyProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "not", act::proc::notProcNode::create);
+
     act::proc::ProcNodeRegistry::add("Network", "JsonMsg", act::proc::JsonMsgProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "Network", act::proc::NetworkProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "OSCMsg", act::proc::OSCMsgProcNode::create);
@@ -164,9 +175,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Timeline", "Easing", act::proc::EasingProcNode::create);
     act::proc::ProcNodeRegistry::add("Timeline", "TriggerList", act::proc::TriggerListProcNode::create);
 
-    act::proc::ProcNodeRegistry::add("Utility", "BooleanImpuls", act::proc::BooleanImpulsProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
-    act::proc::ProcNodeRegistry::add("Utility", "If", act::proc::IfProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberSwitch", act::proc::NumberSwitchProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "Speed", act::proc::SpeedProcNode::create);

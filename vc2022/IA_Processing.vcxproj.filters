@@ -27,6 +27,7 @@
     <Filter Include="Source Files\person" />
     <Filter Include="Source Files\literal" />
     <Filter Include="Source Files\video image" />
+    <Filter Include="Source Files\math logic" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\processing\ProcNodeBase.cpp">
@@ -85,6 +86,21 @@
     </ClCompile>
     <ClCompile Include="..\src\processing\MovingHeadProcNode.cpp">
       <Filter>Source Files\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\AddProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\BooleanImpulsProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\IfProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\MultiplyProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\notProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\JsonMsgProcNode.cpp">
       <Filter>Source Files\network</Filter>
@@ -158,13 +174,7 @@
     <ClCompile Include="..\src\processing\TriggerListProcNode.cpp">
       <Filter>Source Files\timeline</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\BooleanImpulsProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\DistributorProcNode.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\IfProcNode.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\NumberEnhancerProcNode.cpp">
@@ -313,6 +323,21 @@
     <ClInclude Include="..\include\processing\MovingHeadProcNode.hpp">
       <Filter>Source Files\light</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\processing\AddProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\BooleanImpulsProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\IfProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MultiplyProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\notProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\processing\JsonMsgProcNode.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
@@ -385,13 +410,7 @@
     <ClInclude Include="..\include\processing\TriggerListProcNode.hpp">
       <Filter>Source Files\timeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\BooleanImpulsProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\DistributorProcNode.hpp">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\IfProcNode.hpp">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp">
