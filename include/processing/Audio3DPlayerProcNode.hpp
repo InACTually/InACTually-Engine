@@ -54,7 +54,7 @@ namespace act {
 			void init();
 			room::AudioManagerRef			m_audioMgr;
 
-			std::string						m_path;
+			std::vector<std::string>		m_paths;
 			ci::Anim<float>					m_volume;
 			float							m_toVolume;
 
@@ -68,7 +68,7 @@ namespace act {
 
 			vec3							m_3DPosition;
 			void							set3DPosition(vec3 position);
-			room::SoundFileRoomNodeRef		m_soundRoomNode;
+			std::vector<room::SoundFileRoomNodeRef>	 m_soundRoomNodes;
 			OutputPortRef<ci::audio::BufferRef>	m_bufferPort;
 			
 			float							m_playSpeed;
@@ -86,6 +86,8 @@ namespace act {
 
 			void loadSound(std::filesystem::path path);
 			bool m_isOpenDialog;
+			bool m_isAdding = false;
+			bool m_hasChannelSplit = false;
 			bool m_isPlaying;
 			bool m_isCollapsed  = false;
 			bool m_showWaveform = false;

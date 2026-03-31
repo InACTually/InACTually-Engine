@@ -162,13 +162,29 @@ void act::room::SoundFileRoomNode::loop(bool isLooping)
 	m_bufferPlayerNode->setLoopEnabled(m_isLooping);
 }
 
-void act::room::SoundFileRoomNode::loadFile(fs::path path)
+void act::room::SoundFileRoomNode::loadFile(fs::path path, bool isAdding)
 {
 	try {
 		auto source = ci::audio::load(ci::loadFile(path), ci::audio::Context::master()->getSampleRate());
 
 		ci::audio::BufferRef buffer = source->loadBuffer();
+
+		if (isAdding) {
+			auto buf = m_bufferPlayerNode->getBuffer();
+
+			ci::audio::BufferRef newBuffer = std::make_shared<ci::audio::Buffer>(buf->getNumFrames(), buf->getNumChannels() + buffer->getNumChannels());
+		
+			for(int i = 0; i < buf->getNumChannels(); i++) {
+				newBuffer->copyChannel(i, buf->getChannel(i));
+			}
+			for (int i = 0; i < buffer->getNumChannels(); i++) {
+				newBuffer->copyChannel(i + buf->getNumChannels(), buffer->getChannel(i));
+			}
+			buffer = newBuffer;
+		}
+
 		m_bufferPlayerNode->setBuffer(buffer);
+
 
 		if (!m_noTimestretch) {
 			m_gain->disconnectAll();

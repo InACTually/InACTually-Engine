@@ -30,7 +30,7 @@ act::room::SoundRoomNode::SoundRoomNode(ci::vec3 position, float radius, std::st
 	: AudioRoomNodeBase("sound", position, ci::vec3(0.0f), radius)
 {
 	setTriMesh(ci::TriMesh::create(ci::geom::Sphere()));
-
+	setCaption(name);
 }
 
 act::room::SoundRoomNode::~SoundRoomNode()

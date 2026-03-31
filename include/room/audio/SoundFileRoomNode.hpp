@@ -52,7 +52,7 @@ namespace act {
 			std::function<void()> finishedLoadingFn = []() {};
 			std::function<void()> finishedPlayingFn = []() {};
 
-			void loadFile(fs::path path);
+			void loadFile(fs::path path, bool isAdding = false);
 
 			float getPlayPosition() { return  (float)(m_bufferPlayerNode->getReadPositionTime() / m_bufferPlayerNode->getNumSeconds()); };
 			float getSeconds()		{ return  (float)(m_bufferPlayerNode->getNumSeconds()); };
