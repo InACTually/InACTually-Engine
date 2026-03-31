@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2023
+	This file is created and substantially modified: 2022-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -146,6 +146,9 @@ void act::room::SpeakerRoomNode::drawSpecificSettings()
 {
 	if (ImGui::InputInt("Channel", &m_channel, 1, 1)) {
 
+	}
+	if (ImGui::DragFloat("Volume", &m_volume.value(), 0.1f, 0.0f, 120.0f)) {
+		setVolume(m_volume, 0.1f);
 	}
 
 	ImGui::Separator();
