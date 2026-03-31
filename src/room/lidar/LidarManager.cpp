@@ -48,6 +48,17 @@ void act::room::LidarManager::cleanUp()
 	}
 }
 
+void act::room::LidarManager::update()
+{
+	if (!m_nodes.empty() && m_background.empty()) {
+		auto node = std::dynamic_pointer_cast<LDLidarRoomNode>(m_nodes[0]);
+		m_background = node->getData();
+	}
+	else {
+		calculate();
+	}
+}
+
 act::room::RoomNodeBaseRef act::room::LidarManager::drawMenu()
 {
 	if (ImGui::Button("refresh Devicelist")) {
@@ -221,4 +232,51 @@ act::room::RoomNodeBaseRef act::room::LidarManager::addDevice(std::string name)
 
 	CI_LOG_E("LidarManager: unknown device type in fixture: " << name);
 	return nullptr;
+}
+
+void act::room::LidarManager::calculate() {
+	float movement = 0.0f;
+	if (m_nodes.empty())
+		return;
+
+	auto node = dynamic_pointer_cast<LDLidarRoomNode>(m_nodes[0]);
+	auto data = node->getData();
+
+	if(m_latestData.empty()) {
+		m_latestData = data;
+		return;
+	}
+
+	// calculate movement as the average distance between the latest data and the new data
+	for (size_t i = 0; i < data.size(); i++) {
+		if (i >= m_latestData.size())
+			break;
+		movement += glm::distance(data[i], m_latestData[i]);
+	}
+	movement /= data.size();
+
+	m_movement = movement;
+
+
+	int numOfBlobs = 0;
+
+	bool isBlob = false;
+	for (int i = 0; i < data.size(); i++) {
+		if (i >= m_background.size())
+			break;
+		auto point = data[i];
+		auto bgPoint = m_background[i];
+		if (glm::distance(point, bgPoint) < 0.01f) {
+			point = ci::vec2(0.0f);
+			isBlob = false;
+			break;
+		}
+		else {
+			if(!isBlob)
+				numOfBlobs++;
+			isBlob = true;
+		}
+	}
+
+	m_blobAmount = numOfBlobs;
 }

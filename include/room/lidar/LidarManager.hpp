@@ -33,6 +33,8 @@ namespace act {
 			void	setup() override;
 			void	cleanUp() override;
 
+			void	update() override;
+
 			act::room::RoomNodeBaseRef drawMenu() override;
 
 			act::room::RoomNodeBaseRef getDeviceByMarkerID(int id);
@@ -42,6 +44,9 @@ namespace act {
 			virtual void fromJson(ci::Json json);
 			void saveDevicesToJson();
 			act::room::RoomNodeBaseRef addDevice(std::string name);
+
+			float getMovement() { return m_movement; }
+			int getNumOfBlobs() { return m_blobAmount; }
  
 		private:
 
@@ -53,6 +58,14 @@ namespace act {
 			void refreshLists() override;
 			std::vector<std::string>			m_availableDeviceNames;
 			int									m_selectedDevice;
+
+			std::vector<ci::vec2>				m_latestData;
+			std::vector<ci::vec2>				m_background;
+			float								m_movement;
+			int									m_blobAmount;
+
+			void calculate();
+			
 		};
 		using LidarManagerRef = std::shared_ptr<LidarManager>;
 	}

@@ -46,6 +46,9 @@ namespace act {
 
 			bool							m_show;
 
+			OutputPortRef<number>			m_movementOutputPort;
+			OutputPortRef<number>			m_blobAmountOutputPort;
+
 		};
 
 		using LiDARProcNodeRef = std::shared_ptr<LidarProcNode>;
