@@ -465,6 +465,12 @@ void act::InACTually::drawShowGUIMenuEntry()
 		getWindow()->setSize(size);
 		getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
 	}
+	if (m_drawGUI) {
+		bool isFullscreen = app::isFullScreen();
+		if(ImGui::Checkbox("fullscreen", &isFullscreen)) {
+			app::setFullScreen(isFullscreen);
+		}
+	}
 }
 
 void InACTually::fileDrop(FileDropEvent event)
