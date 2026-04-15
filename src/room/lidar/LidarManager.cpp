@@ -140,16 +140,20 @@ void act::room::LidarManager::fromJson(ci::Json json)
 
 void act::room::LidarManager::loadFixtures()
 {
-	fs::path path = app::getAssetPath("lidar/fixtures.json");
+	fs::path path = app::getAssetPath("lidar\\fixtures.json");
 	if (path.empty()) {
-		path = app::getAssetPath("").string() + "lidar/fixtures.json";
+		path = app::getAssetPath("").string() + "lidar\\fixtures.json";
 		writeJson(path, ""); // touch
 		saveFixtures();
 	}
 
 	m_fixtureDescriptions.clear();
 	m_fixtureNames.clear();
-	ci::Json fixtureDescriptions = ci::loadJson(loadFile(path));
+	auto file = loadFile(path);
+	if (!file || !file->getBuffer())
+		return;
+
+	ci::Json fixtureDescriptions = ci::loadJson(file);
 
 	int smallestID = INT_MAX;
 	for (auto&& desc : fixtureDescriptions["devices"]) {
@@ -211,7 +215,7 @@ act::room::RoomNodeBaseRef act::room::LidarManager::addDevice(std::string name)
 {
 	ci::Json description = m_fixtureDescriptions[name];
 
-	std::string portName = "COM3";
+	std::string portName = "COM4";
 	util::setValueFromJson(description, "portName", portName);
 
 	int baudrate = 230400;
@@ -251,7 +255,11 @@ void act::room::LidarManager::calculate() {
 	for (size_t i = 0; i < data.size(); i++) {
 		if (i >= m_latestData.size())
 			break;
-		movement += glm::distance(data[i], m_latestData[i]);
+		auto point = data[i];
+		auto bgPoint = m_background[i];
+		if (glm::distance(vec2(0.0f), bgPoint) - glm::distance(vec2(0.0f), point)  > 0.05f) {
+			movement += glm::distance(point, m_latestData[i]);
+		}
 	}
 	movement /= data.size();
 
@@ -266,7 +274,7 @@ void act::room::LidarManager::calculate() {
 			break;
 		auto point = data[i];
 		auto bgPoint = m_background[i];
-		if (glm::distance(point, bgPoint) < 0.01f) {
+		if (glm::distance(point, bgPoint) < 0.1f) {
 			point = ci::vec2(0.0f);
 			isBlob = false;
 			break;
