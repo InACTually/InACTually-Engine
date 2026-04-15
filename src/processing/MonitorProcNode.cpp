@@ -53,6 +53,19 @@ void act::proc::MonitorProcNode::draw() {
 			m_displayMgr->removeSource(m_texturePort);
 		}
 	}
+	ImGui::SameLine();
+	if (ImGui::Checkbox("to projector", &m_projector)) {
+		if (m_projector) {
+			auto projector = m_projectorMgr->getProjectorByIndex(0);
+			if (projector)
+				projector->getImageInputPort()->connect(m_imagePort);
+		}
+		else {
+			auto projector = m_projectorMgr->getProjectorByIndex(0);
+			if (projector)
+				projector->getImageInputPort()->disconnect(m_imagePort);
+		}
+	}
 	
 	if (m_show && m_texture) {
 		gl::pushMatrices();

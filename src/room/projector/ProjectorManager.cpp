@@ -98,6 +98,13 @@ act::room::ProjectorRoomNodeRef act::room::ProjectorManager::getProjector(act::U
 	return nullptr;
 }
 
+act::room::ProjectorRoomNodeRef	act::room::ProjectorManager::getProjectorByIndex(int index) {
+	if(m_nodes.size() < index)
+		return nullptr;
+
+	return std::dynamic_pointer_cast<ProjectorRoomNode>(m_nodes[index]);
+}
+
 act::room::RoomNodeBaseRef act::room::ProjectorManager::addDevice(std::string name)
 {
 	auto node = ProjectorRoomNode::create(name);

@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2025
+	This file is created and substantially modified: 2025-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -62,6 +62,8 @@ namespace act {
 
 			void setPrincipalPoint(ci::vec2 principalPoint, bool publish = true, bool updateCam = true);
 			ci::vec2 getPrincipalPoint() { return m_principalPoint; };
+
+			proc::InputPortRef<proc::image> getImageInputPort() { return m_imageInputPort; };
 			
 		private:
 			//Window
@@ -76,6 +78,9 @@ namespace act {
 			ci::mat4				m_glViewMatrix;
 
 			cv::Mat					m_P; //CV Projection matrix
+
+			proc::InputPortRef<proc::image> m_imageInputPort;
+			ci::gl::Texture2dRef	m_currentImageTex;	
 
 			
 			ci::gl::BatchRef		m_wirePlane;

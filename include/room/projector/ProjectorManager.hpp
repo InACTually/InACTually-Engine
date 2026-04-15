@@ -43,6 +43,7 @@ namespace act {
 			virtual void						fromJson(ci::Json json);
 
 			act::room::ProjectorRoomNodeRef		getProjector(act::UID projectorUID);
+			act::room::ProjectorRoomNodeRef		getProjectorByIndex(int index);
 
 			act::room::RoomNodeBaseRef addDevice(std::string name);
 

@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2025
+	This file is created and substantially modified: 2025-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -36,6 +36,10 @@ act::room::ProjectorRoomNode::ProjectorRoomNode(std::string name, ci::vec3 posit
 
 	auto colorShader = ci::gl::getStockShader(ci::gl::ShaderDef().color());
 	m_wirePlane = ci::gl::Batch::create(ci::geom::WirePlane().size(ci::vec2(20)).subdivisions(ci::ivec2(100)), colorShader);
+
+	m_imageInputPort = proc::InputPort<proc::image>::create(proc::PT_IMAGE, "image", [this](proc::image img) {
+		m_currentImageTex = ci::gl::Texture2d::create(fromOcv(img));
+	});
 }
 
 act::room::ProjectorRoomNode::~ProjectorRoomNode()
@@ -457,6 +461,10 @@ void act::room::ProjectorRoomNode::drawProjection()
 	}
 	else
 	{
+		if (m_currentImageTex) {
+			gl::draw(m_currentImageTex);
+		}
+
 		//normal rendering
 		if (m_showDebugGrid) {
 			gl::ScopedMatrices mat();

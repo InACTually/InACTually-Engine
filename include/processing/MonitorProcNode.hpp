@@ -46,7 +46,9 @@ namespace act {
 		private:
 			bool m_show;
 			bool m_display;
+			bool m_projector;
 			act::room::DisplayManagerRef	m_displayMgr;
+			act::room::ProjectorManagerRef	m_projectorMgr;
 
 			ci::gl::Texture2dRef	m_texture;
 			ci::ivec2 adaptSize(ci::ivec2 size);
