@@ -158,6 +158,7 @@
     <ClInclude Include="..\include\processing\IDBase.hpp" />
     <ClInclude Include="..\include\processing\IfProcNode.hpp" />
     <ClInclude Include="..\include\processing\ImageEnhancerProcNode.hpp" />
+    <ClInclude Include="..\include\processing\InvertProcNode.hpp" />
     <ClInclude Include="..\include\processing\JsonMsgProcNode.hpp" />
     <ClInclude Include="..\include\processing\KeyInProcNode.hpp" />
     <ClInclude Include="..\include\processing\KinectProcNode.hpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\include\processing\MatListener.hpp" />
     <ClInclude Include="..\include\processing\MatToBase64.hpp" />
     <ClInclude Include="..\include\processing\MicrophoneProcNode.hpp" />
+    <ClInclude Include="..\include\processing\ModuloProcNode.hpp" />
     <ClInclude Include="..\include\processing\MonitorProcNode.hpp" />
     <ClInclude Include="..\include\processing\MovementDetectionProcNode.hpp" />
     <ClInclude Include="..\include\processing\MovingHeadProcNode.hpp" />
@@ -234,6 +236,7 @@
     <ClCompile Include="..\src\processing\FaceEmotionProcNode.cpp" />
     <ClCompile Include="..\src\processing\HandProcNode.cpp" />
     <ClCompile Include="..\src\processing\HeadProcNode.cpp" />
+    <ClCompile Include="..\src\processing\InvertProcNode.cpp" />
     <ClCompile Include="..\src\processing\KeyInProcNode.cpp" />
     <ClCompile Include="..\src\processing\FlowDetectionProcNode.cpp" />
     <ClCompile Include="..\src\processing\IfProcNode.cpp" />
@@ -250,6 +253,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\processing\MicrophoneProcNode.cpp" />
+    <ClCompile Include="..\src\processing\ModuloProcNode.cpp" />
     <ClCompile Include="..\src\processing\MonitorProcNode.cpp" />
     <ClCompile Include="..\src\processing\MovementDetectionProcNode.cpp" />
     <ClCompile Include="..\src\processing\MovingHeadProcNode.cpp" />

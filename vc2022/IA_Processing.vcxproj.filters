@@ -96,6 +96,12 @@
     <ClCompile Include="..\src\processing\IfProcNode.cpp">
       <Filter>Source Files\math logic</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\InvertProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\ModuloProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\MultiplyProcNode.cpp">
       <Filter>Source Files\math logic</Filter>
     </ClCompile>
@@ -246,9 +252,6 @@
     <ClCompile Include="..\src\processing\Vector3ProcNode.cpp">
       <Filter>Source Files\literal</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\ContainerProcNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\processing\IDBase.hpp">
@@ -330,6 +333,12 @@
       <Filter>Source Files\math logic</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\IfProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\InvertProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\ModuloProcNode.hpp">
       <Filter>Source Files\math logic</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\MultiplyProcNode.hpp">
@@ -481,9 +490,6 @@
     </ClInclude>
     <ClInclude Include="..\include\processing\Vector3ProcNode.hpp">
       <Filter>Source Files\literal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\ContainerProcNode.hpp">
-      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
