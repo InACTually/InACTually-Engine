@@ -43,11 +43,12 @@ void act::proc::ClockProcNode::update() {
 	}
 	
 
-	if(m_value <= 1.f) {
+	if(m_value < 1.f) {
 		m_valuePort->send(m_value);
 	}
 	else if (m_hasStarted)
 	{
+		m_value = 1.0f;
 		if (!m_bang) {
 			m_bang = true;
 			m_bangPort->send(true);
