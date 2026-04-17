@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -117,4 +117,15 @@ ci::Json act::proc::ProcNodeBase::getJsonTypeDefinition()
 	typeDefinition[m_name]["params"]	= params;
 
 	return typeDefinition;
+}
+
+bool act::proc::ProcNodeBase::removePort(PortBaseRef port, std::vector<PortBaseRef>& ports) {
+	for (auto it = ports.begin(); it != ports.end(); it++) {
+		if (port->getUID() == (*it)->getUID()) {
+			(*it)->disconnectAll();
+			ports.erase(it);
+			return true;
+		}
+	}
+	return false;
 }

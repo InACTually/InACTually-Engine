@@ -228,6 +228,8 @@ namespace act {
 			std::vector<PortBaseRef> m_inputPorts;
 			std::vector<PortBaseRef> m_outputPorts;
 
+			bool removeInputPort(PortBaseRef inputPort) { return removePort(inputPort, m_inputPorts); };
+			bool removeOutputPort(PortBaseRef outputPort) { return removePort(outputPort, m_outputPorts); };
 
 			InputPortRef<ci::Json>					createJsonInput			(std::string label, std::function<void(ci::Json)> cb, bool display = true)				{ auto port = InputPort<ci::Json>::create(PT_JSON, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
 			InputPortRef<bool>						createBoolInput			(std::string label, std::function<void(bool)> cb, bool display = true)					{ auto port = InputPort<bool>::create(PT_BOOL, label, cb);							if (display) m_inputPorts.push_back(port); return port; }
@@ -271,6 +273,8 @@ namespace act {
 			
 		private:
 			std::string	m_name;
+
+			bool removePort(PortBaseRef port, std::vector<PortBaseRef> &ports);
 
 		}; using ProcNodeBaseRef = std::shared_ptr<ProcNodeBase>;
 
