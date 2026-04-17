@@ -193,7 +193,7 @@ namespace act {
 			}
 
 			std::vector<PortBaseRef> getAllInputPorts() { return m_inputPorts; };
-			std::vector<PortBaseRef> getAllOutputPorts() { return m_inputPorts; };
+			std::vector<PortBaseRef> getAllOutputPorts() { return m_outputPorts; };
 
 			virtual void setIsHovered(bool isHovered) { m_isHovered = isHovered; }
 			virtual void setIsSelected(bool isSelected) { m_isSelected = isSelected; }
