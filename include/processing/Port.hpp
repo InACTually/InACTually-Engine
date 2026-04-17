@@ -47,7 +47,8 @@ namespace act {
 			PortBase(PortType type, std::string name) : m_type(type), m_name(name), m_caption(name) {
 				m_runtimeID = m_id;
 			};
-			~PortBase() {};
+			~PortBase() {
+			};
 
 			PortType getType() { return m_type; };
 
@@ -63,6 +64,7 @@ namespace act {
 			
 			virtual bool connect(std::shared_ptr<PortBase> port) = 0;
 			virtual bool disconnect(std::shared_ptr<PortBase> port) = 0;
+			virtual void disconnectAll() = 0;
 
 			inline bool isEnabled()	{ return m_isEnabled; };
 			void enable()		{ m_isEnabled = true; };
@@ -85,7 +87,9 @@ namespace act {
 		class Port : public PortBase {
 		public:
 			Port(PortType type, std::string name) : PortBase(type, name) {};
-			~Port() {};
+			~Port() {
+				disconnectAll();
+			};
 
 			void setConnectionCB(std::function<void()> cb) { m_onConnectionCB = cb; };
 			void setDisconnectionCB(std::function<void()> cb) { m_onDisconnectionCB = cb; };
@@ -112,6 +116,12 @@ namespace act {
 				if (disconnected && listenerCount() == 0)
 					m_onDisconnectionCB();
 				return disconnected;
+			}
+
+			void disconnectAll() override {
+				while (m_ports.size() > 0) {
+					disconnect(m_ports[m_ports.size() - 1]);
+				}
 			}
 
 			virtual void send(T data, K context = nullptr) {
@@ -267,7 +277,6 @@ namespace act {
 			void recieve(T data, K context = nullptr) override {
 				if (!PortBase::isEnabled())
 					return;
-				
 
 				if (m_wantsContext) {
 					if (m_sendUID)
