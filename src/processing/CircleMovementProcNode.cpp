@@ -28,6 +28,10 @@ act::proc::CircleMovementProcNode::CircleMovementProcNode() : ProcNodeBase("Circ
 
 	m_positionPort = createVec3Output("position");
 
+	createVec3Input("center", [&](vec3 center) { m_position = center; });
+	createNumberInput("radius", [&](number radius) { m_radius = radius; });
+	createNumberInput("speed", [&](number speed) { m_speed = speed; });
+
 }
 
 act::proc::CircleMovementProcNode::~CircleMovementProcNode() {
