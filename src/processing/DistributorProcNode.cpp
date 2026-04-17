@@ -27,11 +27,7 @@ act::proc::DistributorProcNode::DistributorProcNode() : ProcNodeBase("Distributo
 
 
 	createBoolInput("in", [&](bool val) { distribute(val); });
-
-	m_outputs.push_back(createBoolOutput("1"));
-	m_outputs.push_back(createBoolOutput("2"));
-	m_outputs.push_back(createBoolOutput("3"));
-	m_outputs.push_back(createBoolOutput("4"));
+	
 }
 
 act::proc::DistributorProcNode::~DistributorProcNode() {
@@ -45,6 +41,11 @@ void act::proc::DistributorProcNode::draw() {
 	beginNodeDraw();
 
 	ImGui::Combo("option", &m_selectedOption, m_options);
+	if (ImGui::InputInt("outputs", &m_numOfOutputs)) {
+		if (m_numOfOutputs < 0)
+			m_numOfOutputs = 0;
+		updateOutputs();
+	};
 
 	endNodeDraw();
 }
@@ -53,11 +54,35 @@ void act::proc::DistributorProcNode::draw() {
 ci::Json act::proc::DistributorProcNode::toParams() {
 	ci::Json json = ci::Json::object();
 	json["selectedOption"] = m_selectedOption;
+	json["numOfOutputs"] = m_numOfOutputs;
 	return json;
 }
 
 void act::proc::DistributorProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "selectedOption", m_selectedOption);
+	util::setValueFromJson(json, "numOfOutputs", m_numOfOutputs);
+
+	updateOutputs();
+}
+
+void act::proc::DistributorProcNode::updateOutputs() {
+	int currentOutputs = m_outputs.size();
+	if (currentOutputs == m_numOfOutputs)
+		return;
+
+	if (currentOutputs > m_numOfOutputs) {
+		while (m_outputs.size() > m_numOfOutputs) {
+			removeOutputPort(m_outputs[m_outputs.size() - 1]);
+			m_outputs.resize(m_outputs.size() - 1);
+		}
+	}
+	else {
+		for (int i = currentOutputs; i < m_numOfOutputs; i++) {
+			std::stringstream strstr;
+			strstr << i + 1;
+			m_outputs.push_back(createBoolOutput(strstr.str()));
+		}
+	}
 }
 
 void act::proc::DistributorProcNode::distribute(bool val)

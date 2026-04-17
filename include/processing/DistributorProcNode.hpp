@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2025 InACTually Community
+	Copyright (c) 2026 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
@@ -47,6 +47,9 @@ namespace act {
 
 		private:
 			std::vector<OutputPortRef<bool>> m_outputs;
+			int m_numOfOutputs = 3;
+			void updateOutputs();
+
 			std::vector<std::string> m_options;
 			int m_selectedOption = 0;
 
