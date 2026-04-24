@@ -81,17 +81,17 @@ void act::proc::ColorMappingProcNode::fromParams(ci::Json json) {
 
 
 void act::proc::ColorMappingProcNode::onHue(float number) {
-	m_hue = number;
+	m_hue = clamp(number, 0.0f, 1.0f);
 	sendColor();
 }
 
 void act::proc::ColorMappingProcNode::onSaturation(float number) {
-	m_saturation = number;
+	m_saturation = clamp(number, 0.0f, 1.0f);
 	sendColor();
 }
 
 void act::proc::ColorMappingProcNode::onLightness(float number) {
-	m_lightness = number;
+	m_lightness = clamp(number, 0.0f, 1.0f);
 	sendColor();
 }
 
