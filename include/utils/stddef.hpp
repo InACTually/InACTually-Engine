@@ -79,6 +79,7 @@ namespace act {
 		AS_STARTUP = 0, /**< setup */
 		AS_INITIALISING,/**< init */
 		AS_RUNNING,     /**< update/draw */
+		AS_CLOSING,		/**< requested to close */
 		AS_CLEANUP,     /**< preparing shutdown */
 		AS_FEATURETEST  /**< special for testing purposes */
 	};

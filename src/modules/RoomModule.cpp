@@ -93,9 +93,10 @@ void act::mod::RoomModule::drawGUI() {
 	auto primaryColor = IM_COL32(util::Design::primaryColor().r * 255, util::Design::primaryColor().g * 255, util::Design::primaryColor().b * 255, 255);
 	auto highlightColor = IM_COL32(util::Design::highlightColor().r * 255, util::Design::highlightColor().g * 255, util::Design::highlightColor().b * 255, 255);
 
-	auto selectedNode = m_stage->getSelectedNode();
+	if (!m_stage)
+		return;
 
-	
+	auto selectedNode = m_stage->getSelectedNode();
 
 	ImGui::Begin("RoomNode");
 	if (selectedNode) {

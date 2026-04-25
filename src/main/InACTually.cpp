@@ -203,6 +203,9 @@ void InACTually::cleanup()
 
 void InACTually::update()
 {
+	if (AppState::get() == AS_CLOSING || AppState::get() == AS_CLEANUP)
+		return;
+
 	auto windowData = getWindow()->getUserData<WindowData>();
 	if (windowData->getUID() != m_mainWindowUID) {
 		windowData->update();
@@ -237,6 +240,9 @@ void InACTually::update()
 
 void InACTually::draw()
 {
+	if (AppState::get() == AS_CLOSING || AppState::get() == AS_CLEANUP)
+		return;
+
 	getWindow()->getRenderer()->makeCurrentContext(true);
 
 	if (AppState::get() == AS_INITIALISING || AppState::get() == AS_STARTUP) {
@@ -396,6 +402,11 @@ void act::InACTually::drawFullGUI()
 			m_isGettingSavePath = true;
 		}
 
+		if (ImGui::Button("Close")) {
+			AppState::set(AS_CLOSING);
+			ci::app::App::get()->quit();
+		}
+
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu(ICON_FA_COG " Settings")) {
@@ -527,10 +538,8 @@ void InACTually::resize() const
 	}
 }
 
-void InACTually::initStyle() {
-
-	
-
+void InACTually::initStyle() 
+{
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->Clear();
 	ImFontConfig config;
