@@ -113,6 +113,7 @@ namespace act {
 		ci::ivec2	debugGUISize	= ivec2(0, 0);		/**< window size if debug-GUI will be shown */
 		ci::ivec2	guiSize			= ivec2(600, 400);	/**< window size if performace-GUI will be shown */
 		bool		showDebugGUI	= false;			/**< show debug-GUI */
+		bool		fullscreen		= false;			/**< start in fullscreen */	
 	};
 	/**
 	* @brief Settings contain all fundamental parameter (SpectralParameter)
@@ -155,6 +156,7 @@ namespace act {
 			util::setValueFromJson(json, "debugGUISize",	m_settingsParams.debugGUISize);
 			util::setValueFromJson(json, "guiSize",			m_settingsParams.guiSize);
 			util::setValueFromJson(json, "showGUI",			m_settingsParams.showDebugGUI);
+			util::setValueFromJson(json, "fullscreen",		m_settingsParams.fullscreen);
 		}
 
 		void write() {
@@ -165,6 +167,7 @@ namespace act {
 			json["debugGUISize"]	= m_settingsParams.debugGUISize;
 			json["guiSize"]			= m_settingsParams.guiSize;
 			json["showGUI"]			= m_settingsParams.showDebugGUI;
+			json["fullscreen"]		= m_settingsParams.fullscreen;
 			ci::writeJson(getAssetPath("settings.json"), json);
 		}
 	};

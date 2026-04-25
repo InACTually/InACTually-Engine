@@ -147,8 +147,6 @@ void InACTually::init()
 	//getWindow()->setSize(getDisplay()->getSize() - ivec2(0, 70));
 	//getWindow()->setPos(ivec2(0, 70));
 
-	//getWindow()->setFullScreen(true);
-
 	ci::ivec2 size = Settings::get().debugGUISize;
 	if (size.x == 0 || size.y == 0) {
 		size = vec2(m_app->getDisplay()->getSize()) * 0.85f;
@@ -164,15 +162,14 @@ void InACTually::init()
 	getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
 	getWindow()->setBorderless(false);
 
+	ci::app::setFullScreen(Settings::get().fullscreen);
+
 	//m_interactionMgr = make_shared<ia::InteractionManager>();
 	//m_inputMgr = make_shared<input::InputManager>(m_interactionMgr);
 
 	//m_mouseRawListener->addListener(m_inputMgr->getMouseRawListener());
 	//m_keyRawListener->addListener(m_inputMgr->getKeyRawListener());
 	//m_touchRawListener->addListener(m_inputMgr->getTouchRawListener());
-
-
-	//m_moduleMgr = make_shared<mod::ModuleManager>();
 
 	AppState::set(AS_RUNNING);
 
@@ -479,6 +476,8 @@ void act::InACTually::drawShowGUIMenuEntry()
 	if (m_drawGUI) {
 		bool isFullscreen = app::isFullScreen();
 		if(ImGui::Checkbox("fullscreen", &isFullscreen)) {
+			Settings::get().fullscreen = isFullscreen;
+			Settings::save();
 			app::setFullScreen(isFullscreen);
 		}
 	}
