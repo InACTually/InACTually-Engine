@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2022
+	This file is created and substantially modified: 2021-2022, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -46,6 +46,7 @@ namespace act {
 		private:
 			bool m_show;
 			bool m_display;
+			bool m_fullscreen;
 			bool m_projector;
 			act::room::DisplayManagerRef	m_displayMgr;
 			act::room::ProjectorManagerRef	m_projectorMgr;

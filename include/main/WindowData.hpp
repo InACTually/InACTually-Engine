@@ -8,7 +8,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2025
+	This file is created and substantially modified: 2025-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -98,9 +98,22 @@ namespace act {
 			m_drawable = drawable;
 		};
 
+		ci::gl::TextureRef getFullscreenTex() const {
+			return m_fullscreenTex;
+		}
+		void setFullscreenTex(const ci::gl::TextureRef& tex) {
+			m_fullscreenTex = tex;
+		}
+
+		bool isFullscreen() { return m_isFullscreen; }
+		void setIsFullscreen(bool isFullscreen) { m_isFullscreen = isFullscreen; }
+
+
 	private:
 		DrawableBaseRef m_drawable;
 		bool m_isInitialized = false;
+		ci::gl::TextureRef m_fullscreenTex = nullptr;
+		bool m_isFullscreen = false;
 	};
 
 }

@@ -257,11 +257,9 @@ void InACTually::draw()
 
 	auto windowData = getWindow()->getUserData<WindowData>();
 	if (windowData->getUID() != m_mainWindowUID) {
-		
 		windowData->draw();
 		return;
 	}
-
 
 	gl::clear(util::Design::backgroundColor());
 	gl::color(Color::white());
@@ -269,6 +267,19 @@ void InACTually::draw()
 
 	gl::enableDepth();
 	gl::enable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+	if (windowData->isFullscreen()) {
+		if (ImGui::IsKeyDown(ImGuiKey_Escape)) {
+			ci::app::getWindow()->getUserData<act::WindowData>()->setFullscreenTex(nullptr);
+			ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(false);
+		}
+		else {
+			gl::clear(Color::black());
+			Rectf destRect = Rectf(windowData->getFullscreenTex()->getBounds()).getCenteredFit(getWindowBounds(), true).scaledCentered(1.0f);
+			gl::draw(windowData->getFullscreenTex(), destRect);
+			return;
+		}
+	}
 
 	gl::pushMatrices();
 	ImGui::PushFont(m_font);

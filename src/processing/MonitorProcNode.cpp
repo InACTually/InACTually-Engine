@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2022
+	This file is created and substantially modified: 2021-2022, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -17,12 +17,14 @@
 
 #include "procpch.hpp"
 #include "MonitorProcNode.hpp"
+#include "WindowData.hpp"
 
 act::proc::MonitorProcNode::MonitorProcNode() : ProcNodeBase("Monitor") {
 	m_drawSize = ivec2(400, 300);
 	m_show = true;
 	m_display = false;
 	m_displayScale = 0.8f;
+	m_fullscreen = false;
 	
 	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
 
@@ -66,6 +68,16 @@ void act::proc::MonitorProcNode::draw() {
 				projector->getImageInputPort()->disconnect(m_imagePort);
 		}
 	}
+	ImGui::SameLine();
+	if (ImGui::Checkbox("fullscreen", &m_fullscreen)) {
+		if (m_fullscreen) {
+			ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(true);
+		}
+		else {
+			ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(false);
+			ci::app::getWindow()->getUserData<act::WindowData>()->setFullscreenTex(nullptr);
+		}
+	}
 	
 	if (m_show && m_texture) {
 		gl::pushMatrices();
@@ -82,9 +94,16 @@ void act::proc::MonitorProcNode::draw() {
 
 void act::proc::MonitorProcNode::onMat(cv::UMat event) {
 	m_imagePort->send(event);
-	if (m_show || m_display) {
+	if (m_show || m_display || m_fullscreen) {
 		m_texture = gl::Texture2d::create(fromOcv(event));
 		m_drawSize = ivec2(m_texture->getWidth(), m_texture->getHeight());
+
+		auto windowData = ci::app::getWindow()->getUserData<act::WindowData>();
+		if (!windowData->isFullscreen())
+			m_fullscreen = false;
+		if (m_fullscreen) {
+			windowData->setFullscreenTex(m_texture);
+		}
 	}
 	if (m_display)
 		m_texturePort->send(m_texture);
@@ -98,10 +117,14 @@ ci::Json act::proc::MonitorProcNode::toParams() {
 	ci::Json json = ci::Json::object();
 	json["show"]	= m_show;
 	json["display"] = m_display;
+	json["fullscreen"] = m_fullscreen;
 	return json;
 }
 
 void act::proc::MonitorProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "show", m_show);
 	util::setValueFromJson(json, "display", m_display);
+	util::setValueFromJson(json, "fullscreen", m_fullscreen);
+	if(m_fullscreen)
+		ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(true);
 }
