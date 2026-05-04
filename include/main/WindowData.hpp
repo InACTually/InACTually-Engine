@@ -106,7 +106,13 @@ namespace act {
 		}
 
 		bool isFullscreen() { return m_isFullscreen; }
-		void setIsFullscreen(bool isFullscreen) { m_isFullscreen = isFullscreen; }
+		void setIsFullscreen(bool isFullscreen) { 
+			m_isFullscreen = isFullscreen;
+			if(m_isFullscreen)
+				ci::app::AppBase::get()->hideCursor();
+			else
+				ci::app::AppBase::get()->showCursor();
+		}
 
 
 	private:

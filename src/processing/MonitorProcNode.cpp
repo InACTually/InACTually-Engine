@@ -99,8 +99,7 @@ void act::proc::MonitorProcNode::onMat(cv::UMat event) {
 		m_drawSize = ivec2(m_texture->getWidth(), m_texture->getHeight());
 
 		auto windowData = ci::app::getWindow()->getUserData<act::WindowData>();
-		if (!windowData->isFullscreen())
-			m_fullscreen = false;
+		
 		if (m_fullscreen) {
 			windowData->setFullscreenTex(m_texture);
 		}
