@@ -28,6 +28,11 @@ act::room::LidarManager::LidarManager()
 	m_selectedDevice = 0;
 	m_fixtureNames = std::vector<std::string>(0);
 	m_availableDeviceNames = std::vector<std::string>(0);
+	m_movement = 0.0f;
+	m_blobAmount = 0;
+	m_maxDist = 5.0f;
+	m_maskThreshold = 100.0;
+	m_bgSub = cv::createBackgroundSubtractorMOG2(500, 8, false);
 
 	loadFixtures();
 	refreshLists();
@@ -50,13 +55,7 @@ void act::room::LidarManager::cleanUp()
 
 void act::room::LidarManager::update()
 {
-	if (!m_nodes.empty() && m_background.empty()) {
-		auto node = std::dynamic_pointer_cast<LDLidarRoomNode>(m_nodes[0]);
-		m_background = node->getData();
-	}
-	else {
-		calculate();
-	}
+	calculate();
 }
 
 act::room::RoomNodeBaseRef act::room::LidarManager::drawMenu()
@@ -239,52 +238,45 @@ act::room::RoomNodeBaseRef act::room::LidarManager::addDevice(std::string name)
 }
 
 void act::room::LidarManager::calculate() {
-	float movement = 0.0f;
 	if (m_nodes.empty())
 		return;
 
 	auto node = dynamic_pointer_cast<LDLidarRoomNode>(m_nodes[0]);
-	auto data = node->getData();
+	auto& data = node->getData();
 
-	if(m_latestData.empty()) {
-		m_latestData = data;
+	if (data.empty())
 		return;
+
+	// remap points to exactly 360 buckets,  one per degree, column index = angle (0°-359°)
+	// multiple points in the same bucket: keep the smallest distance (closest object wins)
+	cv::Mat scanRow = cv::Mat::zeros(1, 360, CV_8UC1);
+	for (const auto& p : data) {
+		float dist = glm::length(p);
+		if (dist < 0.01f) continue;
+
+		float angleDeg = std::atan2(p.y, p.x) * 180.0f / static_cast<float>(M_PI);
+		if (angleDeg < 0.0f) angleDeg += 360.0f;
+		int angleIdx = static_cast<int>(angleDeg) % 360;
+
+		uint8_t val = static_cast<uint8_t>(std::clamp(dist / m_maxDist, 0.0f, 1.0f) * 255.0f);
+		uint8_t& bucket = scanRow.at<uint8_t>(0, angleIdx);
+		if (bucket == 0 || val < bucket)
+			bucket = val;
 	}
+	auto s = data.size();
+	m_image = scanRow.getUMat(cv::ACCESS_FAST); // store for visualization
 
-	// calculate movement as the average distance between the latest data and the new data
-	for (size_t i = 0; i < data.size(); i++) {
-		if (i >= m_latestData.size())
-			break;
-		auto point = data[i];
-		auto bgPoint = m_background[i];
-		if (glm::distance(vec2(0.0f), bgPoint) - glm::distance(vec2(0.0f), point)  > 0.05f) {
-			movement += glm::distance(point, m_latestData[i]);
-		}
-	}
-	movement /= data.size();
+	// background subtraction on the 1D range image
+	cv::Mat mask;
+	m_bgSub->apply(scanRow, mask);
 
-	m_movement = movement;
+	// zero out entries below threshold (removes shadows and weak detections)
+	cv::threshold(mask, mask, m_maskThreshold, 255, cv::THRESH_BINARY);
 
+	// movement = fraction of foreground columns
+	m_movement = (float)cv::countNonZero(mask) / (float)mask.cols;
 
-	int numOfBlobs = 0;
-
-	bool isBlob = false;
-	for (int i = 0; i < data.size(); i++) {
-		if (i >= m_background.size())
-			break;
-		auto point = data[i];
-		auto bgPoint = m_background[i];
-		if (glm::distance(point, bgPoint) < 0.1f) {
-			point = ci::vec2(0.0f);
-			isBlob = false;
-			break;
-		}
-		else {
-			if(!isBlob)
-				numOfBlobs++;
-			isBlob = true;
-		}
-	}
-
-	m_blobAmount = numOfBlobs;
+	// blob count
+	cv::Mat labels;
+	m_blobAmount = cv::connectedComponents(mask, labels) - 1; // subtract background label
 }

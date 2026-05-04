@@ -47,6 +47,7 @@ namespace act {
 
 			float getMovement() { return m_movement; }
 			int getNumOfBlobs() { return m_blobAmount; }
+			act::proc::image getImage() { return m_image; }
  
 		private:
 
@@ -59,10 +60,13 @@ namespace act {
 			std::vector<std::string>			m_availableDeviceNames;
 			int									m_selectedDevice;
 
-			std::vector<ci::vec2>				m_latestData;
-			std::vector<ci::vec2>				m_background;
 			float								m_movement;
 			int									m_blobAmount;
+			act::proc::image					m_image;
+
+			cv::Ptr<cv::BackgroundSubtractor>	m_bgSub;
+			float								m_maxDist;       
+			double								m_maskThreshold; 
 
 			void calculate();
 			
