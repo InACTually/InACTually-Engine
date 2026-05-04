@@ -65,10 +65,10 @@ void act::proc::NumberEnhancerProcNode::draw() {
 
 	bool prvntDrag = false;
 
-	prvntDrag = ImGui::SliderInt("Filter History", &m_historySize, 1, 100);
+	prvntDrag = ImGui::DragInt("Filter History", &m_historySize, 1, 1);
 
 	auto vec = std::vector<float>(m_history.begin(), m_history.end());
-	ImGui::PlotLines("Filter History", vec.data(), vec.size());
+	ImGui::PlotLines("History Vis", vec.data(), vec.size());
 
 
 	ImGui::Checkbox("Gate", &m_doGate);
