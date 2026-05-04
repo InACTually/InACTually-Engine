@@ -16,7 +16,6 @@
 
 #include "procpch.hpp"
 #include "VideoPlayerProcNode.hpp"
-#include "cinder/qtime/QuickTimeGl.h"
 
 act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlayer") {
 	m_videoSize = ivec2(1920, 1080);
@@ -47,7 +46,7 @@ void act::proc::VideoPlayerProcNode::update() {
 		loadVideo(m_path);
 	}
 
-	if (m_isPlaying && m_inputVideo) {
+	if (m_isPlaying && m_inputVideo && m_inputVideo->getTexture()) {
 		cv::UMat frame;
 		auto frameTexture = m_inputVideo->getTexture();
 		auto src = frameTexture->createSource();
@@ -143,10 +142,12 @@ void act::proc::VideoPlayerProcNode::loadVideo(std::string path)
 		return;
 
 	m_path = path;
-
+	fs::path p(m_path);
+	if (p.is_relative())
+		p = ci::app::getAssetPath(p);
 	try {
 		// load up the movie, set it to loop, and begin playing
-		m_inputVideo = qtime::MovieGl::create(m_path);
+		m_inputVideo = qtime::MovieGl::create(p.string());
 		//mMovie->setLoop();
 		m_inputVideo->play();
 	}
