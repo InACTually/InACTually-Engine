@@ -44,6 +44,7 @@ namespace act {
 			void draw()				override;
 
 			void onTrigger(bool event);
+			void onReset(bool event);
 			bool play();
 			bool stop();
 
@@ -78,6 +79,8 @@ namespace act {
 			float							m_playPosition;
 			OutputPortRef<float>			m_playPosPort;
 			float							m_length;
+
+			OutputPortRef<bool>				m_finishedPort;
 
 			int								m_falseCount;
 			int								m_countFalseUpTo;

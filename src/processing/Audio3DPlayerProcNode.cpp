@@ -45,13 +45,19 @@ act::proc::Audio3DPlayerProcNode::Audio3DPlayerProcNode() : ProcNodeBase("Audio3
 	addRPC("play", [&]() { return play(); });
 	addRPC("stop", [&]() { return stop(); });
 	
-	auto trigger	= createBoolInput("fire",		[&](bool event)  { this->onTrigger(event); });
-	auto gain		= createNumberInput("gain",		[&](float event)  { for(auto& node : m_soundRoomNodes) node->setVolume(audio::linearToDecibel(event)); });
+	auto trigger	= createBoolInput("fire",		[&](bool event)  { onTrigger(event); });
+	auto reset		= createBoolInput("reset",		[&](bool event)  { onReset(event); });
+	auto gain		= createNumberInput("gain",		[&](float event)  { 
+		m_toVolume = audio::linearToDecibel(event);
+		for(auto& node : m_soundRoomNodes) 
+			node->setVolume(m_toVolume, 0.0f);
+		});
 	auto position	= createVec3Input("position",	[&](vec3 event)  { set3DPosition(event); });
 	auto speed		= createNumberInput("speed",	[&](float event) { setPlaySpeed(event); });
 	
 	m_playPosPort	= createNumberOutput("playing at");
 	m_bufferPort	= createAudioOutput("buffer");
+	m_finishedPort  = createBoolOutput("finished");
 
 	m_currentVolumePort = createNumberOutput("current volume");
 
@@ -91,10 +97,12 @@ void act::proc::Audio3DPlayerProcNode::update() {
 	if (!m_soundRoomNodes.empty()) {
 
 		if (m_isPlaying) {
+			if (m_playPosition > m_soundRoomNodes[0]->getPlayPosition())
+				m_finishedPort->send(true);
+
 			m_playPosition = m_soundRoomNodes[0]->getPlayPosition();
 			m_playPosPort->send(m_playPosition);
-		};
-	
+		};	
 
 		if (m_soundRoomNodes[0]->getBufferPlayer()->isEof()) {
 			m_playPosition = 0.0f;
@@ -105,13 +113,16 @@ void act::proc::Audio3DPlayerProcNode::update() {
 			else {
 				for (auto& node : m_soundRoomNodes) node->play();
 			};
-				
+			m_finishedPort->send(true);
 
 		}
 
-		for (auto& node : m_soundRoomNodes) node->update();
-
-		m_currentVolumePort->send(m_soundRoomNodes[0]->getCurrentVolume());
+		number volume = 0.0f;
+		for (auto& node : m_soundRoomNodes) {
+			node->update();
+			volume += node->getCurrentVolume();
+		}
+		m_currentVolumePort->send(volume / m_soundRoomNodes.size());
 		//m_currentVolumePort->send(std::clamp((m_soundRoomNode->getCurrentVolume() + 100) * 0.01f, 0.0f, 1.0f));
 
 	}
@@ -249,6 +260,13 @@ void act::proc::Audio3DPlayerProcNode::onTrigger(bool event) {
 	}
 }
 
+void act::proc::Audio3DPlayerProcNode::onReset(bool event)
+{
+	if (event) {
+		for (auto& node : m_soundRoomNodes) node->getBufferPlayer()->seek(0.0f);
+	}
+}
+
 bool act::proc::Audio3DPlayerProcNode::play()
 {
 	bool wasPlaying = m_isPlaying;
@@ -291,26 +309,28 @@ void act::proc::Audio3DPlayerProcNode::loadSound(std::filesystem::path path) {
 
 		auto waveform = WaveformPlot();
 		auto buf = soundNode->getBufferPlayer()->getBuffer();
-		waveform.load(buf, Rectf(vec2(0, 0), m_drawSize));
+		if (buf) {
+			waveform.load(buf, Rectf(vec2(0, 0), m_drawSize));
 
-		gl::Fbo::Format format;
-		format.setSamples(4);
-		auto fbo = gl::Fbo::create(m_drawSize.x, m_drawSize.y, format);
-		{
-			gl::ScopedFramebuffer fbScp(fbo);
-			gl::ScopedViewport scpVp(ivec2(0), fbo->getSize());
+			gl::Fbo::Format format;
+			format.setSamples(4);
+			auto fbo = gl::Fbo::create(m_drawSize.x, m_drawSize.y, format);
+			{
+				gl::ScopedFramebuffer fbScp(fbo);
+				gl::ScopedViewport scpVp(ivec2(0), fbo->getSize());
 
-			gl::ScopedMatrices scpMatrices;
-			gl::setMatricesWindow(fbo->getSize(), true);
+				gl::ScopedMatrices scpMatrices;
+				gl::setMatricesWindow(fbo->getSize(), true);
 
-			gl::clear(util::Design::backgroundColor());
+				gl::clear(util::Design::backgroundColor());
 
-			waveform.draw();
+				waveform.draw();
+			}
+			m_waveformTex = fbo->getColorTexture();
+			m_length = soundNode->getSeconds();
+
+			m_bufferPort->send(buf);
 		}
-		m_waveformTex = fbo->getColorTexture();
-		m_length = soundNode->getSeconds();
-
-		m_bufferPort->send(buf);
 		
 	} catch(...) {
 		// it's not a sound
