@@ -252,6 +252,9 @@
     <ClCompile Include="..\src\processing\StringProcNode.cpp">
       <Filter>Source Files\literal</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\TriggerValueProcNode.cpp">
+      <Filter>Source Files\literal</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\Vector2ProcNode.cpp">
       <Filter>Source Files\literal</Filter>
     </ClCompile>
@@ -495,6 +498,9 @@
       <Filter>Source Files\literal</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\StringProcNode.hpp">
+      <Filter>Source Files\literal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\TriggerValueProcNode.hpp">
       <Filter>Source Files\literal</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\Vector2ProcNode.hpp">

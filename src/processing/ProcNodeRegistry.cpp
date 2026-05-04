@@ -117,6 +117,7 @@
 #include "NumberProcNode.hpp"
 #include "PositionProcNode.hpp"
 #include "StringProcNode.hpp"
+#include "TriggerValueProcNode.hpp"
 #include "Vector2ProcNode.hpp"
 #include "Vector3ProcNode.hpp"
 
@@ -208,6 +209,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("literal", "Number", act::proc::NumberProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Position", act::proc::PositionProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "String", act::proc::StringProcNode::create);
+    act::proc::ProcNodeRegistry::add("literal", "TriggerValue", act::proc::TriggerValueProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Vector2", act::proc::Vector2ProcNode::create);
     act::proc::ProcNodeRegistry::add("literal", "Vector3", act::proc::Vector3ProcNode::create);
 
