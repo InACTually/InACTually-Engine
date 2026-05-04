@@ -197,6 +197,7 @@
     <ClInclude Include="..\include\processing\PositionProcNode.hpp" />
     <ClInclude Include="..\include\processing\StringProcNode.hpp" />
     <ClInclude Include="..\include\processing\TriggerValueProcNode.hpp" />
+    <ClInclude Include="..\include\processing\TweenProcNode.hpp" />
     <ClInclude Include="..\include\processing\Vector2ProcNode.hpp" />
     <ClInclude Include="..\include\processing\Vector3ProcNode.hpp" />
     <ClInclude Include="..\include\processing\VideoMixerProcNode.hpp" />
@@ -280,6 +281,7 @@
     <ClCompile Include="..\src\processing\PositionProcNode.cpp" />
     <ClCompile Include="..\src\processing\StringProcNode.cpp" />
     <ClCompile Include="..\src\processing\TriggerValueProcNode.cpp" />
+    <ClCompile Include="..\src\processing\TweenProcNode.cpp" />
     <ClCompile Include="..\src\processing\Vector2ProcNode.cpp" />
     <ClCompile Include="..\src\processing\Vector3ProcNode.cpp" />
     <ClCompile Include="..\src\processing\VideoMixerProcNode.cpp" />
