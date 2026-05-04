@@ -92,8 +92,13 @@ void act::proc::MovementDetectionProcNode::draw() {
 void act::proc::MovementDetectionProcNode::onMat(cv::UMat event) {
 	cv::UMat gray;
 
-
-	cv::resize(event, gray, cv::Size(event.cols * m_resizeScale, event.rows * m_resizeScale));
+	int resizedCols = event.cols * m_resizeScale;
+	if (resizedCols < 1)
+		resizedCols = 1;
+	int resizedRows = event.rows * m_resizeScale;
+	if(resizedRows < 1)
+		resizedRows = 1;
+	cv::resize(event, gray, cv::Size(resizedCols, resizedRows));
 	float calcScale = 1.0f / m_resizeScale;
 	if(gray.type() != CV_8UC1)
 	try {
