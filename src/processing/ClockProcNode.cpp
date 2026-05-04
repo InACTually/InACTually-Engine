@@ -49,12 +49,14 @@ void act::proc::ClockProcNode::update() {
 	else if (m_hasStarted)
 	{
 		m_value = 1.0f;
+		
+		m_valuePort->send(m_value);
+		stop();
+
 		if (!m_bang) {
 			m_bang = true;
 			m_bangPort->send(true);
 		}
-		m_valuePort->send(m_value);
-		stop();
 	}
 }
 
@@ -92,6 +94,7 @@ void act::proc::ClockProcNode::start()
 		return; 
 
 	m_hasStarted = true;
+	m_bang = false;
 	m_value = 0.0f;
 	m_startedAt = app::getElapsedSeconds();
 }
