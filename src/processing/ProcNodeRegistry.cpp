@@ -87,6 +87,7 @@
 #include "ClockProcNode.hpp"
 #include "EasingProcNode.hpp"
 #include "TriggerListProcNode.hpp"
+#include "TweenProcNode.hpp"
 
 // Utility
 #include "DistributorProcNode.hpp"
@@ -183,6 +184,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Timeline", "Clock", act::proc::ClockProcNode::create);
     act::proc::ProcNodeRegistry::add("Timeline", "Easing", act::proc::EasingProcNode::create);
     act::proc::ProcNodeRegistry::add("Timeline", "TriggerList", act::proc::TriggerListProcNode::create);
+    act::proc::ProcNodeRegistry::add("Timeline", "Tween", act::proc::TweenProcNode::create);
 
     act::proc::ProcNodeRegistry::add("Utility", "Distributor", act::proc::DistributorProcNode::create);
     act::proc::ProcNodeRegistry::add("Utility", "NumberEnhancer", act::proc::NumberEnhancerProcNode::create);
