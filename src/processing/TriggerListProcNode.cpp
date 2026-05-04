@@ -168,12 +168,11 @@ void act::proc::TriggerListProcNode::fromParams(ci::Json json) {
 void act::proc::TriggerListProcNode::fireTrigger()
 {
 	auto port = std::dynamic_pointer_cast<OutputPort<bool>>(m_outputPorts[m_nextTrigger]);
+	stepDown();
 	if (port)
 		port->send(true);
 	if (m_nextTrigger == m_outputPorts.size() - 1)
 		port->send(false);
-
-	stepDown();
 }
 
 void act::proc::TriggerListProcNode::stepUp()
@@ -200,7 +199,7 @@ void act::proc::TriggerListProcNode::setNextTrigger(int index)
 
 void act::proc::TriggerListProcNode::reset()
 {
-	setNextTrigger(0);
+	m_nextTrigger = 0;
 }
 
 void act::proc::TriggerListProcNode::addTrigger(int index)
