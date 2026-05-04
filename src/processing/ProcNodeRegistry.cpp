@@ -48,6 +48,8 @@
 #include "BooleanImpulsProcNode.hpp"
 #include "IfProcNode.hpp"
 #include "InvertProcNode.hpp"
+#include "MaxProcNode.hpp"
+#include "MinProcNode.hpp"
 #include "ModuloProcNode.hpp"
 #include "MultiplyProcNode.hpp"
 #include "notProcNode.hpp"
@@ -146,6 +148,8 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Math & Logic", "BooleanImpuls", act::proc::BooleanImpulsProcNode::create);
     act::proc::ProcNodeRegistry::add("Math & Logic", "If", act::proc::IfProcNode::create);
     act::proc::ProcNodeRegistry::add("Math & Logic", "Invert", act::proc::InvertProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "Max", act::proc::MaxProcNode::create);
+    act::proc::ProcNodeRegistry::add("Math & Logic", "Min", act::proc::MinProcNode::create);
     act::proc::ProcNodeRegistry::add("Math & Logic", "Modulo", act::proc::ModuloProcNode::create);
     act::proc::ProcNodeRegistry::add("Math & Logic", "Multiply", act::proc::MultiplyProcNode::create);
     act::proc::ProcNodeRegistry::add("Math & Logic", "not", act::proc::notProcNode::create);
