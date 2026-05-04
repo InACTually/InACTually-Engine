@@ -22,6 +22,7 @@ act::proc::LidarProcNode::LidarProcNode() : ProcNodeBase("Lidar", NT_INPUT) {
 
 	m_movementOutputPort = createNumberOutput("movement");
 	m_blobAmountOutputPort = createNumberOutput("blob amount");
+	m_imageOutputPort = createImageOutput("image");
 }
 
 act::proc::LidarProcNode::~LidarProcNode() {
@@ -35,6 +36,7 @@ void act::proc::LidarProcNode::setup(act::room::RoomManagers roomMgrs) {
 void act::proc::LidarProcNode::update() {
 	m_movementOutputPort->send(m_lidarMgr->getMovement());
 	m_blobAmountOutputPort->send(m_lidarMgr->getNumOfBlobs());
+	m_imageOutputPort->send(m_lidarMgr->getImage());
 }
 
 void act::proc::LidarProcNode::draw() {

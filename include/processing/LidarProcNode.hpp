@@ -48,6 +48,7 @@ namespace act {
 
 			OutputPortRef<number>			m_movementOutputPort;
 			OutputPortRef<number>			m_blobAmountOutputPort;
+			ImageOutputPortRef				m_imageOutputPort;
 
 		};
 
