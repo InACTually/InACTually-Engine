@@ -99,6 +99,12 @@
     <ClCompile Include="..\src\processing\InvertProcNode.cpp">
       <Filter>Source Files\math logic</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\MaxProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\MinProcNode.cpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\processing\ModuloProcNode.cpp">
       <Filter>Source Files\math logic</Filter>
     </ClCompile>
@@ -336,6 +342,12 @@
       <Filter>Source Files\math logic</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\InvertProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MaxProcNode.hpp">
+      <Filter>Source Files\math logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\MinProcNode.hpp">
       <Filter>Source Files\math logic</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\ModuloProcNode.hpp">
