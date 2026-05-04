@@ -42,6 +42,7 @@ namespace act {
 		private:
 			OutputPortRef<bool>	m_outPort;
 			bool m_boolean;
+			bool m_isInit = false;
 
 		}; using BooleanProcNodeRef = std::shared_ptr<BooleanProcNode>;
 

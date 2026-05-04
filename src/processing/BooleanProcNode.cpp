@@ -30,6 +30,10 @@ void act::proc::BooleanProcNode::setup(act::room::RoomManagers roomMgrs) {
 }
 
 void act::proc::BooleanProcNode::update() {
+	if (!m_isInit) {
+		m_isInit = true;
+		m_outPort->send(m_boolean);
+	}
 }
 
 void act::proc::BooleanProcNode::draw() {
