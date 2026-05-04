@@ -75,13 +75,13 @@ void act::room::SoundFileRoomNode::update()
 	}
 	
 
-	if(m_bufferPlayerNode->isEof() || getPlayPosition() >= 0.99f) {
+	if(m_bufferPlayerNode->isEof()) {
 		m_isFading = false;
 		if (!m_isLooping) {
 			stop();
 		}
 		else {
-			setVolume(m_targetVolume, m_fadeInPosition * getSeconds());
+			//setVolume(m_targetVolume, m_fadeInPosition * getSeconds());
 		}
 		finishedPlayingFn();
 	} 
@@ -92,7 +92,7 @@ void act::room::SoundFileRoomNode::update()
 	if (!m_isFading && getPlayPosition() > m_fadeOutPosition) {
 		m_isFading = true;
 		m_targetVolume = getVolume();
-		setVolume(0.0f, (1.0f - m_fadeOutPosition) * getSeconds());
+		//setVolume(0.0f, (1.0f - m_fadeOutPosition) * getSeconds());
 	}
 }
 
@@ -124,22 +124,22 @@ void act::room::SoundFileRoomNode::play()
 {
 	if (m_isPlaying) {
 		stop();
-		setVolume(m_targetVolume, 0.0f);
+		//setVolume(m_targetVolume, 0.0f);
 	}
 	else {
 		m_targetVolume = m_volume;
 	}
 		
-	setVolume(0.0f, 0.0f);
-	rampVolume(m_targetVolume, m_fadeInPosition * getSeconds());
+	//setVolume(0.0f, 0.0f);
+	//rampVolume(m_targetVolume, m_fadeInPosition * getSeconds());
 	
-	m_bufferPlayerNode->seekToTime(4.f);
+	//m_bufferPlayerNode->seekToTime(4.f);
 
 	if (m_stretcherNode)
 		m_stretcherNode->play();
 	else
 		m_bufferPlayerNode->start();
-	m_bufferPlayerNode->seekToTime(4.f);
+	//m_bufferPlayerNode->seekToTime(4.f);
 	m_isPlaying = true;
 }
 
@@ -235,6 +235,12 @@ void act::room::SoundFileRoomNode::setSpeed(float speed)
 
 void act::room::SoundFileRoomNode::setVolume(float volume, float rampDuration)
 {
+	if (rampDuration == 0.0f) {
+		m_volume.stop();
+		m_volume = volume;
+		m_gain->setValue(audio::decibelToLinear(m_volume));
+		return;
+	}
 	//m_targetVolume = volume;
 	ci::app::timeline().apply(&m_volume, volume, rampDuration).updateFn([&]() {
 		m_gain->setValue(audio::decibelToLinear(m_volume));
