@@ -1,15 +1,13 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
-	Copyright (c) 2025 InACTually Community
+	Copyright (c) 2026 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -21,6 +19,7 @@
 #include "MatListener.hpp"
 
 #include "camera/CameraManager.hpp"
+#include "cinder/qtime/QuickTimeGl.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -42,6 +41,7 @@ namespace act {
 
 			void onTrigger(bool event);
 			ImageOutputPortRef getVideoOutPort() { return m_videoImageOutPort; };
+			void seek(number playPosition);
 
 			ci::Json toParams() override;
 			void fromParams(ci::Json json) override;
@@ -57,11 +57,10 @@ namespace act {
 
 			ci::ivec2				m_videoSize;
 
-			ImageOutputPortRef m_videoImageOutPort;
-
+			ImageOutputPortRef		m_videoImageOutPort;
 			
 			std::string				m_path;
-			cv::VideoCapture		m_inputVideo;
+			qtime::MovieGlRef		m_inputVideo;
 			bool					m_isOpenDialog;
 			bool					m_isPlaying;
 			bool					m_isLooping;

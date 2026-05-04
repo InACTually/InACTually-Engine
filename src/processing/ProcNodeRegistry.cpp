@@ -195,6 +195,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Video & Image", "ImageEnhancer", act::proc::ImageEnhancerProcNode::create);
     act::proc::ProcNodeRegistry::add("Video & Image", "VideoMixer", act::proc::VideoMixerProcNode::create);
     act::proc::ProcNodeRegistry::add("Video & Image", "VideoPlayer", act::proc::VideoPlayerProcNode::create);
+    act::proc::ProcNodeRegistry::add("Video & Image", "VideoPlayerQT", act::proc::VideoPlayerQTProcNode::create);
     act::proc::ProcNodeRegistry::add("Video & Image", "VideoRecorder", act::proc::VideoRecorderProcNode::create);
 
     act::proc::ProcNodeRegistry::add("general IO", "Camera", act::proc::CameraProcNode::create);

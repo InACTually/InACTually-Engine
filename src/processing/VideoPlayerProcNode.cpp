@@ -1,10 +1,9 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -17,6 +16,7 @@
 
 #include "procpch.hpp"
 #include "VideoPlayerProcNode.hpp"
+#include "cinder/qtime/QuickTimeGl.h"
 
 act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlayer") {
 	m_videoSize = ivec2(1920, 1080);
@@ -26,7 +26,8 @@ act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlaye
 	m_isPlaying = false;
 	m_isLooping = true;
 
-	auto trigger = createBoolInput("fire", [&](bool event) { this->onTrigger(event); });
+	auto trigger = createBoolInput("fire", [&](bool event) { onTrigger(event); });
+	createNumberInput("seek", [&](number playPos) { seek(playPos); });
 
 	m_videoImageOutPort = createImageOutput("videoImage");
 }
@@ -46,18 +47,21 @@ void act::proc::VideoPlayerProcNode::update() {
 		loadVideo(m_path);
 	}
 
-	if (m_isPlaying && m_inputVideo.isOpened()) {
+	if (m_isPlaying && m_inputVideo) {
 		cv::UMat frame;
-		m_inputVideo >> frame;
-		if (frame.empty()) {
-			
-			if(!m_isResuming) 
+		auto frameTexture = m_inputVideo->getTexture();
+		auto src = frameTexture->createSource();
+		frame = toOcv(src).getUMat(cv::ACCESS_FAST);
+
+		if (m_inputVideo->isDone()) {
+			if (!m_isLooping) {
 				m_isPlaying = false;
-
-			m_inputVideo.set(cv::CAP_PROP_POS_FRAMES, 0.0f);
-
+			}
+			else {
+				m_inputVideo->seekToStart();
+			}
 		}
-		else {
+		if (!frame.empty()) {
 			m_videoImageOutPort->send(frame);
 		}
 	}
@@ -69,7 +73,7 @@ void act::proc::VideoPlayerProcNode::draw() {
 	if (ImGui::Button("load")) {
 		m_isOpenDialog = true;
 	}
-	if (m_inputVideo.isOpened()) {
+	if (m_inputVideo) {
 		ImGui::SameLine();
 		if (!m_isPlaying && ImGui::Button("play")) {
 			onTrigger(true);
@@ -97,17 +101,23 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 {
+	if (!event)
+		return;
+
 	if (!m_isPlaying) {
 		m_isPlaying = true;
 	}
 	else if (m_isPlaying) {
-		m_isPlaying = false;
 		if(!m_isResuming)
-			m_inputVideo.set(cv::CAP_PROP_POS_FRAMES, 0.0f);
+			m_inputVideo->seekToStart();
 	}
 }
 
-
+void act::proc::VideoPlayerProcNode::seek(number playPosition)
+{
+	playPosition = std::clamp(playPosition, 0.0f, 1.0f);
+	m_inputVideo->seekToTime(m_inputVideo->getDuration() * playPosition);
+}
 
 ci::Json act::proc::VideoPlayerProcNode::toParams() {
 	ci::Json json = ci::Json::object();
@@ -133,9 +143,17 @@ void act::proc::VideoPlayerProcNode::loadVideo(std::string path)
 		return;
 
 	m_path = path;
-	 m_inputVideo = cv::VideoCapture(path);              // Open input
-	if (!m_inputVideo.isOpened())
-	{
-		CI_LOG_E("Could not open the input video: " << path);
+
+	try {
+		// load up the movie, set it to loop, and begin playing
+		m_inputVideo = qtime::MovieGl::create(m_path);
+		//mMovie->setLoop();
+		m_inputVideo->play();
+	}
+	catch (ci::Exception& exc) {
+		std::stringstream strstr;
+		strstr << "Failed to load the movie from path: " << m_path << ", what: " << exc.what();
+		CI_LOG_E(strstr.str());
+		m_inputVideo.reset();
 	}
 }
