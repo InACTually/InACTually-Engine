@@ -41,11 +41,14 @@ namespace act {
 			ci::Json toParams() override;
 			void fromParams(ci::Json json) override;
 
+			float ease(float value);
+
+			std::vector<std::string>& getEasingNames() { return m_easingNames; }
+			void setEasing(int index);
+
 		private:
 			OutputPortRef<float>	m_valuePort;
 			float m_value;
-
-			float ease(float value);
 
 			int m_selectedEasing = 0;
 			std::vector<std::string> m_easingNames;

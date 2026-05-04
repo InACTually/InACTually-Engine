@@ -33,7 +33,7 @@ act::proc::EasingProcNode::EasingProcNode() : ProcNodeBase("Easing") {
 	auto valInput = createNumberInput("in", [&](float value) {
 		m_value = value;
 		m_valuePort->send(ease(m_value));
-		});
+	});
 }
 
 act::proc::EasingProcNode::~EasingProcNode() {
@@ -68,6 +68,15 @@ void act::proc::EasingProcNode::fromParams(ci::Json json) {
 float act::proc::EasingProcNode::ease(float value)
 {
 	return m_easingsMap[m_easingNames[m_selectedEasing]](value);
+}
+
+void act::proc::EasingProcNode::setEasing(int index)
+{
+	if (index < 0 || index >= m_easingNames.size())
+		return;
+
+	m_selectedEasing = index;
+	m_valuePort->send(ease(m_value));
 }
 
 void act::proc::EasingProcNode::createEasingsList()
