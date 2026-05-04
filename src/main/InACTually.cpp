@@ -268,17 +268,25 @@ void InACTually::draw()
 	gl::enableDepth();
 	gl::enable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
-	if (windowData->isFullscreen()) {
-		if (ImGui::IsKeyDown(ImGuiKey_Escape)) {
+	if (ImGui::IsKeyPressed(ImGuiKey_Space)) {
+		if (ci::app::getWindow()->getUserData<act::WindowData>()->isFullscreen()) {
 			ci::app::getWindow()->getUserData<act::WindowData>()->setFullscreenTex(nullptr);
 			ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(false);
 		}
 		else {
-			gl::clear(Color::black());
-			Rectf destRect = Rectf(windowData->getFullscreenTex()->getBounds()).getCenteredFit(getWindowBounds(), true).scaledCentered(1.0f);
-			gl::draw(windowData->getFullscreenTex(), destRect);
-			return;
+			ci::app::getWindow()->getUserData<act::WindowData>()->setIsFullscreen(true);
 		}
+	}
+	if (ImGui::IsKeyDown(ImGuiKey_Escape)) {
+		AppState::set(AS_CLOSING);
+		ci::app::App::get()->quit();
+	}
+
+	if (windowData->isFullscreen() && windowData->getFullscreenTex()) {
+		gl::clear(Color::black());
+		Rectf destRect = Rectf(windowData->getFullscreenTex()->getBounds()).getCenteredFit(getWindowBounds(), true).scaledCentered(1.0f);
+		gl::draw(windowData->getFullscreenTex(), destRect);
+		return;
 	}
 
 	gl::pushMatrices();
