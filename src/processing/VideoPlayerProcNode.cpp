@@ -22,11 +22,18 @@ act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlaye
 	m_drawSize = ivec2(m_videoSize.x * 0.25, m_videoSize.y * 0.25);
 
 	m_isOpenDialog = false;
+	m_isAdding = false;
 	m_isPlaying = false;
 	m_isLooping = true;
 
+	m_currentVideoIndex = 0;
+
+	m_isFading = false;
+	m_fadeAt = 1.0f;
+
 	auto trigger = createBoolInput("fire", [&](bool event) { onTrigger(event); });
 	createNumberInput("seek", [&](number playPos) { seek(playPos); });
+	createNumberInput("fade to video", [&](number videoIndex) { fadeToVideoIndex(videoIndex); });
 
 	m_videoImageOutPort = createImageOutput("videoImage");
 }
@@ -42,22 +49,46 @@ void act::proc::VideoPlayerProcNode::setup(act::room::RoomManagers roomMgrs) {
 void act::proc::VideoPlayerProcNode::update() {
 	if (m_isOpenDialog) {
 		m_isOpenDialog = false;
-		m_path = ci::app::getOpenFilePath().string();
-		loadVideo(m_path);
+		fs::path path = ci::app::getOpenFilePath().string();
+
+		if (path.empty())
+			return;
+
+		if (m_isAdding) {
+			m_isAdding = false;
+			m_paths.push_back(path);
+		}
+		else {
+			m_paths.resize(0);
+			m_paths.push_back(path);
+			m_currentVideoIndex = 0;
+			loadVideo(getCurrentPath());
+		}
 	}
 
-	if (m_isPlaying && m_inputVideo && m_inputVideo->getTexture()) {
+	if (m_isPlaying && m_video && m_video->getTexture()) {
 		cv::UMat frame;
-		auto frameTexture = m_inputVideo->getTexture();
+		auto frameTexture = m_video->getTexture();
 		auto src = frameTexture->createSource();
 		frame = toOcv(src).getUMat(cv::ACCESS_FAST);
 
-		if (m_inputVideo->isDone()) {
+		if (m_fadeAt.isComplete())
+			m_isFading = false;
+		if (m_isFading && m_videoFadeFrom && m_videoFadeFrom->getTexture()) {
+			cv::UMat fromFrame;
+			auto fromFrameTexture = m_videoFadeFrom->getTexture();
+			auto fromSrc = fromFrameTexture->createSource();
+			fromFrame = toOcv(fromSrc).getUMat(cv::ACCESS_FAST);
+
+			cv::addWeighted(frame, m_fadeAt, fromFrame, 1.0f - m_fadeAt, 0.0f, frame);
+		}
+
+		if (m_video->isDone()) {
 			if (!m_isLooping) {
 				m_isPlaying = false;
 			}
 			else {
-				m_inputVideo->seekToStart();
+				m_video->seekToStart();
 			}
 		}
 		if (!frame.empty()) {
@@ -72,7 +103,13 @@ void act::proc::VideoPlayerProcNode::draw() {
 	if (ImGui::Button("load")) {
 		m_isOpenDialog = true;
 	}
-	if (m_inputVideo) {
+	if (m_video) {
+		ImGui::SameLine();
+		if (ImGui::Button("add")) {
+			m_isAdding = true;
+			m_isOpenDialog = true;
+		}
+
 		ImGui::SameLine();
 		if (!m_isPlaying && ImGui::Button("play")) {
 			onTrigger(true);
@@ -86,7 +123,9 @@ void act::proc::VideoPlayerProcNode::draw() {
 	ImGui::SameLine();
 	ImGui::Checkbox("loop video", &m_isLooping);
 
-	ImGui::Text(m_path.c_str());
+
+	for(auto&& path : m_paths)
+		ImGui::Text(path.string().c_str());
 
 	if (m_videoTexture) {
 		gl::pushMatrices();
@@ -103,25 +142,25 @@ void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 	if (!event)
 		return;
 
-	if (!m_isPlaying) {
+	if (!m_isPlaying && m_video) {
 		m_isPlaying = true;
 	}
 	else if (m_isPlaying) {
 		if(!m_isResuming)
-			m_inputVideo->seekToStart();
+			m_video->seekToStart();
 	}
 }
 
 void act::proc::VideoPlayerProcNode::seek(number playPosition)
 {
 	playPosition = std::clamp(playPosition, 0.0f, 1.0f);
-	m_inputVideo->seekToTime(m_inputVideo->getDuration() * playPosition);
+	m_video->seekToTime(m_video->getDuration() * playPosition);
 }
 
 ci::Json act::proc::VideoPlayerProcNode::toParams() {
 	ci::Json json = ci::Json::object();
 
-	json["path"] = m_path;
+	json["paths"] = m_paths;
 	json["resuming"] = m_isResuming;
 	json["looping"] = m_isLooping;
 
@@ -129,32 +168,64 @@ ci::Json act::proc::VideoPlayerProcNode::toParams() {
 }
 
 void act::proc::VideoPlayerProcNode::fromParams(ci::Json json) {
-	util::setValueFromJson(json, "path", m_path);
+	if (json.contains("paths")) {
+		m_paths.clear();
+		for (auto& path : json["paths"])
+			m_paths.push_back(path.get<std::string>());
+	}
 	util::setValueFromJson(json, "resuming", m_isResuming);
 	util::setValueFromJson(json, "looping", m_isLooping);
 
-	loadVideo(m_path);
+	loadVideo(getCurrentPath());
 }
 
-void act::proc::VideoPlayerProcNode::loadVideo(std::string path)
+void act::proc::VideoPlayerProcNode::loadVideo(fs::path path)
 {
-	if (path == "")
+	if (path.empty())
 		return;
 
-	m_path = path;
-	fs::path p(m_path);
+	fs::path p(path);
 	if (p.is_relative())
 		p = ci::app::getAssetPath(p);
 	try {
 		// load up the movie, set it to loop, and begin playing
-		m_inputVideo = qtime::MovieGl::create(p.string());
+		m_video = qtime::MovieGl::create(p.string());
 		//mMovie->setLoop();
-		m_inputVideo->play();
+		m_video->play();
 	}
 	catch (ci::Exception& exc) {
 		std::stringstream strstr;
-		strstr << "Failed to load the movie from path: " << m_path << ", what: " << exc.what();
+		strstr << "Failed to load the movie from path: " << path << ", what: " << exc.what();
 		CI_LOG_E(strstr.str());
-		m_inputVideo.reset();
+		m_video.reset();
 	}
+}
+
+bool act::proc::VideoPlayerProcNode::fadeToVideoIndex(int index)
+{
+	if (index >= m_paths.size())
+		return false;
+
+	m_videoFadeFrom = m_video;
+	loadVideo(m_paths[index]);
+
+	if (!m_video) {
+		m_video = m_videoFadeFrom;
+		return false;
+	}
+
+	m_video->seekToTime(m_videoFadeFrom->getCurrentTime());
+
+	m_fadeAt = 0.0f;
+	ci::app::timeline().apply(&m_fadeAt, 1.0f, 3, ci::easeInOutSine);
+	m_isFading = true;
+
+	return true;
+}
+
+fs::path act::proc::VideoPlayerProcNode::getCurrentPath()
+{
+	if (m_currentVideoIndex >= m_paths.size())
+		return fs::path();
+	return m_paths[m_currentVideoIndex];
 }

@@ -46,10 +46,13 @@ namespace act {
 			ci::Json toParams() override;
 			void fromParams(ci::Json json) override;
 
-			void loadVideo(std::string path);
+			void loadVideo(fs::path path);
 
 			void setIsLooping(bool isLooping)	{ m_isLooping = isLooping; };
 			void setIsResuming(bool isResuming) { m_isResuming = isResuming; };
+
+			bool fadeToVideoIndex(int index);
+			fs::path getCurrentPath();
 
 		private:
 			ci::SurfaceRef			m_videoSurface;
@@ -59,9 +62,17 @@ namespace act {
 
 			ImageOutputPortRef		m_videoImageOutPort;
 			
-			std::string				m_path;
-			qtime::MovieGlRef		m_inputVideo;
+			int						m_currentVideoIndex;
+			std::vector<fs::path>	m_paths;
+			qtime::MovieGlRef		m_video;
+			qtime::MovieGlRef		m_videoFadeFrom;
+
+			ci::Anim<float>			m_fadeAt;
+			bool					m_isFading;
+
 			bool					m_isOpenDialog;
+			bool					m_isAdding;
+
 			bool					m_isPlaying;
 			bool					m_isLooping;
 			bool					m_isResuming;
