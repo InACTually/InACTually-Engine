@@ -21,6 +21,7 @@ act::proc::NumberProcNode::NumberProcNode() : ProcNodeBase("Number") {
 	m_number = 0.0f;
 
 	m_outPort = createNumberOutput("out");
+	createBoolInput("fire", [&](bool event) { if(event) m_outPort->send(m_number); });
 }
 
 act::proc::NumberProcNode::~NumberProcNode() {
