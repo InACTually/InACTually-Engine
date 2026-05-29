@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2023-2025
+	This file is created and substantially modified: 2023-2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -26,6 +26,10 @@ act::proc::NoiseProcNode::NoiseProcNode() : ProcNodeBase("Noise") {
 	m_drawSize = ivec2(100, 200);
 	m_perlin = Perlin();
 	m_random = Rand::randFloat(0.0f, 255.0f);
+
+	m_min = 0.0f;
+	m_max = 1.0f;
+	m_speed = 0.5f;
 
 	m_show = false;
 
