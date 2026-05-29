@@ -46,6 +46,7 @@ namespace act {
 
 			int m_nextTrigger = 0;
 			bool m_isTriggering = false;
+			bool m_startAtRandom = false;
 
 			InputPortRef<bool> m_fireInputPort;
 			InputPortRef<bool> m_stepUpInputPort;

@@ -17,6 +17,7 @@
 
 #include "procpch.hpp"
 #include "TriggerListProcNode.hpp"
+#include "cinder/rand.h"
 
 
 act::proc::TriggerListProcNode::TriggerListProcNode() : ProcNodeBase("TriggerList") {
@@ -28,10 +29,10 @@ act::proc::TriggerListProcNode::TriggerListProcNode() : ProcNodeBase("TriggerLis
 	m_fireInputPort = createBoolInput("fire", [&](bool triggered) { 
 		if (triggered && !m_isTriggering) {
 			fireTrigger(); 
-			m_isTriggering = true;
+			m_isTriggering = false;
 		}
 		else if (!triggered && m_isTriggering) {
-			m_isTriggering = false;
+			m_isTriggering = true;
 		}
 	});
 
@@ -152,6 +153,7 @@ ci::Json act::proc::TriggerListProcNode::toParams() {
 		trigger.push_back(portJson);
 	}
 	json["trigger"] = trigger;
+	json["startAtRandom"] = m_startAtRandom;
 	return json;
 }
 
@@ -162,6 +164,10 @@ void act::proc::TriggerListProcNode::fromParams(ci::Json json) {
 
 		auto port = createBoolOutput( name);
 		port->setCaption(caption);
+	}
+	util::setValueFromJson(json, "startAtRandom", m_startAtRandom);
+	if(m_startAtRandom && m_outputPorts.size() > 1) {
+		m_nextTrigger = ci::randInt(m_outputPorts.size()-1);
 	}
 }
 
