@@ -51,7 +51,7 @@ namespace act {
 		private:
 			float	m_dim;
 			float	m_zoom;
-			Color	m_color;
+			ci::Anim<Color>	m_color;
 			vec3	m_lookAt;
 			bool	m_isLookingAt;
 			bool	m_isUpsideDown;
