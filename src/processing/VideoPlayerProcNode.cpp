@@ -71,27 +71,37 @@ void act::proc::VideoPlayerProcNode::update() {
 	if (m_isPlaying && m_video && m_video->getTexture()) {
 		
 		auto frameTexture = m_video->getTexture();
+
 		if (!frameTexture)
 			return;
 
-		GLuint texId = frameTexture->getId();
+		m_videoTexture = frameTexture;
+
 		cv::UMat frame;
 		try {
-			cv::ogl::Texture2D glFrame(frameTexture->getHeight(), frameTexture->getWidth(), cv::ogl::Texture2D::RGBA, texId, false);
-			glFrame.copyTo(frame);
+			cv::ogl::Texture2D glFrame(frameTexture->getHeight(), frameTexture->getWidth(), cv::ogl::Texture2D::RGBA, frameTexture->getId(), false);
+			cv::ogl::convertFromGLTexture2D(glFrame, frame);
 		}
 		catch (const cv::Exception& e) {
 			CI_LOG_E("OpenCV OGL error: " << e.what());
 			return;
 		}
 
+		cv::flip(frame, frame, -1);
+
 		if (m_fadeAt.isComplete())
 			m_isFading = false;
 		if (m_isFading && m_videoFadeFrom && m_videoFadeFrom->getTexture()) {
 			cv::UMat fromFrame;
-			auto fromFrameTexture = m_videoFadeFrom->getTexture();
-			auto fromSrc = fromFrameTexture->createSource();
-			fromFrame = ci::toOcv(fromSrc).getUMat(cv::ACCESS_FAST);
+			auto fromFrameTexture = m_videoFadeFrom->getTexture(); 
+			try {
+				cv::ogl::Texture2D glfromFrame(fromFrameTexture->getHeight(), fromFrameTexture->getWidth(), cv::ogl::Texture2D::RGBA, fromFrameTexture->getId(), false);
+				cv::ogl::convertFromGLTexture2D(glfromFrame, fromFrame);
+			}
+			catch (const cv::Exception& e) {
+				CI_LOG_E("OpenCV OGL error: " << e.what());
+				return;
+			}
 
 			cv::addWeighted(frame, m_fadeAt, fromFrame, 1.0f - m_fadeAt, 0.0f, frame);
 		}
@@ -142,8 +152,7 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 	if (m_videoTexture) {
 		ci::gl::pushMatrices();
-		ci::gl::rotate(ci::toRadians(180.0f));
-		ImGui::Image(m_videoTexture, m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_videoTexture, m_drawSize, glm::vec2(0, 0), glm::vec2(1, 1));
 		ci::gl::pushMatrices();
 	}
 
@@ -152,13 +161,11 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 {
-	if (!event)
-		return;
-
-	if (!m_isPlaying && m_video) {
+	if (event && !m_isPlaying && m_video) {
 		m_isPlaying = true;
 	}
-	else if (m_isPlaying) {
+	else if (!event && m_isPlaying) {
+		m_isPlaying = false;
 		if(!m_isResuming)
 			m_video->seekToStart();
 	}

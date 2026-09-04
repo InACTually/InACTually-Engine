@@ -19,6 +19,9 @@
 
 #include "ProcNodeBase.hpp"
 
+#include <atomic>
+#include <opencv2/core/opengl.hpp>
+
 
 namespace act {
 	namespace proc {
@@ -45,15 +48,20 @@ namespace act {
 			bool m_display;
 			bool m_fullscreen;
 			bool m_projector;
-			act::room::DisplayManagerRef	m_displayMgr;
-			act::room::ProjectorManagerRef	m_projectorMgr;
+			act::room::DisplayManagerRef		m_displayMgr;
+			act::room::ProjectorManagerRef		m_projectorMgr;
 
-			ci::gl::Texture2dRef	m_texture;
+			ci::gl::Texture2dRef				m_texture;
 			glm::ivec2 adaptSize(glm::ivec2 size);
-			float	m_displayScale;
+			float								m_displayScale;
 
-			ImageOutputPortRef				m_imagePort;
+			cv::UMat							m_rgbaBuffer;
+			cv::ogl::Texture2D					m_glTex;
+
+			ImageOutputPortRef					m_imagePort;
 			OutputPortRef<ci::gl::Texture2dRef>	m_texturePort;
+
+			std::atomic_bool					m_frameInFlight { false };
 
 		}; using MonitorProcNodeRef = std::shared_ptr<MonitorProcNode>;
 

@@ -19,6 +19,8 @@
 #include "MonitorProcNode.hpp"
 #include "WindowData.hpp"
 
+#include <opencv2/core/opengl.hpp>
+
 act::proc::MonitorProcNode::MonitorProcNode() : ProcNodeBase("Monitor") {
 	m_drawSize = glm::ivec2(400, 300);
 	m_show = true;
@@ -86,7 +88,7 @@ void act::proc::MonitorProcNode::draw() {
 		ImGui::Image(m_texture, m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
 		ImGui::Indent(adaptSize(m_drawSize).x - m_drawSize.x);
 
-		ci::gl::pushMatrices();
+		ci::gl::popMatrices();
 	}
 
 	endNodeDraw();
@@ -95,10 +97,28 @@ void act::proc::MonitorProcNode::draw() {
 void act::proc::MonitorProcNode::onMat(cv::UMat event) {
 	m_imagePort->send(event);
 
-	auto frame = ci::fromOcv(event);
-	ci::app::App::get()->dispatchAsync([this, frame, event]() {
+	// Guard against piling up dispatched lambdas / GL texture creations when the
+	// producer (capture thread) is faster than the main thread can consume them.
+	bool expected = false;
+	if (!m_frameInFlight.compare_exchange_strong(expected, true))
+		return;
+
+	ci::app::App::get()->dispatchAsync([this, event]() {
+		m_frameInFlight = false;
+
 		if (m_show || m_display || m_fullscreen) {
-			m_texture = ci::gl::Texture2d::create(frame);
+			try {
+				cv::cvtColor(event, m_rgbaBuffer, cv::COLOR_BGR2RGBA);
+
+				m_glTex = cv::ogl::Texture2D(m_rgbaBuffer.rows, m_rgbaBuffer.cols, cv::ogl::Texture2D::RGBA, false);
+				cv::ogl::convertToGLTexture2D(m_rgbaBuffer, m_glTex);
+				m_texture = ci::gl::Texture2d::create(GL_TEXTURE_2D, m_glTex.texId(), m_glTex.cols(), m_glTex.rows(), false);
+			}
+			catch (const cv::Exception& e) {
+				CI_LOG_E("OpenCV OGL error: " << e.what());
+				return;
+			}
+
 			m_drawSize = glm::ivec2(m_texture->getWidth(), m_texture->getHeight());
 
 			auto windowData = ci::app::getWindow()->getUserData<act::WindowData>();

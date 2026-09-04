@@ -18,7 +18,10 @@
 #include "main/InACTually.hpp"
 #include "Logger.hpp"
 
+#include <opencv2/core.hpp>
 #include <opencv2/core/ocl.hpp>
+#include <opencv2/core/opengl.hpp>
+
 #include <cinder/CinderImGui.h>
 #include <imgui_impl_opengl3.h>
 #include "implot.h"
@@ -86,7 +89,9 @@ void InACTually::init()
 	oneapi::tbb::global_control c(oneapi::tbb::global_control::max_allowed_parallelism,	numOfThreads);
 
 	if (cv::ocl::haveOpenCL()) {
-		cv::ocl::setUseOpenCL(cv::ocl::haveOpenCL());
+		cv::ocl::setUseOpenCL(false);
+		cv::ogl::ocl::initializeContextFromGL();
+		cv::ocl::setUseOpenCL(true);
 
 		std::vector<cv::ocl::PlatformInfo> plattformInfo;
 		cv::ocl::getPlatfomsInfo(plattformInfo);
