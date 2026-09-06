@@ -14,9 +14,13 @@ Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folde
     - for Release "Multithreaded-DLL (/MD)" name the output folder "Release_MD\..\" (e.g. name the configuration accordingly)
     - for Debug "Multithreaded-Debug-DLL (/MDd)" name the output folder "Debug_MD\..\" likewise
 
-+ [OpenCV 4.10.0](https://github.com/opencv/opencv) (or possibly newer) \
-You need to compile OpenCV, maybe with opencv_contrib and things you like to have.\
-Place OpenCV in `./3rd/OpenCV4` – care: the include folder is `./3rd/OpenCV4/include/opencv`.\
++ [OpenCV 5.1.0](https://github.com/opencv/opencv) (or possibly newer) \
+You need to compile OpenCV with "WITH_OPENGL"-flag (best "WITH_TBB") and things you like to have.\
+Place OpenCV in `./3rd/OpenCV5` – care: the include folder is `./3rd/OpenCV5/include/opencv`.\
+You need to place/copy the corresponding *.dll's in `vc2022\bin\Release|Debug`.
+
++ [oneTBB - 2023.1.0 (tbb12)](https://github.com/uxlfoundation/oneTBB) (or possibly newer) \
+Place oneTBB in `./3rd/oneTBB` - the include folder is `./3rd/oneTBB/include`.\
 You need to place/copy the corresponding *.dll's in `vc2022\bin\Release|Debug`.
 
 ## Optional ones
