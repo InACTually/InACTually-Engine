@@ -22,7 +22,7 @@ namespace act {
 
 			struct OFLChannelDescPatch {
 				ci::Json descriptionPatch;
-				bool includePatch = true;
+				bool isIncludePatch = true;
 			}; using OFLChannelDescPatchRef = std::shared_ptr<OFLChannelDescPatch>;
 
 			struct OFLChannel {
@@ -44,20 +44,20 @@ namespace act {
 				std::vector<OFLModeRef> modes;
 				std::string type;
 				bool isSupportedType = false;
-				bool forceConverted = false;
+				bool isForceConverted = false;
 				int selectedMode;
-				bool queuedForLoading = false;
-				bool queuedForImport = false;
+				bool isQueuedForLoading = false;
+				bool isQueuedForImport = false;
 				bool hasError = false;
-				bool showInListing = true; // used for filtering in UI
+				bool isShowInListing = true; // used for filtering in UI
 			}; using OFLFixtureDescriptionRef = std::shared_ptr<OFLFixtureDescription>;
 
 			struct OFLManufacturer {
 				std::string key;
 				std::string name;
 				std::vector<OFLFixtureDescriptionRef> fixtures;
-				bool showInListing = true; // used for filtering UI
-				bool expandInListing = false; // used to automatically and show fixtures in UI
+				bool isShowInListing = true; // used for filtering UI
+				bool isExpandInListing = false; // used to automatically and show fixtures in UI
 			}; using OFLManufacturerRef = std::shared_ptr<OFLManufacturer>;
 
 			/** @brief The OpenFixtureLibrary struct holds a vector of manufacturers

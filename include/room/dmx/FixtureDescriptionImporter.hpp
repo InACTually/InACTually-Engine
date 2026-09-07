@@ -46,18 +46,18 @@ namespace act {
 			*/
 			void	registerDMXManager(std::weak_ptr<DMXManager> dmxManagerWRef);
 
-			bool m_showImporter;
+			bool m_isShowImporter;
 
 		private:
 
 			std::map<std::string, std::string> m_oflJsonDmpCache;
 			std::list<ofl::OFLFixtureDescriptionRef> m_oflFetchFixtureQueue;
 			std::list<ofl::OFLFixtureDescriptionRef> m_importQueue;
-			bool m_openOFLInBrowser = false;
-			bool m_searchOFLAgain = false;
-			bool m_oflReparse = false;
+			bool m_isOpenOFLInBrowser = false;
+			bool m_isSearchOFLAgain = false;
+			bool m_isOFLReparsing = false;
 			bool m_isOFLListFilteres = false;
-			bool m_oflFixtureFilterChanged = false;
+			bool m_hasOFLFixtureFilterChanged = false;
 			char m_oflFixtureFilterBuffer[128] = "";
 			std::weak_ptr<DMXManager> m_dmxManagerWRef;
 

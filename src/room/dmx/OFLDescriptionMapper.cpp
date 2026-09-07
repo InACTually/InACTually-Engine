@@ -198,7 +198,7 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(ofl::OFLFixtureDes
 		fixtureDescription->type = "dimmer";
 	else if (act::util::isInJsonArray("Moving Head", externalDesc["categories"]) || act::util::isInJsonArray("Color Changer", externalDesc["categories"]))
 		fixtureDescription->type = "mv";
-	else if (fixtureDescription->forceConverted)
+	else if (fixtureDescription->isForceConverted)
 		fixtureDescription->type = "mv";
 	else
 	{
@@ -274,7 +274,7 @@ bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& m
 		const std::string& channelKey = modeDesc["channels"][dmxOffset];
 
 		ofl::OFLChannelDescPatchRef descPatchRef = std::make_shared<ofl::OFLChannelDescPatch>();
-		descPatchRef->includePatch = false;
+		descPatchRef->isIncludePatch = false;
 
 		// Check if there is already a description patch for this channel
 		// checkOtherAffectedChannels could produce that
@@ -322,7 +322,7 @@ bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& m
 			continue;
 		}
 
-		if (fixtureDescription->forceConverted)
+		if (fixtureDescription->isForceConverted)
 			modeRef->internalDescBase["notes"]["forceConverted"] = "CHECK DESCRIPTION BEFORE USING IT! Fixture type is not a supported fixture type. This description was force converted by the user.";
 
 		descPatchRef->descriptionPatch = internalDescPatch;
@@ -335,7 +335,7 @@ bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& m
 			// Check if notes were added while converting the fixture. If so there is probably something the user should actively notice
 			// so we dont include the patch by default
 			if (!internalDescPatch.contains("notes"))
-				descPatchRef->includePatch = true;
+				descPatchRef->isIncludePatch = true;
 			else
 				CI_LOG_W("Channel " << channelKey << " wont be included in final internal description by default because notes were produced while converting the channel.");
 		}
@@ -357,7 +357,7 @@ ci::Json act::room::OFLDescriptionMapper::getInternalDescription(ofl::OFLFixture
 	for (auto const& [channel, channelRef] : modeRef->channelMapping)
 	{
 		//TODO check constraints like only one dimmer etc.
-		if (channelRef->channelDescPatch->includePatch)
+		if (channelRef->channelDescPatch->isIncludePatch)
 			internalDescription.merge_patch(channelRef->channelDescPatch->descriptionPatch);
 	}
 
@@ -399,10 +399,10 @@ void act::room::OFLDescriptionMapper::addDescToOtherAffectedChannels(ofl::OFLMod
 				// we already have a desription and it is not empty. This should not happen
 				// So we dont include both by default and add a warning
 				std::string note = "The parameter has two conflicting descriptions! Caused by parameter '" + parameter + "'!";
-				channelDescPatchRef->includePatch = false;
+				channelDescPatchRef->isIncludePatch = false;
 				ofl::OFLHelper::attachNoteToChannelDesc(channelDescPatchRef->descriptionPatch, inACTparamOffset, note);
 
-				channelRef->channelDescPatch->includePatch = false;
+				channelRef->channelDescPatch->isIncludePatch = false;
 				ofl::OFLHelper::attachNoteToChannelDesc(channelRef->channelDescPatch->descriptionPatch, inACTparamOffset, note);
 				continue;
 			}

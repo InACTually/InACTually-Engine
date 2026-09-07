@@ -24,7 +24,7 @@
 act::room::FixtureDescriptionImporter::FixtureDescriptionImporter()
 {
 	m_oflDescriptionMapper = OFLDescriptionMapper::create();
-	m_showImporter = false;
+	m_isShowImporter = false;
 }
 
 act::room::FixtureDescriptionImporter::~FixtureDescriptionImporter()
@@ -34,9 +34,9 @@ act::room::FixtureDescriptionImporter::~FixtureDescriptionImporter()
 void act::room::FixtureDescriptionImporter::draw()
 {
 	if (ImGui::Button("Import Fixture Description"))
-		m_showImporter = true;
+		m_isShowImporter = true;
 
-	if (!m_showImporter)
+	if (!m_isShowImporter)
 		return;
 
 	ImGui::OpenPopup("Fixture Import");
@@ -48,7 +48,7 @@ void act::room::FixtureDescriptionImporter::draw()
 
 		if (ImGui::Button("Close Importer"))
 		{
-			m_showImporter = false;
+			m_isShowImporter = false;
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -57,29 +57,29 @@ void act::room::FixtureDescriptionImporter::draw()
 
 void act::room::FixtureDescriptionImporter::update()
 {
-	if (m_openOFLInBrowser)
+	if (m_isOpenOFLInBrowser)
 	{
 		CI_LOG_D("Opening Open Fixture Library Website");
 		ci::app::Platform::get()->launchWebBrowser(ci::Url("https://open-fixture-library.org/"));
-		m_openOFLInBrowser = false;
+		m_isOpenOFLInBrowser = false;
 	}
-	if (m_searchOFLAgain)
+	if (m_isSearchOFLAgain)
 	{
 		CI_LOG_D("Trying to find Open Fixture Library again...");
 		m_oflDescriptionMapper->searchLibraryPath(); // Set Library path
 		m_oflDescriptionMapper->getManufacturers(true); // And parse manufacturers
-		m_searchOFLAgain = false;
+		m_isSearchOFLAgain = false;
 	}
-	if (m_oflFixtureFilterChanged)
+	if (m_hasOFLFixtureFilterChanged)
 	{
 		filterOFLFixtures();
-		m_oflFixtureFilterChanged = false;
+		m_hasOFLFixtureFilterChanged = false;
 	}
 
-	if (m_oflReparse)
+	if (m_isOFLReparsing)
 	{
 		m_oflDescriptionMapper->getManufacturers(true);
-		m_oflReparse = false;
+		m_isOFLReparsing = false;
 	}
 
 	while (m_oflFetchFixtureQueue.size() > 0)
@@ -98,7 +98,7 @@ void act::room::FixtureDescriptionImporter::update()
 			std::string dmpKey = fixture->uid + "-" + fixture->modes.at(fixture->selectedMode)->name;
 			m_oflJsonDmpCache[dmpKey] = OFLDescriptionMapper::getInternalDescription(fixture).dump(3);
 		}
-		fixture->queuedForLoading = false;
+		fixture->isQueuedForLoading = false;
 		m_oflFetchFixtureQueue.pop_front();
 	}
 
@@ -128,10 +128,10 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 			ImGui::Spacing();
 			ImGui::TextWrapped(assetsPath.c_str());
 			if (ImGui::Button("Open OFL Website"))
-				m_openOFLInBrowser = true;
+				m_isOpenOFLInBrowser = true;
 			ImGui::SameLine();
 			if (ImGui::Button("Search Again"))
-				m_searchOFLAgain = true;
+				m_isSearchOFLAgain = true;
 			ImGui::Spacing();
 			return;
 		}
@@ -141,12 +141,12 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 
 		ImGui::Spacing();
 		if (ImGui::InputText("Search OFL Fixture", m_oflFixtureFilterBuffer, IM_ARRAYSIZE(m_oflFixtureFilterBuffer)))
-			m_oflFixtureFilterChanged = true;
+			m_hasOFLFixtureFilterChanged = true;
 		ImGui::Spacing();
 
 		if (!m_oflDescriptionMapper->getIsParsed())
 		{
-			if (!m_oflReparse) m_oflReparse = true;
+			if (!m_isOFLReparsing) m_isOFLReparsing = true;
 			ImGui::Text("Open Fixture Library not loaded jet. Queued for loading.");
 		}
 
@@ -156,11 +156,11 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 		{
 			ofl::OFLManufacturerRef manufacturer = manufacturers.at(manufacturerId);
 				
-			if (m_isOFLListFilteres && !manufacturer->showInListing)
+			if (m_isOFLListFilteres && !manufacturer->isShowInListing)
 				continue; // Skipp if we filter and manufacturer is not to be shown
 
 
-			if (m_isOFLListFilteres && manufacturer->expandInListing)
+			if (m_isOFLListFilteres && manufacturer->isExpandInListing)
 				ImGui::SetNextItemOpen(true);
 			if (ImGui::TreeNode(manufacturer->name.c_str()))
 			{
@@ -172,7 +172,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 				{
 					ofl::OFLFixtureDescriptionRef fixture = manufacturer->fixtures.at(fixtureId);
 
-					if (m_isOFLListFilteres && !fixture->showInListing)
+					if (m_isOFLListFilteres && !fixture->isShowInListing)
 						continue; // Skipp if we filter and fixture is not to be shown
 						
 					fixtureShown = true;
@@ -198,7 +198,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 
 void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
 {
-	if (fixture->queuedForLoading)
+	if (fixture->isQueuedForLoading)
 	{
 		// Fixture is queued for loading
 		ImGui::Text("... Fixture details loading...");
@@ -206,9 +206,9 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtur
 	}
 
 	// Check if there is an Description ready
-	if (fixture->externalDescription.empty() && !fixture->queuedForLoading)
+	if (fixture->externalDescription.empty() && !fixture->isQueuedForLoading)
 	{
-		fixture->queuedForLoading = true;
+		fixture->isQueuedForLoading = true;
 		m_oflFetchFixtureQueue.push_back(fixture);
 		return;
 	}
@@ -224,17 +224,17 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtur
 			return;
 		}
 
-		bool checkBoxBefore = fixture->forceConverted;
-		ImGui::Checkbox(("Force convert '"+fixture->name + "' anyway").c_str(), &fixture->forceConverted);
-		if (fixture->forceConverted != checkBoxBefore && fixture->forceConverted)
+		bool checkBoxBefore = fixture->isForceConverted;
+		ImGui::Checkbox(("Force convert '"+fixture->name + "' anyway").c_str(), &fixture->isForceConverted);
+		if (fixture->isForceConverted != checkBoxBefore && fixture->isForceConverted)
 		{
 			// set externalDescription to empty to force new traslation
 			fixture->externalDescription = ci::Json();
-			fixture->queuedForLoading = true;
+			fixture->isQueuedForLoading = true;
 			m_oflFetchFixtureQueue.push_back(fixture);
 		}
 
-		if(!fixture->forceConverted) // Continue only if we force converted the fixture
+		if(!fixture->isForceConverted) // Continue only if we force converted the fixture
 			return; 
 	}
 
@@ -286,9 +286,9 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtur
 		// store json dump in map so the inputTextMultline callback has something to work with
 
 		if (m_oflJsonDmpCache.find(internalDescKey) == m_oflJsonDmpCache.end()
-			&& !fixture->queuedForLoading)
+			&& !fixture->isQueuedForLoading)
 		{
-			fixture->queuedForLoading = true;
+			fixture->isQueuedForLoading = true;
 			m_oflFetchFixtureQueue.push_back(fixture);
 		}
 		else
@@ -302,10 +302,10 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtur
 
 	// === Import Button
 	ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Always check plausibility of the internal fixture description before importing the fixture!");
-	if (ImGui::Button("Add Fixture To Project") && !fixture->queuedForLoading)
+	if (ImGui::Button("Add Fixture To Project") && !fixture->isQueuedForLoading)
 	{
 		m_importQueue.push_back(fixture);
-		m_showImporter = false;
+		m_isShowImporter = false;
 	}
 }
 
@@ -332,13 +332,13 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtureD
 			if (isSupported)
 			{
 				std::string checkboxlabel = "##" + fixture->uid + std::to_string(dmxOffset);
-				bool isIncludedPre = modeRef->channelDescPatch->includePatch;
+				bool isIncludedPre = modeRef->channelDescPatch->isIncludePatch;
 				ImGui::SetWindowFontScale(0.3f);
-				ImGui::Checkbox(checkboxlabel.c_str(), &modeRef->channelDescPatch->includePatch);
+				ImGui::Checkbox(checkboxlabel.c_str(), &modeRef->channelDescPatch->isIncludePatch);
 				ImGui::SetWindowFontScale(1.0f);
-				if (isIncludedPre != modeRef->channelDescPatch->includePatch && !fixture->queuedForLoading)
+				if (isIncludedPre != modeRef->channelDescPatch->isIncludePatch && !fixture->isQueuedForLoading)
 				{
-					fixture->queuedForLoading = true;
+					fixture->isQueuedForLoading = true;
 					m_oflFetchFixtureQueue.push_back(fixture);
 				}
 			}
@@ -434,17 +434,17 @@ void act::room::FixtureDescriptionImporter::filterOFLFixtures()
 			if (fixture->name.find(filterTerm) != std::string::npos || forceShowFixtures)
 			{
 				fixtureWithText = true;
-				fixture->showInListing = true;
+				fixture->isShowInListing = true;
 			}
 			else
-				fixture->showInListing = false;
+				fixture->isShowInListing = false;
 		}
 
-		manufacturer->expandInListing = fixtureWithText;
+		manufacturer->isExpandInListing = fixtureWithText;
 
 		if (fixtureWithText || manufacturerLowerCase.find(filterTerm) != std::string::npos)
-			manufacturer->showInListing = true;
+			manufacturer->isShowInListing = true;
 		else
-			manufacturer->showInListing = false;
+			manufacturer->isShowInListing = false;
 	}
 }
