@@ -38,15 +38,15 @@ std::string act::room::OFLDescriptionMapper::getName()
 bool act::room::OFLDescriptionMapper::searchLibraryPath()
 {
 	ci::fs::path usualPath = ci::app::getAssetPath("dmx/ofl_export_ofl");
-	return setLibarayPath(usualPath);
+	return setLibraryPath(usualPath);
 }
 
-ci::fs::path act::room::OFLDescriptionMapper::getLibarayPath()
+ci::fs::path act::room::OFLDescriptionMapper::getLibraryPath()
 {
 	return m_ofl.libraryPath;
 }
 
-bool act::room::OFLDescriptionMapper::setLibarayPath(ci::fs::path path)
+bool act::room::OFLDescriptionMapper::setLibraryPath(ci::fs::path path)
 {
 	// Check if a manufacturer index exists at provided path
 	ci::fs::path check = path;
@@ -68,7 +68,7 @@ bool act::room::OFLDescriptionMapper::getIsParsed()
 
 std::vector<act::room::OFLDescriptionMapper::OFLManufacturerRef> act::room::OFLDescriptionMapper::getManufacturers(bool allowParsingMeta)
 {
-	// If the libaray is not parsed jet but we are allowed to we parse it first
+	// If the library is not parsed jet but we are allowed to we parse it first
 	if (!m_ofl.isParsed && allowParsingMeta)
 		parseLibraryMeta();
 

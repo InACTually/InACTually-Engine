@@ -59,14 +59,14 @@ void act::room::FixtureDescriptionImporter::update()
 {
 	if (m_openOFLInBrowser)
 	{
-		CI_LOG_D("Opening Open Fixture Libaray Website");
+		CI_LOG_D("Opening Open Fixture Library Website");
 		ci::app::Platform::get()->launchWebBrowser(ci::Url("https://open-fixture-library.org/"));
 		m_openOFLInBrowser = false;
 	}
 	if (m_searchOFLAgain)
 	{
 		CI_LOG_D("Trying to find Open Fixture Library again...");
-		m_oflDescriptionMapper->searchLibraryPath(); // Set Libaray path
+		m_oflDescriptionMapper->searchLibraryPath(); // Set Library path
 		m_oflDescriptionMapper->getManufacturers(true); // And parse manufacturers
 		m_searchOFLAgain = false;
 	}
@@ -119,11 +119,11 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 	if (ImGui::CollapsingHeader(m_oflDescriptionMapper->getName().c_str()))
 	{
 		// Check if the ofl library is present
-		if (m_oflDescriptionMapper->getLibarayPath().empty())
+		if (m_oflDescriptionMapper->getLibraryPath().empty())
 		{
-			ImGui::Text("No Path to the Open Fixture Libaray Found!");
+			ImGui::Text("No Path to the Open Fixture Library Found!");
 			ImGui::Spacing();
-			ImGui::TextWrapped("Please download the 'Open Fixture Libaray JSON' ZIP-Archive from https://open-fixture-library.org/ and extract it as 'ofl_export_ofl' into the 'dmx' subfolder of the assets folder.");
+			ImGui::TextWrapped("Please download the 'Open Fixture Library JSON' ZIP-Archive from https://open-fixture-library.org/ and extract it as 'ofl_export_ofl' into the 'dmx' subfolder of the assets folder.");
 			std::string assetsPath = "Current assets folder: " + ci::app::getAssetPath("").string();
 			ImGui::Spacing();
 			ImGui::TextWrapped(assetsPath.c_str());
@@ -137,7 +137,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 		}
 
 		//== Header with library path an search box
-		ImGui::Text(("Library Path: " + m_oflDescriptionMapper->getLibarayPath().string()).c_str());
+		ImGui::Text(("Library Path: " + m_oflDescriptionMapper->getLibraryPath().string()).c_str());
 
 		ImGui::Spacing();
 		if (ImGui::InputText("Search OFL Fixture", m_oflFixtureFilterBuffer, IM_ARRAYSIZE(m_oflFixtureFilterBuffer)))
@@ -150,7 +150,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 			ImGui::Text("Open Fixture Library not loaded jet. Queued for loading.");
 		}
 
-		//== Loop over all manufactueres
+		//== Loop over all manufacturers
 		std::vector<act::room::OFLDescriptionMapper::OFLManufacturerRef> manufacturers = m_oflDescriptionMapper->getManufacturers(false);
 		for (int manufacturerId = 0; manufacturerId < manufacturers.size(); manufacturerId++)
 		{

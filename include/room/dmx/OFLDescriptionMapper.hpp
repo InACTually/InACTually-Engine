@@ -68,25 +68,25 @@ namespace act {
 				bool expandInListing = false; // used to automatically and show fixtures in UI
 			}; using OFLManufacturerRef = std::shared_ptr<OFLManufacturer>;
 
-			// The OpenFixtureLibaray struct holds a vector of manufactueres
+			// The OpenFixtureLibrary struct holds a vector of manufacturers
 			// which each hold a vector of fixtures
 			// each holding a vector of modes
-			struct OpenFixtureLibaray {
+			struct OpenFixtureLibrary {
 				std::string name;
 				ci::fs::path libraryPath;
 				std::vector<OFLManufacturerRef> manufacturers{};
 				bool isParsed;
-			}; using OpenFixtureLibarayRef = std::shared_ptr<OpenFixtureLibaray>;
+			}; using OpenFixtureLibraryRef = std::shared_ptr<OpenFixtureLibrary>;
 
 
 			std::string getName();
 			bool searchLibraryPath();
-			ci::fs::path getLibarayPath();
-			bool setLibarayPath(ci::fs::path path);
+			ci::fs::path getLibraryPath();
+			bool setLibraryPath(ci::fs::path path);
 			bool getIsParsed();
 			std::vector<OFLManufacturerRef> getManufacturers(bool allowParsing);
 
-			// Parse OFL meta information like which manufactueres there are and which fixtures they contain
+			// Parse OFL meta information like which manufacturers there are and which fixtures they contain
 			bool parseLibraryMeta();
 
 			// Parse description of an OFL fixture like name and name of modes
@@ -104,7 +104,7 @@ namespace act {
 
 		private:
 			std::string m_ManufacturerIdxFileName = "manufacturers.json";
-			OpenFixtureLibaray m_ofl;
+			OpenFixtureLibrary m_ofl;
 
 			//Translates a channel into a json patch of the internal description calling the corresponding translate methods
 			ci::Json translateChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName);
