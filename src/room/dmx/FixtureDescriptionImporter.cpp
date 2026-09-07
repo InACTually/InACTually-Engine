@@ -13,10 +13,6 @@
 	ein-christoph
 */
 
-/* The FixtureDescriptionImporter converts external fixture descriptions into the InACTually internal description format.
-*  Description mappers are used to convert a specific external format into ours.
-*/
-
 #include "roompch.hpp"
 #include "dmx/FixtureDescriptionImporter.hpp"
 #include "dmx/DMXManager.hpp"

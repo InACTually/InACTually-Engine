@@ -27,6 +27,10 @@ namespace act {
 		*/
 		class DMXManager;
 
+		/* 
+		* The FixtureDescriptionImporter converts external fixture descriptions into the InACTually internal description format.
+		* Description mappers are used to convert a specific external format into ours.
+		*/
 		class FixtureDescriptionImporter
 		{
 		public:
