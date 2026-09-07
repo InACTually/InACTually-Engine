@@ -151,10 +151,10 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 		}
 
 		//== Loop over all manufacturers
-		std::vector<act::room::OFLDescriptionMapper::OFLManufacturerRef> manufacturers = m_oflDescriptionMapper->getManufacturers(false);
+		std::vector<ofl::OFLManufacturerRef> manufacturers = m_oflDescriptionMapper->getManufacturers(false);
 		for (int manufacturerId = 0; manufacturerId < manufacturers.size(); manufacturerId++)
 		{
-			OFLDescriptionMapper::OFLManufacturerRef manufacturer = manufacturers.at(manufacturerId);
+			ofl::OFLManufacturerRef manufacturer = manufacturers.at(manufacturerId);
 				
 			if (m_isOFLListFilteres && !manufacturer->showInListing)
 				continue; // Skipp if we filter and manufacturer is not to be shown
@@ -170,7 +170,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 				bool fixtureShown = false;
 				for (int fixtureId = 0; fixtureId < manufacturer->fixtures.size(); fixtureId++)
 				{
-					OFLDescriptionMapper::OFLFixtureDescriptionRef fixture = manufacturer->fixtures.at(fixtureId);
+					ofl::OFLFixtureDescriptionRef fixture = manufacturer->fixtures.at(fixtureId);
 
 					if (m_isOFLListFilteres && !fixture->showInListing)
 						continue; // Skipp if we filter and fixture is not to be shown
@@ -196,7 +196,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport()
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
+void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
 {
 	if (fixture->queuedForLoading)
 	{
@@ -309,7 +309,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
+void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
 {
 	bool showMindNotes = false;
 

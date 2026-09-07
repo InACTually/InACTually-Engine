@@ -17,6 +17,7 @@
 #pragma once
 
 #include "roompch.hpp"
+#include "dmx/OFLHelper.hpp"
 
 namespace act {
 	namespace room {
@@ -28,63 +29,12 @@ namespace act {
 
 			static std::shared_ptr<OFLDescriptionMapper> create() { return std::make_shared<OFLDescriptionMapper>(); };
 
-			struct OFLChannelDescPatch {
-				ci::Json descriptionPatch;
-				bool includePatch = true;
-			}; using OFLChannelDescPatchRef = std::shared_ptr<OFLChannelDescPatch>;
-
-			struct OFLChannel {
-				std::string oflChannelKey;
-				OFLChannelDescPatchRef channelDescPatch;
-			}; using OFLChannelRef = std::shared_ptr<OFLChannel>;
-
-			struct OFLMode {
-				std::string name;
-				std::map<int, OFLChannelRef> channelMapping; // cache for the converted dmx channel to internal parameter name
-				ci::Json internalDescBase;
-			}; using OFLModeRef = std::shared_ptr<OFLMode>;
-
-			struct OFLFixtureDescription {
-				act::UID uid;
-				std::string name;
-				ci::fs::path descriptionPath;
-				ci::Json externalDescription;
-				std::vector<OFLModeRef> modes;
-				std::string type;
-				bool isSupportedType = false;
-				bool forceConverted = false;
-				int selectedMode;
-				bool queuedForLoading = false;
-				bool queuedForImport = false;
-				bool hasError = false;
-				bool showInListing = true; // used for filtering in UI
-			}; using OFLFixtureDescriptionRef = std::shared_ptr<OFLFixtureDescription>;
-
-			struct OFLManufacturer {
-				std::string key;
-				std::string name;
-				std::vector<OFLFixtureDescriptionRef> fixtures;
-				bool showInListing = true; // used for filtering UI
-				bool expandInListing = false; // used to automatically and show fixtures in UI
-			}; using OFLManufacturerRef = std::shared_ptr<OFLManufacturer>;
-
-			// The OpenFixtureLibrary struct holds a vector of manufacturers
-			// which each hold a vector of fixtures
-			// each holding a vector of modes
-			struct OpenFixtureLibrary {
-				std::string name;
-				ci::fs::path libraryPath;
-				std::vector<OFLManufacturerRef> manufacturers{};
-				bool isParsed;
-			}; using OpenFixtureLibraryRef = std::shared_ptr<OpenFixtureLibrary>;
-
-
 			std::string getName();
 			bool searchLibraryPath();
 			ci::fs::path getLibraryPath();
 			bool setLibraryPath(ci::fs::path path);
 			bool getIsParsed();
-			std::vector<OFLManufacturerRef> getManufacturers(bool allowParsing);
+			std::vector<ofl::OFLManufacturerRef> getManufacturers(bool allowParsing);
 
 			// Parse OFL meta information like which manufacturers there are and which fixtures they contain
 			bool parseLibraryMeta();
@@ -92,26 +42,26 @@ namespace act {
 			// Parse description of an OFL fixture like name and name of modes
 			// calling convertOFLModeToInternal for each mode
 			// returns true if successful, false if errors occure, errors get logged
-			bool parseFixtureDescription(OFLFixtureDescriptionRef fixtureDescription);
+			bool parseFixtureDescription(ofl::OFLFixtureDescriptionRef fixtureDescription);
 
 			// Converts the mode description of a fixture into an internal representation and sets it to the fixtureModeRef
 			// throws exceptions on errors
-			bool convertOFLModeToInternal(ci::Json const& modeDesc, OFLFixtureDescriptionRef fixtureDescription, OFLModeRef fixtureModeRef, int modeIndex);
+			bool convertOFLModeToInternal(ci::Json const& modeDesc, ofl::OFLFixtureDescriptionRef fixtureDescription, ofl::OFLModeRef fixtureModeRef, int modeIndex);
 
 			// Returns one combined inACTually internal fixture description 
 			// depending on which channels are selected to be included
-			static ci::Json getInternalDescription(OFLFixtureDescriptionRef fixture);
+			static ci::Json getInternalDescription(ofl::OFLFixtureDescriptionRef fixture);
 
 		private:
 			std::string m_ManufacturerIdxFileName = "manufacturers.json";
-			OpenFixtureLibrary m_ofl;
+			ofl::OpenFixtureLibrary m_ofl;
 
 			//Converts a channel into a json patch of the internal description calling the corresponding convert methods
 			ci::Json convertChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName);
 			
 			// Checks all channels in mapping of description patch and adds the descriptionRef to those channels that do not have an internal description jet
 			// The mapping with the primaryDMXOffset will be ignored because it should already have the description
-			void addDescToOtherAffectedChannels(OFLModeRef modeRef, OFLChannelDescPatchRef channelDescPatchRef, std::string const& channelKey, int primaryDmxOffset);
+			void addDescToOtherAffectedChannels(ofl::OFLModeRef modeRef, ofl::OFLChannelDescPatchRef channelDescPatchRef, std::string const& channelKey, int primaryDmxOffset);
 
 			// Takes fineChannelAliases array and resolves them to dmx Offset in the channels List of the given mode
 			// Returns map of fine channel alias with corresponding int or -1 if fineChannelAlias could not be resolved
