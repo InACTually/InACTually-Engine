@@ -190,7 +190,7 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(OFLFixtureDescript
 	{
 		fixtureDescription->type = "laser";
 		fixtureDescription->isSupportedType = false;
-		CI_LOG_W("Fixture is or contains a laser! InACTually currently can not handle lasers so no translation will be performed.");
+		CI_LOG_W("Fixture is or contains a laser! InACTually currently can not handle lasers so it will not be converted.");
 		return false;
 	}
 
@@ -199,7 +199,7 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(OFLFixtureDescript
 		fixtureDescription->type = "dimmer";
 	else if (act::util::isInJsonArray("Moving Head", externalDesc["categories"]) || act::util::isInJsonArray("Color Changer", externalDesc["categories"]))
 		fixtureDescription->type = "mv";
-	else if (fixtureDescription->forceTranslation)
+	else if (fixtureDescription->forceConverted)
 		fixtureDescription->type = "mv";
 	else
 	{
@@ -225,16 +225,16 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(OFLFixtureDescript
 		OFLModeRef oflModeRef = std::make_shared<OFLMode>(oflMode);
 		fixtureDescription->modes.push_back(oflModeRef);
 
-		// Translate ofl description into inACTually description (mode specific)
+		// Convert ofl description into inACTually description (mode specific)
 		try
 		{
-			translateOFLModeToInternal(modeDesc, fixtureDescription, oflModeRef, modeIndex);
+			convertOFLModeToInternal(modeDesc, fixtureDescription, oflModeRef, modeIndex);
 			fixtureDescription->hasError = false;
 		}
 		catch (const std::exception& e)
 		{
 			fixtureDescription->hasError = true;
-			CI_LOG_E("Could not translate fixture: '" << fixtureDescription->name << "'! : " << e.what());
+			CI_LOG_E("Could not convert fixture: '" << fixtureDescription->name << "'! : " << e.what());
 			continue;
 		}
 	}
@@ -242,7 +242,7 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(OFLFixtureDescript
 	return true;
 }
 
-bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const& modeDesc, OFLFixtureDescriptionRef fixtureDescription, OFLModeRef modeRef, int modeIndex)
+bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& modeDesc, OFLFixtureDescriptionRef fixtureDescription, OFLModeRef modeRef, int modeIndex)
 {
 	ci::Json const& externalDesc = fixtureDescription->externalDescription;
 	modeRef->internalDescBase = ci::Json::object();
@@ -258,7 +258,7 @@ bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const&
 
 	modeRef->internalDescBase["channel"] = modeDesc["channels"].size();
 		
-	// Translate channels for selected mode to mapping
+	// Convert channels for selected mode to mapping
 	// adding other information to the description if needed
 	if (!externalDesc.contains("availableChannels") || !externalDesc["availableChannels"].is_object())
 		throw std::invalid_argument("AvailableChannels missing in externalDescription");
@@ -277,23 +277,23 @@ bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const&
 		OFLChannelDescPatchRef descPatchRef = std::make_shared<OFLChannelDescPatch>();
 		descPatchRef->includePatch = false;
 
-		// Check if there is already a translation for this channel
+		// Check if there is already a description patch for this channel
 		// checkOtherAffectedChannels could produce that
-		OFLChannelTranslationRef channelTranslationRef;
-		if (!modeRef->channelTranslationMapping.contains(dmxOffset))
+		OFLChannelRef channelRef;
+		if (!modeRef->channelMapping.contains(dmxOffset))
 		{
-			OFLChannelTranslation channelTranslation;
-			channelTranslation.oflChannelKey = channelKey;
-			channelTranslation.channelDescPatch = descPatchRef;
+			OFLChannel channelDescriptionPatch;
+			channelDescriptionPatch.oflChannelKey = channelKey;
+			channelDescriptionPatch.channelDescPatch = descPatchRef;
 
-			channelTranslationRef = std::make_shared<OFLChannelTranslation>(channelTranslation);
-			modeRef->channelTranslationMapping.insert({ dmxOffset, channelTranslationRef });
+			channelRef = std::make_shared<OFLChannel>(channelDescriptionPatch);
+			modeRef->channelMapping.insert({ dmxOffset, channelRef });
 		}
 		else
 		{
-			channelTranslationRef = modeRef->channelTranslationMapping.at(dmxOffset);
-			if (channelTranslationRef->oflChannelKey == "unknown")
-				channelTranslationRef->oflChannelKey = channelKey;
+			channelRef = modeRef->channelMapping.at(dmxOffset);
+			if (channelRef->oflChannelKey == "unknown")
+				channelRef->oflChannelKey = channelKey;
 		}
 
 		// Channels are arbitrary keys so we need to lookup type of the capability which should follow a standardised naming
@@ -309,11 +309,11 @@ bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const&
 
 		try
 		{
-			internalDescPatch = translateChannel(externalDesc["availableChannels"][channelKey], externalDesc, dmxOffset + 1, modeIndex, channelKey);
+			internalDescPatch = convertChannel(externalDesc["availableChannels"][channelKey], externalDesc, dmxOffset + 1, modeIndex, channelKey);
 		}
 		catch (const std::exception& e)
 		{
-			CI_LOG_W("Could not translate channel '" << channelKey << "' :" << e.what());
+			CI_LOG_W("Could not convert channel '" << channelKey << "' :" << e.what());
 		}
 			
 
@@ -323,8 +323,8 @@ bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const&
 			continue;
 		}
 
-		if (fixtureDescription->forceTranslation)
-			modeRef->internalDescBase["notes"]["forcedTranslation"] = "CHECK TRANSLATION BEFORE USING THE DESCRIPTION! Fixture type is not a supported fixture type. Translation was forced by the user.";
+		if (fixtureDescription->forceConverted)
+			modeRef->internalDescBase["notes"]["forceConverted"] = "CHECK DESCRIPTION BEFORE USING IT! Fixture type is not a supported fixture type. This description was force converted by the user.";
 
 		descPatchRef->descriptionPatch = internalDescPatch;
 
@@ -333,12 +333,12 @@ bool act::room::OFLDescriptionMapper::translateOFLModeToInternal(ci::Json const&
 
 		if (!internalDescPatch.empty())
 		{
-			// Check if translation resulted in notes, if so there is probably something the user should actively notice
+			// Check if notes were added while converting the fixture. If so there is probably something the user should actively notice
 			// so we dont include the patch by default
 			if (!internalDescPatch.contains("notes"))
 				descPatchRef->includePatch = true;
 			else
-				CI_LOG_W("Channel " << channelKey << " wont be included in final translation by default because it's translation resulted in notes.");
+				CI_LOG_W("Channel " << channelKey << " wont be included in final internal description by default because notes were produced while converting the channel.");
 		}
 	}
 	return true;
@@ -355,11 +355,11 @@ ci::Json act::room::OFLDescriptionMapper::getInternalDescription(OFLFixtureDescr
 
 	ci::Json internalDescription = modeRef->internalDescBase;
 
-	for (auto const& [channel, channelTranslation] : modeRef->channelTranslationMapping)
+	for (auto const& [channel, channelRef] : modeRef->channelMapping)
 	{
 		//TODO check constraints like only one dimmer etc.
-		if (channelTranslation->channelDescPatch->includePatch)
-			internalDescription.merge_patch(channelTranslation->channelDescPatch->descriptionPatch);
+		if (channelRef->channelDescPatch->includePatch)
+			internalDescription.merge_patch(channelRef->channelDescPatch->descriptionPatch);
 	}
 
 	return internalDescription;
@@ -367,7 +367,7 @@ ci::Json act::room::OFLDescriptionMapper::getInternalDescription(OFLFixtureDescr
 
 void act::room::OFLDescriptionMapper::addDescToOtherAffectedChannels(OFLModeRef modeRef, OFLChannelDescPatchRef channelDescPatchRef, std::string const& channelKey, int primaryDmxOffset)
 {
-	// Loop over Mapping and add TranslationRef to corresponding TranslationMappings
+	// Loop over Mapping and add description to corresponding mappings
 	if (channelDescPatchRef->descriptionPatch.is_null() || channelDescPatchRef->descriptionPatch.empty())
 		return;
 
@@ -387,37 +387,37 @@ void act::room::OFLDescriptionMapper::addDescToOtherAffectedChannels(OFLModeRef 
 		int paramDmxOffset = inACTparamOffset - 1; // arrays etc start with 0, inACTually uses 1 as first address
 
 		if (paramDmxOffset == primaryDmxOffset)
-			continue; // The translation is set already by the translateOFLtoInternal function
+			continue; // The description is set already by the convertOFLtoInternal function
 
-		if (modeRef->channelTranslationMapping.contains(paramDmxOffset))
+		if (modeRef->channelMapping.contains(paramDmxOffset))
 		{
-			// There is already a channelTranslation registered at this offset
-			OFLChannelTranslationRef channelTranslationRef = modeRef->channelTranslationMapping.at(paramDmxOffset);
+			// There is already a channel description registered at this offset
+			OFLChannelRef channelRef = modeRef->channelMapping.at(paramDmxOffset);
 
 			// Check if it has already an internalDescription
-			if (channelTranslationRef->channelDescPatch && !channelTranslationRef->channelDescPatch->descriptionPatch.empty())
+			if (channelRef->channelDescPatch && !channelRef->channelDescPatch->descriptionPatch.empty())
 			{
 				// we already have a desription and it is not empty. This should not happen
 				// So we dont include both by default and add a warning
-				std::string note = "The parameter has two conflicting translations! Caused by parameter '" + parameter + "'!";
+				std::string note = "The parameter has two conflicting descriptions! Caused by parameter '" + parameter + "'!";
 				channelDescPatchRef->includePatch = false;
 				OFLHelper::attachNoteToChannelDesc(channelDescPatchRef->descriptionPatch, inACTparamOffset, note);
 
-				channelTranslationRef->channelDescPatch->includePatch = false;
-				OFLHelper::attachNoteToChannelDesc(channelTranslationRef->channelDescPatch->descriptionPatch, inACTparamOffset, note);
+				channelRef->channelDescPatch->includePatch = false;
+				OFLHelper::attachNoteToChannelDesc(channelRef->channelDescPatch->descriptionPatch, inACTparamOffset, note);
 				continue;
 			}
 
 			// if there is no channel Descirption we can add the new one
-			channelTranslationRef->channelDescPatch = channelDescPatchRef;
+			channelRef->channelDescPatch = channelDescPatchRef;
 		}
 		else
 		{
-			// otherwise we need to create a new channel translation and append that
-			OFLChannelTranslationRef translationRef = std::make_shared<OFLChannelTranslation>();
-			translationRef->oflChannelKey = "unknown";
-			translationRef->channelDescPatch = channelDescPatchRef;
-			modeRef->channelTranslationMapping.insert({ paramDmxOffset, translationRef });
+			// otherwise we need to create a new channel description and append that
+			OFLChannelRef channelDescriptionRef = std::make_shared<OFLChannel>();
+			channelDescriptionRef->oflChannelKey = "unknown";
+			channelDescriptionRef->channelDescPatch = channelDescPatchRef;
+			modeRef->channelMapping.insert({ paramDmxOffset, channelDescriptionRef });
 		}
 	}
 }
@@ -457,18 +457,18 @@ std::map<std::string, int> act::room::OFLDescriptionMapper::resolveFineChannels(
 			// If the fineChannelAlias is not found in channels list this mode does not contain this fine channel so we ignore it
 		}
 		else
-			CI_LOG_W("Found non string fineChannelAlias! Skipping fine channel translation.");
+			CI_LOG_W("Found non string fineChannelAlias! Skipping fine channel.");
 	}
 
 	return retLookup;
 }
 
-// Determine the capability or capabilities of a channel and call the correct translate function
-// Register new translation in this method.
+// Determine the capability or capabilities of a channel and call the correct convert function
+// Register new convert... functions in this method.
 // For a list of current capability types see https://github.com/OpenLightingProject/open-fixture-library/blob/master/docs/capability-types.md
-ci::Json act::room::OFLDescriptionMapper::translateChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
+ci::Json act::room::OFLDescriptionMapper::convertChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
 {
-	if (extChannelDesc.contains("capability")) // === Translate single capability
+	if (extChannelDesc.contains("capability")) // === Convert single capability
 	{
 		ci::Json const& extCapabilityDesc = extChannelDesc["capability"];
 
@@ -480,26 +480,26 @@ ci::Json act::room::OFLDescriptionMapper::translateChannel(ci::Json const& extCh
 		if (capabilityType == "NoFunction")
 			return ci::Json::object(); // NoFunction can be ignored except for some special cases which should not matter for our purpose
 		else if (capabilityType == "Intensity")
-			return translateIntensityCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
+			return convertIntensityCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
 		else if (capabilityType == "Pan" || capabilityType == "Tilt")
-			return translatePanTiltCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
+			return convertPanTiltCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
 		else if (capabilityType == "Zoom")
-			return translateZoomCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
+			return convertZoomCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
 		else if (capabilityType == "ColorIntensity")
-			return translateColorIntensityCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
+			return convertColorIntensityCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
 		else if (capabilityType == "PanTiltSpeed")
-			return translatePanTiltSpeedCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
+			return convertPanTiltSpeedCapability(extCapabilityDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex);
 	}
-	else if (extChannelDesc.contains("capabilities")) // === Translate capabilities list
+	else if (extChannelDesc.contains("capabilities")) // === Convert capabilities list
 	{
 		ci::Json const& extCapabilitiesDesc = extChannelDesc["capabilities"];
 
 		if (isColorWheel(channelName, extChannelDesc, fullExtDesc, dmxOffset, modeIndex))
-			return translateColorWheelCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
+			return convertColorWheelCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
 		else if (isGoboWheel(channelName, extChannelDesc, fullExtDesc, dmxOffset, modeIndex))
-			return translateGoboWheelCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
+			return convertGoboWheelCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
 		else if (isShutterStrobeCapability(channelName, extChannelDesc, fullExtDesc, dmxOffset, modeIndex))
-			return translateShutterStrobeCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
+			return convertShutterStrobeCapability(extCapabilitiesDesc, extChannelDesc, fullExtDesc, dmxOffset, modeIndex, channelName);
 	}
 
 	CI_LOG_W("No mapping exists for channel '" << channelName << "'");
@@ -507,7 +507,7 @@ ci::Json act::room::OFLDescriptionMapper::translateChannel(ci::Json const& extCh
 	return ci::Json::object();
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
+ci::Json act::room::OFLDescriptionMapper::convertIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
 {
 	ci::Json descPatch = ci::Json::object();
 
@@ -520,16 +520,16 @@ ci::Json act::room::OFLDescriptionMapper::translateIntensityCapability(ci::Json 
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::translatePanTiltCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
+ci::Json act::room::OFLDescriptionMapper::convertPanTiltCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
 {
-	// The translation of Pan and Tilt is so similar it is combined into one function
+	// Converting Pan and Tilt is so similar it is combined into one function
 
 	ci::Json descPatch = ci::Json::object();
 
 	if (!extCapabilityDesc.contains("type") || (extCapabilityDesc["type"] != "Pan" && extCapabilityDesc["type"] != "Tilt"))
-		throw std::exception("translatePanTiltCapability called but capability is neither pan or tilt!");
+		throw std::exception("convertPanTiltCapability called but capability is neither pan or tilt!");
 
-	std::string panTiltIdentifier = extCapabilityDesc["type"]; // panTileIdentifier holds the information if we are translating pan or tilt
+	std::string panTiltIdentifier = extCapabilityDesc["type"]; // panTileIdentifier holds the information if we are converting pan or tilt
 	std::string panTiltIdentifierL = panTiltIdentifier; // panTiltIdentifierL is the lowercase equivalent
 	std::transform(panTiltIdentifierL.begin(), panTiltIdentifierL.end(), panTiltIdentifierL.begin(), [](unsigned char c) {return std::tolower(c);});
 
@@ -555,7 +555,7 @@ ci::Json act::room::OFLDescriptionMapper::translatePanTiltCapability(ci::Json co
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateZoomCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
+ci::Json act::room::OFLDescriptionMapper::convertZoomCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
 {
 	ci::Json descPatch = ci::Json::object();
 
@@ -589,15 +589,15 @@ ci::Json act::room::OFLDescriptionMapper::translateZoomCapability(ci::Json const
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateColorIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
+ci::Json act::room::OFLDescriptionMapper::convertColorIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
 {
 	ci::Json descPatch = ci::Json::object();
 
 	if (!extCapabilityDesc.contains("color") || !extCapabilityDesc["color"].is_string())
 		throw std::invalid_argument("Capability Description does not contain color entry or color entry is not a string!");
 
-	// Translation from OFL Key to internal key
-	std::map<std::string, std::string> translationLookup = { {"Red", "R"}
+	// OFL color key to internal color key
+	std::map<std::string, std::string> colorKeyLookup = { {"Red", "R"}
 															,{"Green", "G"}
 															,{"Blue", "B"}
 															,{"Amber", "A"}
@@ -605,9 +605,9 @@ ci::Json act::room::OFLDescriptionMapper::translateColorIntensityCapability(ci::
 															,{"UV", "UV"}
 															};
 
-	if (translationLookup.find(extCapabilityDesc["color"]) != translationLookup.end())
+	if (colorKeyLookup.find(extCapabilityDesc["color"]) != colorKeyLookup.end())
 	{
-		std::string color = translationLookup.at(extCapabilityDesc["color"]);
+		std::string color = colorKeyLookup.at(extCapabilityDesc["color"]);
 		descPatch["mapping"][color] = dmxOffset;
 
 		auto const& fineChannelMap = resolveFineChannels(fullExtDesc, modeIndex, extChannelDesc, 1);
@@ -623,7 +623,7 @@ ci::Json act::room::OFLDescriptionMapper::translateColorIntensityCapability(ci::
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::translatePanTiltSpeedCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
+ci::Json act::room::OFLDescriptionMapper::convertPanTiltSpeedCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex)
 {
 	ci::Json descPatch = ci::Json::object();
 	
@@ -654,7 +654,7 @@ bool act::room::OFLDescriptionMapper::isColorWheel(std::string const& channelNam
 	return true; // Otherwise it is a color wheel
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateColorWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
+ci::Json act::room::OFLDescriptionMapper::convertColorWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
 {
 
 	if (!extChannelDesc.contains("capabilities") ||  !extChannelDesc["capabilities"].is_array())
@@ -678,12 +678,12 @@ ci::Json act::room::OFLDescriptionMapper::translateColorWheelCapability(ci::Json
 	{
 		if (!capability.contains("type") || !capability["type"].is_string())
 		{
-			CI_LOG_W("Found no or non string type in capability of color wheel translation! Skipping capability.");
+			CI_LOG_W("Found no or non string type in capability of color wheel! Skipping capability.");
 			continue;
 		}
 		if(capability["type"] != "WheelSlot")
 		{
-			CI_LOG_W("Found non Wheel Slot Type '" << capability["type"] << "' in color wheel translation! Skipping capability");
+			CI_LOG_W("Found non Wheel Slot Type '" << capability["type"] << "' in color wheel! Skipping capability");
 			continue;
 		}
 
@@ -702,7 +702,7 @@ ci::Json act::room::OFLDescriptionMapper::translateColorWheelCapability(ci::Json
 
 		if (!capability.contains("slotNumber") || !capability["slotNumber"].is_number_integer())
 		{
-			CI_LOG_W("Color Wheel translation WheelSlot at position " << idx << " does not specify single slotNumbers! Half frames currently not supported, skipping slot.");
+			CI_LOG_W("Color Wheel: WheelSlot at position " << idx << " does not specify single slotNumbers! Half frames currently not supported, skipping slot.");
 
 			if (  (capability.contains("slotNumberStart") && capability.contains("slotNumberEnd")) // Split slots can be identified by two slot numbers
 				|| capability.contains("slotNumber") && capability["slotNumber"].is_number_float()) // or by a float as slot number
@@ -765,7 +765,7 @@ ci::Json act::room::OFLDescriptionMapper::translateColorWheelCapability(ci::Json
 	}
 
 	if (amount < 1 || start < 0 || end < 0 || start > end)
-		throw std::exception("Amount, start and/or end are not plausible after translation!");
+		throw std::exception("Amount, start and/or end are not plausible!");
 
 	colorMap["amount"] = amount;
 	colorMap["start"] = start;
@@ -802,7 +802,7 @@ bool act::room::OFLDescriptionMapper::isGoboWheel(std::string const& channelName
 	return true; // Otherwise it is a gobo wheel
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateGoboWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
+ci::Json act::room::OFLDescriptionMapper::convertGoboWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
 {
 
 	if (!extChannelDesc.contains("capabilities") || !extChannelDesc["capabilities"].is_array())
@@ -823,12 +823,12 @@ ci::Json act::room::OFLDescriptionMapper::translateGoboWheelCapability(ci::Json 
 	{
 		if (!capability.contains("type") || !capability["type"].is_string())
 		{
-			CI_LOG_W("Found no or non string type in capability of gobo wheel translation! Skipping capability.");
+			CI_LOG_W("Found no or non string type in capability of gobo wheel! Skipping capability.");
 			continue;
 		}
 		if (capability["type"] != "WheelSlot" && capability["type"] != "WheelShake")
 		{
-			CI_LOG_W("Found unexpected type '" << capability["type"] << "' in gobo wheel translation! Skipping capability");
+			CI_LOG_W("Found unexpected type '" << capability["type"] << "' in gobo wheel! Skipping capability");
 			continue;
 		}
 
@@ -926,7 +926,7 @@ ci::Json act::room::OFLDescriptionMapper::translateGoboWheelCapability(ci::Json 
 	}
 
 	if (amount < 1 || goboStart < 0 || goboEnd < 0 || goboEnd < goboStart)
-		throw std::exception(("Gobo Wheel translation at dmx offset" + std::to_string(dmxOffset) + " did not result in plausible values, aborting translation!").c_str());
+		throw std::exception(("Gobo Wheel at dmx offset" + std::to_string(dmxOffset) + " did not result in plausible values, aborting!").c_str());
 
 	descPatch["goboMap"] = ci::Json::object();
 	descPatch["goboMap"]["amount"] = amount;
@@ -974,7 +974,7 @@ bool act::room::OFLDescriptionMapper::isShutterStrobeCapability(std::string cons
 	return hasOpenState && hasStrobeWithSpeed;
 }
 
-ci::Json act::room::OFLDescriptionMapper::translateShutterStrobeCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
+ci::Json act::room::OFLDescriptionMapper::convertShutterStrobeCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName)
 {
 
 	if (!extChannelDesc.contains("capabilities") && !extChannelDesc["capabilities"].is_array())
@@ -983,7 +983,7 @@ ci::Json act::room::OFLDescriptionMapper::translateShutterStrobeCapability(ci::J
 	ci::Json descPatch = ci::Json::object();
 
 	// NOTE: Currently the strobe parameter of InACTually is rather limited 
-	// so the only thing we can translate is a open state as no strobe and an strobe state
+	// so the only thing we can convert is a open state as no strobe and an strobe state
 	// which is controling the speed directly
 	// no strobe type like ramp up etc. or strobe speed controlled with different parameter is
 	// possible at the moment
@@ -1048,7 +1048,7 @@ ci::Json act::room::OFLDescriptionMapper::translateShutterStrobeCapability(ci::J
 	}
 
 	if (openStateIdxAndDistance[0] < 0 || openStateIdxAndDistance[1] < 0)
-		throw std::exception(("Did not found any open state for strobe at dmxOffset: "+std::to_string(dmxOffset)+" skipping strobe translation!").c_str());
+		throw std::exception(("Did not found any open state for strobe at dmxOffset: "+std::to_string(dmxOffset)+" skipping strobe!").c_str());
 
 	descPatch["strobeMap"] = ci::Json::object();
 	int minValue, maxValue = -1;

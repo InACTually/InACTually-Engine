@@ -39,7 +39,7 @@ namespace act {
 			void	update();
 			void	drawOFLImport();
 			void	drawOFLFixtureDetails(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
-			void	drawOFLFixtureTranslationTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
+			void	drawOFLFixtureTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
 			
 			/* Register function for observer.
 			*  Should provide importFixture(ci::Json) function, which will be called upon a fixture import. 
@@ -50,7 +50,7 @@ namespace act {
 
 		private:
 
-			std::map<std::string, std::string> m_oflTranslationJsonDmpCache;
+			std::map<std::string, std::string> m_oflJsonDmpCache;
 			std::list<OFLDescriptionMapper::OFLFixtureDescriptionRef> m_oflFetchFixtureQueue;
 			std::list<OFLDescriptionMapper::OFLFixtureDescriptionRef> m_importQueue;
 			bool m_openOFLInBrowser = false;

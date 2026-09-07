@@ -13,8 +13,8 @@
 	ein-christoph
 */
 
-/* The FixtureDescriptionImporter translates external fixture descriptions into the InACTually internal description format.
-*  Description mappers are used to do the translation of a specific external format into ours.
+/* The FixtureDescriptionImporter converts external fixture descriptions into the InACTually internal description format.
+*  Description mappers are used to convert a specific external format into ours.
 */
 
 #include "roompch.hpp"
@@ -94,9 +94,9 @@ void act::room::FixtureDescriptionImporter::update()
 
 		if (success)
 		{
-			// if we have a valid description build the translation
+			// we have a valid description converted
 			std::string dmpKey = fixture->uid + "-" + fixture->modes.at(fixture->selectedMode)->name;
-			m_oflTranslationJsonDmpCache[dmpKey] = OFLDescriptionMapper::getInternalDescription(fixture).dump(3);
+			m_oflJsonDmpCache[dmpKey] = OFLDescriptionMapper::getInternalDescription(fixture).dump(3);
 		}
 		fixture->queuedForLoading = false;
 		m_oflFetchFixtureQueue.pop_front();
@@ -220,13 +220,13 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 		ImGui::PopStyleColor();
 		if (fixture->type == "laser")
 		{
-			ImGui::Text("InACTually can not handle lasers so they won't be translated.");
+			ImGui::Text("InACTually can not handle lasers so they won't be converted.");
 			return;
 		}
 
-		bool checkBoxBefore = fixture->forceTranslation;
-		ImGui::Checkbox(("Force translation of '"+fixture->name + "' anyway").c_str(), &fixture->forceTranslation);
-		if (fixture->forceTranslation != checkBoxBefore && fixture->forceTranslation)
+		bool checkBoxBefore = fixture->forceConverted;
+		ImGui::Checkbox(("Force convert '"+fixture->name + "' anyway").c_str(), &fixture->forceConverted);
+		if (fixture->forceConverted != checkBoxBefore && fixture->forceConverted)
 		{
 			// set externalDescription to empty to force new traslation
 			fixture->externalDescription = ci::Json();
@@ -234,7 +234,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 			m_oflFetchFixtureQueue.push_back(fixture);
 		}
 
-		if(!fixture->forceTranslation) // Continue only if we force translated the fixture
+		if(!fixture->forceConverted) // Continue only if we force converted the fixture
 			return; 
 	}
 
@@ -270,11 +270,11 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 		return;
 	}
 	
-	//== Table for displaying the translation
-	drawOFLFixtureTranslationTable(fixture, manufacturerId, fixtureId);
+	//== Table for displaying the fixtures
+	drawOFLFixtureTable(fixture, manufacturerId, fixtureId);
 
 	ImGui::Spacing();
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Not all OFL fixtures are fully supported. The automatic translation tries to match the ofl description as best as possible to the InACTually internal description.");
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Not all OFL fixtures are fully supported. OFL descriptions are converted as best as possible to the InACTually internal description.");
 
 	std::string internalDescKey = fixture->uid + "-" + fixture->modes.at(fixture->selectedMode)->name;
 
@@ -285,7 +285,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 
 		// store json dump in map so the inputTextMultline callback has something to work with
 
-		if (m_oflTranslationJsonDmpCache.find(internalDescKey) == m_oflTranslationJsonDmpCache.end()
+		if (m_oflJsonDmpCache.find(internalDescKey) == m_oflJsonDmpCache.end()
 			&& !fixture->queuedForLoading)
 		{
 			fixture->queuedForLoading = true;
@@ -293,7 +293,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 		}
 		else
 		{
-			ImGui::InputTextMultiline(internalDescKey.c_str(), &m_oflTranslationJsonDmpCache.at(internalDescKey), ImVec2(-FLT_MIN, 300), ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputTextMultiline(internalDescKey.c_str(), &m_oflJsonDmpCache.at(internalDescKey), ImVec2(-FLT_MIN, 300), ImGuiInputTextFlags_ReadOnly);
 		}
 
 		ImGui::TreePop();
@@ -301,7 +301,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 	}
 
 	// === Import Button
-	ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Always check plausibility of the automatic translation before importing the fixture!");
+	ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Always check plausibility of the internal fixture description before importing the fixture!");
 	if (ImGui::Button("Add Fixture To Project") && !fixture->queuedForLoading)
 	{
 		m_importQueue.push_back(fixture);
@@ -309,11 +309,11 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(OFLDescription
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
+void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId)
 {
 	bool showMindNotes = false;
 
-	//== Table for displaying the translation
+	//== Table for displaying the fixture details
 	if (ImGui::BeginTable((fixture->name + "Mode Details").c_str(), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg))
 	{
 		ImGui::TableSetupColumn("Include");
@@ -323,20 +323,20 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 		ImGui::TableHeadersRow();
 
 
-		for(auto const& [dmxOffset, translationRef] : fixture->modes.at(fixture->selectedMode)->channelTranslationMapping)
+		for(auto const& [dmxOffset, modeRef] : fixture->modes.at(fixture->selectedMode)->channelMapping)
 		{ 
-			bool isSupported = translationRef->channelDescPatch->descriptionPatch.contains("mapping");
+			bool isSupported = modeRef->channelDescPatch->descriptionPatch.contains("mapping");
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
 			if (isSupported)
 			{
 				std::string checkboxlabel = "##" + fixture->uid + std::to_string(dmxOffset);
-				bool isIncludedPre = translationRef->channelDescPatch->includePatch;
+				bool isIncludedPre = modeRef->channelDescPatch->includePatch;
 				ImGui::SetWindowFontScale(0.3f);
-				ImGui::Checkbox(checkboxlabel.c_str(), &translationRef->channelDescPatch->includePatch);
+				ImGui::Checkbox(checkboxlabel.c_str(), &modeRef->channelDescPatch->includePatch);
 				ImGui::SetWindowFontScale(1.0f);
-				if (isIncludedPre != translationRef->channelDescPatch->includePatch && !fixture->queuedForLoading)
+				if (isIncludedPre != modeRef->channelDescPatch->includePatch && !fixture->queuedForLoading)
 				{
 					fixture->queuedForLoading = true;
 					m_oflFetchFixtureQueue.push_back(fixture);
@@ -345,7 +345,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 			ImGui::TableSetColumnIndex(1);
 			ImGui::Text("%i", dmxOffset + 1);
 			ImGui::TableSetColumnIndex(2);
-			ImGui::Text(translationRef->oflChannelKey.c_str());
+			ImGui::Text(modeRef->oflChannelKey.c_str());
 			ImGui::TableSetColumnIndex(3);
 
 			if (!isSupported)
@@ -355,7 +355,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 			}
 
 			std::string internalParamsStr = "";
-			for (auto const& [parameterKey, channel] : translationRef->channelDescPatch->descriptionPatch["mapping"].items())
+			for (auto const& [parameterKey, channel] : modeRef->channelDescPatch->descriptionPatch["mapping"].items())
 			{
 				if (internalParamsStr != "")
 					internalParamsStr += ", ";
@@ -372,8 +372,8 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 					internalParamsStr += " (MAPPING ERROR: Not a Number!)";
 			}
 
-			if (!translationRef->channelDescPatch->descriptionPatch.contains("notes")
-				|| !translationRef->channelDescPatch->descriptionPatch["notes"].contains("channel-" + std::to_string(dmxOffset + 1)))
+			if (!modeRef->channelDescPatch->descriptionPatch.contains("notes")
+				|| !modeRef->channelDescPatch->descriptionPatch["notes"].contains("channel-" + std::to_string(dmxOffset + 1)))
 			{
 				ImGui::Text(internalParamsStr.c_str());
 				continue;
@@ -385,7 +385,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    NOTE:");
 
-			for (auto const& note : translationRef->channelDescPatch->descriptionPatch["notes"]["channel-"+ std::to_string(dmxOffset + 1)])
+			for (auto const& note : modeRef->channelDescPatch->descriptionPatch["notes"]["channel-"+ std::to_string(dmxOffset + 1)])
 			{
 				if (!note.is_string())
 					ImGui::TextColored(ImVec4(1.0f, 8.0f, 0.0f, 1.0f), "Can not display non string note, please refer to the internal fixture description!");
