@@ -19,11 +19,10 @@
 
 #include "roompch.hpp"
 #include "dmx/FixtureDescriptionImporter.hpp"
+#include "dmx/DMXManager.hpp"
 
-act::room::FixtureDescriptionImporter::FixtureDescriptionImporter(std::function<void(ci::Json)> importCallback)
+act::room::FixtureDescriptionImporter::FixtureDescriptionImporter()
 {
-	m_importCallback = importCallback;
-
 	m_oflDescriptionMapper = OFLDescriptionMapper::create();
 	m_showImporter = false;
 }
@@ -107,7 +106,10 @@ void act::room::FixtureDescriptionImporter::update()
 	{
 		auto const& fixture = m_importQueue.front();
 		ci::Json internalDesc = OFLDescriptionMapper::getInternalDescription(fixture);
-		m_importCallback(internalDesc);
+
+		if(auto dmxManagerRef = m_dmxManagerWRef.lock())
+			dmxManagerRef->importFixture(internalDesc);
+
 		m_importQueue.pop_front();
 	}
 }
@@ -398,6 +400,11 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTranslationTable(OFLDe
 		if (showMindNotes)
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow colored parameters have notes attached to them. They might not be fully supported!");
 	}
+}
+
+void act::room::FixtureDescriptionImporter::registerDMXManager(std::weak_ptr<DMXManager> dmxManagerWRef)
+{
+	m_dmxManagerWRef = dmxManagerWRef;
 }
 
 void act::room::FixtureDescriptionImporter::filterOFLFixtures()

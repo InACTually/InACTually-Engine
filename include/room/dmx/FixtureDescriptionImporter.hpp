@@ -18,23 +18,36 @@
 #include "roompch.hpp"
 #include "dmx/OFLDescriptionMapper.hpp"
 
+
 namespace act {
 	namespace room {
+
+		/* 
+		* Forward declaration, DMXManager is observer of FixtureDescriptionImporter
+		*/
+		class DMXManager;
+
 		class FixtureDescriptionImporter
 		{
 		public:
-			FixtureDescriptionImporter(std::function<void(ci::Json)> importCallback);
+			FixtureDescriptionImporter();
 			~FixtureDescriptionImporter();
 
-			static std::shared_ptr<FixtureDescriptionImporter> create(std::function<void(ci::Json)> importCallback) { return std::make_shared<FixtureDescriptionImporter>(importCallback); };
+			static std::shared_ptr<FixtureDescriptionImporter> create() { return std::make_shared<FixtureDescriptionImporter>(); };
 
 			void	draw();
 			void	update();
 			void	drawOFLImport();
 			void	drawOFLFixtureDetails(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
 			void	drawOFLFixtureTranslationTable(OFLDescriptionMapper::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
+			
+			/* Register function for observer.
+			*  Should provide importFixture(ci::Json) function, which will be called upon a fixture import. 
+			*/
+			void	registerDMXManager(std::weak_ptr<DMXManager> dmxManagerWRef);
 
 			bool m_showImporter;
+
 		private:
 
 			std::map<std::string, std::string> m_oflTranslationJsonDmpCache;
@@ -46,8 +59,7 @@ namespace act {
 			bool m_isOFLListFilteres = false;
 			bool m_oflFixtureFilterChanged = false;
 			char m_oflFixtureFilterBuffer[128] = "";
-
-			std::function<void(ci::Json)> m_importCallback;
+			std::weak_ptr<DMXManager> m_dmxManagerWRef;
 
 			void filterOFLFixtures();
 			OFLDescriptionMapperRef m_oflDescriptionMapper;

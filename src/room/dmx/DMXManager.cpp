@@ -33,16 +33,7 @@ act::room::DMXManager::DMXManager()
 	m_fixtureNames = std::vector<std::string>(0);
 	m_availableDeviceNames = std::vector<std::string>(0);
 
-	m_fixtureDescriptionImporter = FixtureDescriptionImporter::create([this](ci::Json fixtureDesc) {
-		try
-		{
-			this->importFixtureCallback(fixtureDesc);
-		}
-		catch (const std::exception& e)
-		{
-			CI_LOG_E("import fixture callback failed! " << e.what());
-		}
-		});
+	m_fixtureDescriptionImporter = FixtureDescriptionImporter::create();
 
 	refreshInterfaceNames();
 	loadFixtures();
@@ -57,6 +48,7 @@ act::room::DMXManager::~DMXManager()
 
 void act::room::DMXManager::setup()
 {
+	m_fixtureDescriptionImporter->registerDMXManager(weak_from_this());
 }
 
 void act::room::DMXManager::update()
@@ -239,7 +231,7 @@ void act::room::DMXManager::loadFixtures()
 	}
 }
 
-void act::room::DMXManager::importFixtureCallback(ci::Json fixtureDescription)
+void act::room::DMXManager::importFixture(ci::Json fixtureDescription)
 {
 	if (!fixtureDescription.contains("name")) throw std::invalid_argument("Fixture has to have a name!");
 	if (!fixtureDescription["name"].is_string()) throw std::invalid_argument("Fixture name has to be a string!");

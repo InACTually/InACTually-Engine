@@ -28,7 +28,7 @@
 namespace act {
 	namespace room {
 
-		class DMXManager : public RoomNodeManagerBase {
+		class DMXManager : public RoomNodeManagerBase, public std::enable_shared_from_this<DMXManager> {
 		public:
 			DMXManager();
 			~DMXManager();
@@ -54,6 +54,7 @@ namespace act {
 			virtual ci::Json toJson();
 			virtual void fromJson(ci::Json json);
 			void saveDevicesToJson();
+			void importFixture(ci::Json fixtureDescription);
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
  
 		private:
@@ -64,7 +65,6 @@ namespace act {
 			void changeInterface(std::string interfaceName);
 
 			void loadFixtures();
-			void importFixtureCallback(ci::Json);
 			void saveFixtures();
 			int getFixtureIndexByName(std::string fixtureName);
 			std::vector<ci::Json>				m_fixtureDescriptions;
