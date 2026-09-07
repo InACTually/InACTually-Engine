@@ -55,8 +55,8 @@ namespace act {
 		private:
 
 			std::map<std::string, std::string> m_oflJsonDmpCache;
-			std::list<ofl::OFLFixtureDescriptionRef> m_oflFetchFixtureQueue;
-			std::list<ofl::OFLFixtureDescriptionRef> m_importQueue;
+			std::deque<ofl::OFLFixtureDescriptionRef> m_oflFetchFixtureQueue;
+			std::deque<ofl::OFLFixtureDescriptionRef> m_importQueue;
 			bool m_isOpenOFLInBrowser = false;
 			bool m_isSearchOFLAgain = false;
 			bool m_isOFLReparsing = false;
