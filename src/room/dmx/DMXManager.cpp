@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2026
+	This file is created and substantially modified: 2021-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
