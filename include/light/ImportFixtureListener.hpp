@@ -21,7 +21,7 @@ namespace act {
 	namespace system {
 		
 		/*
-		* ImportFixtureListener is an interface requiring an importFixture function which
+		* ImportFixtureListener is an interface requiring an onImportFixture function which
 		* can be called by the FixtureDescriptionImporter upon an import request providing an 
 		* internal fixture description
 		*/
