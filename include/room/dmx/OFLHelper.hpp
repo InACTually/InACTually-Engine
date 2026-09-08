@@ -12,6 +12,7 @@
 	contributors:
 	ein-christoph
 */
+
 #pragma once
 #include "roompch.hpp"
 
@@ -74,44 +75,42 @@ namespace act {
 			/*
 			* OFLHelper contains a collection of static methods used to handle the Open Fixture Library
 			*/
-			class OFLHelper
-			{
+			class OFLHelper {
 			public:
 
 				// Adds a note at internalDescPatch["notes"]["channel-<dmxOffsett>"]
-				static void attachNoteToChannelDesc(ci::Json& internalDescPatch, int dmxOffset, std::string note)
-				{
+				static void attachNoteToChannelDesc(ci::Json& internalDescPatch, int dmxOffset, std::string note) {
 					if (!internalDescPatch.contains("notes"))
 						internalDescPatch["notes"] = ci::Json::object();
 
 					std::string channelKey = "channel-" + std::to_string(dmxOffset);
 
-					if (internalDescPatch["notes"].contains(channelKey) && !internalDescPatch["notes"][channelKey].is_array())
-					{
+					if (internalDescPatch["notes"].contains(channelKey) && !internalDescPatch["notes"][channelKey].is_array()) {
 						// There is already a notes list for that channel but it is not an array
 						CI_LOG_E("could not attach note to channel " << channelKey << " because there are notes but not as array! note:" << note);
 						return;
 					}
-					else
-					{
+					else {
 						// There is no notes list jet so we create an array
 						internalDescPatch["notes"][channelKey] = ci::Json::array();
 					}
 					internalDescPatch["notes"][channelKey].push_back(note);
 				};
 
-				// Checks if there is a wheelName specified for the capabilities list, returns the channelname otherwise
-				// WheelName can be channel name or stated explicitly in the description
-				static std::string getWheelNameKey(std::string const& channelName, ci::Json const& extCapabilities)
-				{
+				/*
+				* Checks if there is a wheelName specified for the capabilities list, returns the channelname otherwise
+				* WheelName can be channel name or stated explicitly in the description
+				*/
+				static std::string getWheelNameKey(std::string const& channelName, ci::Json const& extCapabilities) {
 					return (extCapabilities.contains("wheel") && extCapabilities["wheel"].is_string()) ? extCapabilities["wheel"].get<std::string>() : channelName;
 				};
 
-				// Converts a degree string into an integer
-				// NOTE: angles in OFL can also be in % but since inACTually currently can not handle 
-				// proportional angles it wont be converted but result in an exception
-				static int convertDegStrToInt(std::string degStr, std::string decimalpoint = ".")
-				{
+				/* 
+				* Converts a degree string into an integer
+				* NOTE: angles in OFL can also be in % but since inACTually currently can not handle 
+				* proportional angles it wont be converted but result in an exception
+				*/
+				static int convertDegStrToInt(std::string degStr, std::string decimalpoint = ".") {
 					size_t degPos = degStr.find("deg");
 
 					if (degPos == std::string::npos) throw std::invalid_argument("degStr does not contain 'deg'!");
@@ -125,9 +124,11 @@ namespace act {
 						return std::stoi(degStr);
 				};
 
-				// Tries to convert a BeamAngle into a degree range
-				// BeamAngles can be in deg or in % (also specified as 0% = "closed", 1% = "narrow, 100% = "wide"
-				// If a % BeamAngle is found the function looks if deg can be retrived from the physical lens description
+				/*
+				* Tries to convert a BeamAngle into a degree range
+				* BeamAngles can be in deg or in % (also specified as 0% = "closed", 1% = "narrow, 100% = "wide"
+				* If a % BeamAngle is found the function looks if deg can be retrived from the physical lens description
+				*/
 				static int beamAngleToDegRange(std::string const& beamAngle, int modeIdx, ci::Json const& fullExtDesc) {
 					if (beamAngle.find("deg") != std::string::npos)
 						return convertDegStrToInt(beamAngle);
@@ -137,8 +138,7 @@ namespace act {
 					// in rare cases it can be mode specific so lets search there first
 					if (fullExtDesc.contains("modes") && modeIdx >= 0 && fullExtDesc["modes"] > modeIdx
 						&& fullExtDesc["modes"][modeIdx].contains("physical")
-						&& fullExtDesc["modes"][modeIdx]["physical"].contains("lens"))
-					{
+						&& fullExtDesc["modes"][modeIdx]["physical"].contains("lens")) {
 						physicalLensDesc = fullExtDesc["modes"][modeIdx]["physical"]["lens"];
 					}
 					else if (fullExtDesc.contains("physical") && fullExtDesc["physical"].contains("lens")) // otherwise look for a physical description at first level
@@ -152,8 +152,7 @@ namespace act {
 					if (!physicalLensDesc.is_object()
 						|| !physicalLensDesc.contains("degreesMinMax")
 						|| !physicalLensDesc["degreesMinMax"].is_array()
-						|| physicalLensDesc["degreesMinMax"].size() != 2)
-					{
+						|| physicalLensDesc["degreesMinMax"].size() != 2) {
 						throw std::invalid_argument("beamAngle does not specify deg explicit or implicit (physical lens description does not contain degreesMinMax).");
 					}
 
@@ -163,8 +162,10 @@ namespace act {
 					if (physicalLensDesc["degreesMinMax"][0] > physicalLensDesc["degreesMinMax"][1])
 						throw std::exception("physical lens description degreesMinMax in wrong order!");
 
-					// Determine which degree to take
-					// NOTE: possible float to int conversion but InACTually currently can not handle float zoom values
+					/* 
+					* Determine which degree to take
+					* NOTE: possible float to int conversion but InACTually currently can not handle float zoom values
+					*/
 					if (beamAngle == "narrow" || beamAngle == "1%")
 						return physicalLensDesc["degreesMinMax"][0];
 					else if (beamAngle == "wide" || beamAngle == "100%")
@@ -173,15 +174,16 @@ namespace act {
 						return 0;
 					else
 						throw std::exception("Could not map physical lens description degreesMinMax to a degree!");
-					// NOTE: x% outside of 1% and 100% is not mapped to specifies range because values other than those
-					// three were not present for beam angles as of writing this function
-					// they would however be spec-compliant
+					/* 
+					* NOTE: x% outside of 1 % and 100 % is not mapped to specifies range because values other than those
+					* three were not present for beam angles as of writing this function
+					* they would however be spec-compliant
+					*/
 
 				};
 
 				// converts an ofl speed string into a float
-				static float speedToFloat(std::string speed)
-				{
+				static float speedToFloat(std::string speed) {
 					// Speed can have Hz, bpm or % as units
 					size_t HzPos = speed.find("Hz");
 					if (HzPos != std::string::npos)
@@ -199,8 +201,7 @@ namespace act {
 				};
 
 				// Calculates the distance in address offset from baseRange to distantRange
-				static int dmxRangeDistance(ci::Json const& distantRange, ci::Json const& baseRange)
-				{
+				static int dmxRangeDistance(ci::Json const& distantRange, ci::Json const& baseRange) {
 					if (!distantRange.is_array() || !baseRange.is_array()
 						|| distantRange.size() != 2 || baseRange.size() != 2)
 						throw new std::invalid_argument("Malformed dmxRanges!");
@@ -214,8 +215,7 @@ namespace act {
 				};
 
 				// Averages a dmx range to one dmx value
-				static int dmxRangeToDmxValue(ci::Json const& dmxRange)
-				{
+				static int dmxRangeToDmxValue(ci::Json const& dmxRange) {
 					if (!dmxRange.is_array() || dmxRange.size() != 2)
 						throw std::invalid_argument("Malformed dmxRange!");
 

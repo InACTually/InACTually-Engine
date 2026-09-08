@@ -22,17 +22,16 @@
 namespace act {
 	namespace room {
 
-		/* 
+		/*
 		* Forward declaration, DMXManager is observer of FixtureDescriptionImporter
 		*/
 		class DMXManager;
 
-		/* 
+		/*
 		* The FixtureDescriptionImporter converts external fixture descriptions into the InACTually internal description format.
 		* Description mappers are used to convert a specific external format into ours.
 		*/
-		class FixtureDescriptionImporter
-		{
+		class FixtureDescriptionImporter {
 		public:
 			FixtureDescriptionImporter();
 			~FixtureDescriptionImporter();
@@ -44,9 +43,9 @@ namespace act {
 			void	drawOFLImport();
 			void	drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
 			void	drawOFLFixtureTable(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
-			
+
 			/* Register function for observer.
-			*  Should provide importFixture(ci::Json) function, which will be called upon a fixture import. 
+			*  Should provide importFixture(ci::Json) function, which will be called upon a fixture import.
 			*/
 			void	registerDMXManager(std::weak_ptr<DMXManager> dmxManagerWRef);
 
