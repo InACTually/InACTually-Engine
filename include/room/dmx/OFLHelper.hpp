@@ -149,17 +149,18 @@ namespace act {
 						throw std::invalid_argument("beamAngle does not specify deg explicit or implicit (by a physical lens description).");
 
 					// check for degreesMinMax
+					constexpr auto OFLDegMinMaxKey = "degreesMinMax";;
 					if (!physicalLensDesc.is_object()
-						|| !physicalLensDesc.contains("degreesMinMax")
-						|| !physicalLensDesc["degreesMinMax"].is_array()
-						|| physicalLensDesc["degreesMinMax"].size() != 2) {
+						|| !physicalLensDesc.contains(OFLDegMinMaxKey)
+						|| !physicalLensDesc[OFLDegMinMaxKey].is_array()
+						|| physicalLensDesc[OFLDegMinMaxKey].size() != 2) {
 						throw std::invalid_argument("beamAngle does not specify deg explicit or implicit (physical lens description does not contain degreesMinMax).");
 					}
 
-					if (!physicalLensDesc["degreesMinMax"][0].is_number() || !physicalLensDesc["degreesMinMax"][1].is_number())
+					if (!physicalLensDesc[OFLDegMinMaxKey][0].is_number() || !physicalLensDesc[OFLDegMinMaxKey][1].is_number())
 						throw std::exception("physical lens description contains non number degreesMinMax!");
 
-					if (physicalLensDesc["degreesMinMax"][0] > physicalLensDesc["degreesMinMax"][1])
+					if (physicalLensDesc[OFLDegMinMaxKey][0] > physicalLensDesc[OFLDegMinMaxKey][1])
 						throw std::exception("physical lens description degreesMinMax in wrong order!");
 
 					/* 
@@ -167,9 +168,9 @@ namespace act {
 					* NOTE: possible float to int conversion but InACTually currently can not handle float zoom values
 					*/
 					if (beamAngle == "narrow" || beamAngle == "1%")
-						return physicalLensDesc["degreesMinMax"][0];
+						return physicalLensDesc[OFLDegMinMaxKey][0];
 					else if (beamAngle == "wide" || beamAngle == "100%")
-						return physicalLensDesc["degreesMinMax"][1];
+						return physicalLensDesc[OFLDegMinMaxKey][1];
 					else if (beamAngle == "closed")
 						return 0;
 					else
