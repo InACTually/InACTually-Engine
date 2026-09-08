@@ -233,15 +233,20 @@ void act::room::DMXManager::loadFixtures()
 
 void act::room::DMXManager::importFixture(ci::Json fixtureDescription)
 {
-	if (!fixtureDescription.contains("name")) throw std::invalid_argument("Fixture has to have a name!");
-	if (!fixtureDescription["name"].is_string()) throw std::invalid_argument("Fixture name has to be a string!");
-	if (!fixtureDescription.contains("type")) throw std::invalid_argument("Fixture has to have a type!");
-	if (!fixtureDescription.contains("mapping")) throw std::invalid_argument("Fixture has to have a mapping!");
+	if (!fixtureDescription.contains("name")
+	 || !fixtureDescription["name"].is_string()
+	 || !fixtureDescription.contains("type")
+	 || !fixtureDescription.contains("mapping")) {
+		CI_LOG_E("importFixture called with malformed fixtureDescription. Fixture description has to have a name, a type and a mapping!");
+		return;
+	}
 
 	std::string fixturename = fixtureDescription["name"];
 
-	if (std::find(m_fixtureNames.begin(), m_fixtureNames.end(), fixturename) != m_fixtureNames.end())
-		throw std::invalid_argument("Fixture with the name '" + fixturename + "' already exists!");
+	if (std::find(m_fixtureNames.begin(), m_fixtureNames.end(), fixturename) != m_fixtureNames.end()) {
+		CI_LOG_E("Fixture with the name '" + fixturename + "' already exists!");
+		return;
+	}
 
 	m_fixtureDescriptions.push_back(fixtureDescription);
 	m_fixtureNames.push_back(fixturename);
