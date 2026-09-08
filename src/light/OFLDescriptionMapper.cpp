@@ -104,7 +104,7 @@ bool act::system::OFLDescriptionMapper::parseLibraryMeta() {
 			continue;
 		}
 
-		/* iterate files in the directors and use their names as fixture names
+		/* iterate files in the directories and use their names as fixture names
 		* this might not be the real fixture name but otherwise all json descriptons
 		* would have to be parsed, most of which will not be needed
 		*/
