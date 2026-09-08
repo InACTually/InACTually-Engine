@@ -142,6 +142,8 @@
     <ClCompile Include="..\src\input\KeyInput.cpp" />
     <ClCompile Include="..\src\input\MouseInput.cpp" />
     <ClCompile Include="..\src\input\TouchInput.cpp" />
+    <ClCompile Include="..\src\light\FixtureDescriptionImporter.cpp" />
+    <ClCompile Include="..\src\light\OFLDescriptionMapper.cpp" />
     <ClCompile Include="..\src\llm\LLMLightTools.cpp" />
     <ClCompile Include="..\src\llm\LLMToolManager.cpp" />
     <ClCompile Include="..\src\networking\Message.cpp" />
@@ -180,6 +182,9 @@
     <ClInclude Include="..\include\input\MouseRawListener.hpp" />
     <ClInclude Include="..\include\input\TouchInput.hpp" />
     <ClInclude Include="..\include\input\TouchRawListener.hpp" />
+    <ClInclude Include="..\include\light\FixtureDescriptionImporter.hpp" />
+    <ClInclude Include="..\include\light\OFLDescriptionMapper.hpp" />
+    <ClInclude Include="..\include\light\OFLHelper.hpp" />
     <ClInclude Include="..\include\llm\LLMLightTools.hpp" />
     <ClInclude Include="..\include\llm\LLMToolManager.hpp" />
     <ClInclude Include="..\include\networking\Connection.hpp" />

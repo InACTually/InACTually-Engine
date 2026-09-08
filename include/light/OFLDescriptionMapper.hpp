@@ -16,11 +16,11 @@
 #pragma once
 
 #include "roompch.hpp"
-#include "dmx/OFLHelper.hpp"
+#include "light/OFLHelper.hpp"
 
 
 namespace act {
-	namespace room {
+	namespace system {
 
 		class OFLDescriptionMapper {
 		public:

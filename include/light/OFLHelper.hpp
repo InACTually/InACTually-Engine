@@ -18,7 +18,7 @@
 
 
 namespace act {
-	namespace room {
+	namespace system {
 		namespace ofl {
 
 			struct OFLChannelDescPatch {

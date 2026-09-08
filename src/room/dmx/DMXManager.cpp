@@ -33,7 +33,7 @@ act::room::DMXManager::DMXManager()
 	m_fixtureNames = std::vector<std::string>(0);
 	m_availableDeviceNames = std::vector<std::string>(0);
 
-	m_fixtureDescriptionImporter = FixtureDescriptionImporter::create();
+	m_fixtureDescriptionImporter = act::system::FixtureDescriptionImporter::create();
 
 	refreshInterfaceNames();
 	loadFixtures();

@@ -14,34 +14,34 @@
 */
 
 #include "roompch.hpp"
-#include "dmx/OFLDescriptionMapper.hpp"
+#include "light/OFLDescriptionMapper.hpp"
 #include "utils/RGBAWHelper.h"
 #include "utils/jsonHelper.hpp"
 
 
-act::room::OFLDescriptionMapper::OFLDescriptionMapper() {
+act::system::OFLDescriptionMapper::OFLDescriptionMapper() {
 	m_ofl.name = "Open Fixture Library";
 	m_ofl.isParsed = false;
 	searchLibraryPath();
 }
 
-act::room::OFLDescriptionMapper::~OFLDescriptionMapper() {
+act::system::OFLDescriptionMapper::~OFLDescriptionMapper() {
 }
 
-std::string act::room::OFLDescriptionMapper::getName() {
+std::string act::system::OFLDescriptionMapper::getName() {
 	return m_ofl.name;
 }
 
-bool act::room::OFLDescriptionMapper::searchLibraryPath() {
+bool act::system::OFLDescriptionMapper::searchLibraryPath() {
 	ci::fs::path usualPath = ci::app::getAssetPath("dmx/ofl_export_ofl");
 	return setLibraryPath(usualPath);
 }
 
-ci::fs::path act::room::OFLDescriptionMapper::getLibraryPath() {
+ci::fs::path act::system::OFLDescriptionMapper::getLibraryPath() {
 	return m_ofl.libraryPath;
 }
 
-bool act::room::OFLDescriptionMapper::setLibraryPath(ci::fs::path path) {
+bool act::system::OFLDescriptionMapper::setLibraryPath(ci::fs::path path) {
 	// Check if a manufacturer index exists at provided path
 	ci::fs::path check = path;
 	check.append(m_ManufacturerIdxFileName);
@@ -54,11 +54,11 @@ bool act::room::OFLDescriptionMapper::setLibraryPath(ci::fs::path path) {
 	return true;
 }
 
-bool act::room::OFLDescriptionMapper::getIsParsed() {
+bool act::system::OFLDescriptionMapper::getIsParsed() {
 	return m_ofl.isParsed;
 }
 
-std::vector<act::room::ofl::OFLManufacturerRef> act::room::OFLDescriptionMapper::getManufacturers(bool allowParsingMeta) {
+std::vector<act::system::ofl::OFLManufacturerRef> act::system::OFLDescriptionMapper::getManufacturers(bool allowParsingMeta) {
 	// If the library is not parsed jet but we are allowed to we parse it first
 	if (!m_ofl.isParsed && allowParsingMeta)
 		parseLibraryMeta();
@@ -67,7 +67,7 @@ std::vector<act::room::ofl::OFLManufacturerRef> act::room::OFLDescriptionMapper:
 
 }
 
-bool act::room::OFLDescriptionMapper::parseLibraryMeta() {
+bool act::system::OFLDescriptionMapper::parseLibraryMeta() {
 	ci::Json manufacturersJson;
 	ci::fs::path manufacturersDescriptionPath = m_ofl.libraryPath;
 	manufacturersDescriptionPath.append(m_ManufacturerIdxFileName);
@@ -134,7 +134,7 @@ bool act::room::OFLDescriptionMapper::parseLibraryMeta() {
 	return true;
 }
 
-bool act::room::OFLDescriptionMapper::parseFixtureDescription(ofl::OFLFixtureDescriptionRef fixtureDescription) {
+bool act::system::OFLDescriptionMapper::parseFixtureDescription(ofl::OFLFixtureDescriptionRef fixtureDescription) {
 	CI_LOG_I("Parsing Description of '" << fixtureDescription->name << "' ...");
 	fixtureDescription->externalDescription.clear();
 	fixtureDescription->modes.clear();
@@ -219,7 +219,7 @@ bool act::room::OFLDescriptionMapper::parseFixtureDescription(ofl::OFLFixtureDes
 	return true;
 }
 
-bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& modeDesc, ofl::OFLFixtureDescriptionRef fixtureDescription, ofl::OFLModeRef modeRef, int modeIndex) {
+bool act::system::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& modeDesc, ofl::OFLFixtureDescriptionRef fixtureDescription, ofl::OFLModeRef modeRef, int modeIndex) {
 	ci::Json const& externalDesc = fixtureDescription->externalDescription;
 	modeRef->internalDescBase = ci::Json::object();
 
@@ -315,7 +315,7 @@ bool act::room::OFLDescriptionMapper::convertOFLModeToInternal(ci::Json const& m
 	return true;
 }
 
-ci::Json act::room::OFLDescriptionMapper::getInternalDescription(ofl::OFLFixtureDescriptionRef fixture) {
+ci::Json act::system::OFLDescriptionMapper::getInternalDescription(ofl::OFLFixtureDescriptionRef fixture) {
 	ofl::OFLModeRef modeRef = fixture->modes.at(fixture->selectedMode);
 	if (modeRef->internalDescBase.empty() || !modeRef->internalDescBase.contains("name")) {
 		CI_LOG_E("Malformed internalDescBase provided, no internal description producable!");
@@ -333,7 +333,7 @@ ci::Json act::room::OFLDescriptionMapper::getInternalDescription(ofl::OFLFixture
 	return internalDescription;
 }
 
-void act::room::OFLDescriptionMapper::addDescToOtherAffectedChannels(ofl::OFLModeRef modeRef, ofl::OFLChannelDescPatchRef channelDescPatchRef, std::string const& channelKey, int primaryDmxOffset) {
+void act::system::OFLDescriptionMapper::addDescToOtherAffectedChannels(ofl::OFLModeRef modeRef, ofl::OFLChannelDescPatchRef channelDescPatchRef, std::string const& channelKey, int primaryDmxOffset) {
 	// Loop over Mapping and add description to corresponding mappings
 	if (channelDescPatchRef->descriptionPatch.is_null() || channelDescPatchRef->descriptionPatch.empty())
 		return;
@@ -385,7 +385,7 @@ void act::room::OFLDescriptionMapper::addDescToOtherAffectedChannels(ofl::OFLMod
 	}
 }
 
-std::map<std::string, int> act::room::OFLDescriptionMapper::resolveFineChannels(ci::Json const& fullExtDesc, int modeIndex, ci::Json const& extChannelDesc, int maxAliases) {
+std::map<std::string, int> act::system::OFLDescriptionMapper::resolveFineChannels(ci::Json const& fullExtDesc, int modeIndex, ci::Json const& extChannelDesc, int maxAliases) {
 	if (!fullExtDesc.contains("modes") || !fullExtDesc["modes"].is_array() || fullExtDesc["modes"].size() <= modeIndex
 		|| !fullExtDesc["modes"][modeIndex].contains("channels") || !fullExtDesc["modes"][modeIndex]["channels"].is_array()) {
 		CI_LOG_E("resolveFineChannel got malformed fullExtDesc! Skipping fine channel resolution.");
@@ -424,7 +424,7 @@ std::map<std::string, int> act::room::OFLDescriptionMapper::resolveFineChannels(
  * Register new convert... functions in this method.
  * For a list of current capability types see https://github.com/OpenLightingProject/open-fixture-library/blob/master/docs/capability-types.md
 */
-ci::Json act::room::OFLDescriptionMapper::convertChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
+ci::Json act::system::OFLDescriptionMapper::convertChannel(ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
 	if (extChannelDesc.contains("capability")) // === Convert single capability
 	{
 		ci::Json const& extCapabilityDesc = extChannelDesc["capability"];
@@ -464,7 +464,7 @@ ci::Json act::room::OFLDescriptionMapper::convertChannel(ci::Json const& extChan
 	return ci::Json::object();
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+ci::Json act::system::OFLDescriptionMapper::convertIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	ci::Json descPatch = ci::Json::object();
 
 	descPatch["mapping"]["dimmer"] = dmxOffset;
@@ -476,7 +476,7 @@ ci::Json act::room::OFLDescriptionMapper::convertIntensityCapability(ci::Json co
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertPanTiltCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+ci::Json act::system::OFLDescriptionMapper::convertPanTiltCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	// Converting Pan and Tilt is so similar it is combined into one function
 
 	ci::Json descPatch = ci::Json::object();
@@ -510,7 +510,7 @@ ci::Json act::room::OFLDescriptionMapper::convertPanTiltCapability(ci::Json cons
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertZoomCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+ci::Json act::system::OFLDescriptionMapper::convertZoomCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	ci::Json descPatch = ci::Json::object();
 
 	if (!extCapabilityDesc.contains("angleStart") || !extCapabilityDesc["angleStart"].is_string())
@@ -541,7 +541,7 @@ ci::Json act::room::OFLDescriptionMapper::convertZoomCapability(ci::Json const& 
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertColorIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+ci::Json act::system::OFLDescriptionMapper::convertColorIntensityCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	ci::Json descPatch = ci::Json::object();
 
 	if (!extCapabilityDesc.contains("color") || !extCapabilityDesc["color"].is_string())
@@ -573,7 +573,7 @@ ci::Json act::room::OFLDescriptionMapper::convertColorIntensityCapability(ci::Js
 	return descPatch;
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertPanTiltSpeedCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+ci::Json act::system::OFLDescriptionMapper::convertPanTiltSpeedCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	ci::Json descPatch = ci::Json::object();
 
 	descPatch["mapping"]["speed"] = dmxOffset;
@@ -582,7 +582,7 @@ ci::Json act::room::OFLDescriptionMapper::convertPanTiltSpeedCapability(ci::Json
 }
 
 // Checks if there is a capability with array of type wheelSlot and a corresponding wheel description with slots of type color
-bool act::room::OFLDescriptionMapper::isColorWheel(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+bool act::system::OFLDescriptionMapper::isColorWheel(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	if (!extChannelDesc.contains("capabilities") && !extChannelDesc["capabilities"].is_array())
 		return false; // A Color Wheeel has to have an array of WheelSlot capabilities
 
@@ -602,7 +602,7 @@ bool act::room::OFLDescriptionMapper::isColorWheel(std::string const& channelNam
 	return true; // Otherwise it is a color wheel
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertColorWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
+ci::Json act::system::OFLDescriptionMapper::convertColorWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
 
 	if (!extChannelDesc.contains("capabilities") || !extChannelDesc["capabilities"].is_array())
 		throw std::invalid_argument("A Color Wheeel has to have an array of WheelSlot capabilities");
@@ -720,7 +720,7 @@ ci::Json act::room::OFLDescriptionMapper::convertColorWheelCapability(ci::Json c
 	return descPatch;
 }
 
-bool act::room::OFLDescriptionMapper::isGoboWheel(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+bool act::system::OFLDescriptionMapper::isGoboWheel(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	if (!extChannelDesc.contains("capabilities") && !extChannelDesc["capabilities"].is_array())
 		return false; // A Gobo Wheeel has to have an array of WheelSlot capabilities
 
@@ -741,7 +741,7 @@ bool act::room::OFLDescriptionMapper::isGoboWheel(std::string const& channelName
 	return true; // Otherwise it is a gobo wheel
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertGoboWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
+ci::Json act::system::OFLDescriptionMapper::convertGoboWheelCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
 
 	if (!extChannelDesc.contains("capabilities") || !extChannelDesc["capabilities"].is_array())
 		throw std::invalid_argument("A Gobo Wheeel has to have an array of WheelSlot capabilities");
@@ -871,7 +871,7 @@ ci::Json act::room::OFLDescriptionMapper::convertGoboWheelCapability(ci::Json co
 	return descPatch;
 }
 
-bool act::room::OFLDescriptionMapper::isShutterStrobeCapability(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
+bool act::system::OFLDescriptionMapper::isShutterStrobeCapability(std::string const& channelName, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex) {
 	// Determine if there are capabilities with an open state and a dedicated strobe state with speedStart and speedEnd
 	if (!extChannelDesc.contains("capabilities") && !extChannelDesc["capabilities"].is_array())
 		return false;
@@ -896,7 +896,7 @@ bool act::room::OFLDescriptionMapper::isShutterStrobeCapability(std::string cons
 	return hasOpenState && hasStrobeWithSpeed;
 }
 
-ci::Json act::room::OFLDescriptionMapper::convertShutterStrobeCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
+ci::Json act::system::OFLDescriptionMapper::convertShutterStrobeCapability(ci::Json const& extCapabilityDesc, ci::Json const& extChannelDesc, ci::Json const& fullExtDesc, int dmxOffset, int modeIndex, std::string const& channelName) {
 
 	if (!extChannelDesc.contains("capabilities") && !extChannelDesc["capabilities"].is_array())
 		throw std::invalid_argument("No capabilities array found in capabolities description!");

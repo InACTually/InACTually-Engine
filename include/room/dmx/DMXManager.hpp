@@ -21,7 +21,7 @@
 #include "dmx/DMXRoomNodeBase.hpp"
 #include "dmx/MovingHeadRoomNode.hpp"
 #include "dmx/DimmerRoomNode.hpp"
-#include "dmx/FixtureDescriptionImporter.hpp"
+#include "light/FixtureDescriptionImporter.hpp"
 
 #include "dmx/DMXPro.hpp"
 
@@ -71,7 +71,7 @@ namespace act {
 			std::vector<std::string>			m_fixtureNames;
 			int									m_selectedFixture;
 
-			FixtureDescriptionImporterRef           m_fixtureDescriptionImporter;
+			act::system::FixtureDescriptionImporterRef m_fixtureDescriptionImporter;
 
 			void refreshLists() override;
 			std::vector<std::string>			m_availableDeviceNames;

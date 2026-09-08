@@ -153,10 +153,7 @@
     <ClInclude Include="..\include\room\dmx\DimmerRoomNode.hpp" />
     <ClInclude Include="..\include\room\dmx\DMXManager.hpp" />
     <ClInclude Include="..\include\room\dmx\DMXRoomNodeBase.hpp" />
-    <ClInclude Include="..\include\room\dmx\FixtureDescriptionImporter.hpp" />
     <ClInclude Include="..\include\room\dmx\MovingHeadRoomNode.hpp" />
-    <ClInclude Include="..\include\room\dmx\OFLDescriptionMapper.hpp" />
-    <ClInclude Include="..\include\room\dmx\OFLHelper.hpp" />
     <ClInclude Include="..\include\room\kinect\KinectDevice.hpp" />
     <ClInclude Include="..\include\room\kinect\KinectDummy.hpp" />
     <ClInclude Include="..\include\room\kinect\KinectManager.hpp" />
@@ -207,9 +204,7 @@
     <ClCompile Include="..\src\room\dmx\DimmerRoomNode.cpp" />
     <ClCompile Include="..\src\room\dmx\DMXManager.cpp" />
     <ClCompile Include="..\src\room\dmx\DMXRoomNodeBase.cpp" />
-    <ClCompile Include="..\src\room\dmx\FixtureDescriptionImporter.cpp" />
     <ClCompile Include="..\src\room\dmx\MovingHeadRoomNode.cpp" />
-    <ClCompile Include="..\src\room\dmx\OFLDescriptionMapper.cpp" />
     <ClCompile Include="..\src\room\kinect\KinectDevice.cpp" />
     <ClCompile Include="..\src\room\kinect\KinectDummy.cpp" />
     <ClCompile Include="..\src\room\kinect\KinectManager.cpp" />

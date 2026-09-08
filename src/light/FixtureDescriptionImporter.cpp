@@ -14,19 +14,19 @@
 */
 
 #include "roompch.hpp"
-#include "dmx/FixtureDescriptionImporter.hpp"
+#include "light/FixtureDescriptionImporter.hpp"
 #include "dmx/DMXManager.hpp"
 
 
-act::room::FixtureDescriptionImporter::FixtureDescriptionImporter() {
+act::system::FixtureDescriptionImporter::FixtureDescriptionImporter() {
 	m_oflDescriptionMapper = OFLDescriptionMapper::create();
 	m_isShowImporter = false;
 }
 
-act::room::FixtureDescriptionImporter::~FixtureDescriptionImporter() {
+act::system::FixtureDescriptionImporter::~FixtureDescriptionImporter() {
 }
 
-void act::room::FixtureDescriptionImporter::draw() {
+void act::system::FixtureDescriptionImporter::draw() {
 	if (ImGui::Button("Import Fixture Description"))
 		m_isShowImporter = true;
 
@@ -47,7 +47,7 @@ void act::room::FixtureDescriptionImporter::draw() {
 	}
 }
 
-void act::room::FixtureDescriptionImporter::update() {
+void act::system::FixtureDescriptionImporter::update() {
 	if (m_isOpenOFLInBrowser) {
 		CI_LOG_D("Opening Open Fixture Library Website");
 		ci::app::Platform::get()->launchWebBrowser(ci::Url("https://open-fixture-library.org/"));
@@ -91,14 +91,14 @@ void act::room::FixtureDescriptionImporter::update() {
 		auto const& fixture = m_importQueue.front();
 		ci::Json internalDesc = OFLDescriptionMapper::getInternalDescription(fixture);
 
-		if (auto dmxManagerRef = m_dmxManagerWRef.lock())
+		if (act::room::DMXManagerRef dmxManagerRef = m_dmxManagerWRef.lock())
 			dmxManagerRef->importFixture(internalDesc);
 
 		m_importQueue.pop_front();
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLImport() {
+void act::system::FixtureDescriptionImporter::drawOFLImport() {
 	if (ImGui::CollapsingHeader(m_oflDescriptionMapper->getName().c_str())) {
 		// Check if the ofl library is present
 		if (m_oflDescriptionMapper->getLibraryPath().empty()) {
@@ -172,7 +172,7 @@ void act::room::FixtureDescriptionImporter::drawOFLImport() {
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId) {
+void act::system::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId) {
 	if (fixture->isQueuedForLoading) {
 		// Fixture is queued for loading
 		ImGui::Text("... Fixture details loading...");
@@ -271,7 +271,7 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixtur
 	}
 }
 
-void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId) {
+void act::system::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId) {
 	bool showMindNotes = false;
 
 	//== Table for displaying the fixture details
@@ -354,11 +354,11 @@ void act::room::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtureD
 	}
 }
 
-void act::room::FixtureDescriptionImporter::registerDMXManager(std::weak_ptr<DMXManager> dmxManagerWRef) {
+void act::system::FixtureDescriptionImporter::registerDMXManager(std::weak_ptr<act::room::DMXManager> dmxManagerWRef) {
 	m_dmxManagerWRef = dmxManagerWRef;
 }
 
-void act::room::FixtureDescriptionImporter::filterOFLFixtures() {
+void act::system::FixtureDescriptionImporter::filterOFLFixtures() {
 	std::string filterTerm(m_oflFixtureFilterBuffer);
 	std::transform(filterTerm.begin(), filterTerm.end(), filterTerm.begin(), [](unsigned char c) {return std::tolower(c);});
 	if (filterTerm.size() < 3) {
