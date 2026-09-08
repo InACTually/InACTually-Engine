@@ -231,17 +231,14 @@ namespace act {
 
         // Checks if array of objects contains the key with the value or just the value / key if one is empty
         // returns index or -1 if nothing is found
-        static int isInJsonObjArray(std::string key, std::string value, ci::Json const& array)
-        {
+        static int isInJsonObjArray(std::string key, std::string value, ci::Json const& array){
             if (!array.is_array()) return -1;
 
             bool matchKey = !key.empty();
             bool matchValue = !value.empty();
 
-            for (int idx = 0; idx < array.size(); idx++)
-            {
-                for (auto const& [elemKey, elemValue] : array[idx].items())
-                {
+            for (int idx = 0; idx < array.size(); idx++){
+                for (auto const& [elemKey, elemValue] : array[idx].items()){
                     if (!elemValue.is_string())
                         continue;
                     if ((matchKey && key == elemKey) && (matchValue && value == elemValue)) return idx; // return if key and value match
@@ -253,12 +250,10 @@ namespace act {
             return -1;
         }
 
-        static bool isInJsonArray(std::string value, ci::Json const& array)
-        {
+        static bool isInJsonArray(std::string value, ci::Json const& array){
             if (!array.is_array())
                 return false;
-            for (auto const& entry : array)
-            {
+            for (auto const& entry : array){
                 if (!entry.is_string())
                     continue;
                 if (entry == value)
