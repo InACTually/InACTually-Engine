@@ -55,7 +55,7 @@ namespace act {
 			virtual ci::Json toJson();
 			virtual void fromJson(ci::Json json);
 			void saveDevicesToJson();
-			void importFixture(ci::Json fixtureDescription) override;
+			void onImportFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
  
 		private:

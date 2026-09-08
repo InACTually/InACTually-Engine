@@ -231,7 +231,7 @@ void act::room::DMXManager::loadFixtures()
 	}
 }
 
-void act::room::DMXManager::importFixture(ci::Json fixtureDescription)
+void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
 {
 	if (!fixtureDescription.contains("name")
 	 || !fixtureDescription["name"].is_string()

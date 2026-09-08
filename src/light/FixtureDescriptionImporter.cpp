@@ -92,7 +92,7 @@ void act::system::FixtureDescriptionImporter::update() {
 		ci::Json internalDesc = OFLDescriptionMapper::getInternalDescription(fixture);
 
 		if (auto const dmxManagerRef = m_importFixtureListenerWRef.lock())
-			dmxManagerRef->importFixture(internalDesc);
+			dmxManagerRef->onImportFixture(internalDesc);
 
 		m_importQueue.pop_front();
 	}

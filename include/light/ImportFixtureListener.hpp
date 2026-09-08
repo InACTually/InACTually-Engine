@@ -29,7 +29,7 @@ namespace act {
 			/*
 			* Import the provided fixtureDescription
 			*/
-			virtual void importFixture(ci::Json fixtureDescription) = 0;
+			virtual void onImportFixture(ci::Json fixtureDescription) = 0;
 		};
 
 	}
