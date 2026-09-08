@@ -21,6 +21,7 @@
 #include "dmx/DMXRoomNodeBase.hpp"
 #include "dmx/MovingHeadRoomNode.hpp"
 #include "dmx/DimmerRoomNode.hpp"
+#include "light/ImportFixtureListener.hpp"
 #include "light/FixtureDescriptionImporter.hpp"
 
 #include "dmx/DMXPro.hpp"
@@ -28,7 +29,7 @@
 namespace act {
 	namespace room {
 
-		class DMXManager : public RoomNodeManagerBase, public std::enable_shared_from_this<DMXManager> {
+		class DMXManager : public RoomNodeManagerBase, public system::ImportFixtureListener, public std::enable_shared_from_this<DMXManager> {
 		public:
 			DMXManager();
 			~DMXManager();
@@ -54,7 +55,7 @@ namespace act {
 			virtual ci::Json toJson();
 			virtual void fromJson(ci::Json json);
 			void saveDevicesToJson();
-			void importFixture(ci::Json fixtureDescription);
+			void importFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
  
 		private:

@@ -183,6 +183,7 @@
     <ClInclude Include="..\include\input\TouchInput.hpp" />
     <ClInclude Include="..\include\input\TouchRawListener.hpp" />
     <ClInclude Include="..\include\light\FixtureDescriptionImporter.hpp" />
+    <ClInclude Include="..\include\light\ImportFixtureListener.hpp" />
     <ClInclude Include="..\include\light\OFLDescriptionMapper.hpp" />
     <ClInclude Include="..\include\light\OFLHelper.hpp" />
     <ClInclude Include="..\include\llm\LLMLightTools.hpp" />

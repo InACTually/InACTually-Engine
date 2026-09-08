@@ -251,6 +251,9 @@
     <ClInclude Include="..\include\light\OFLHelper.hpp">
       <Filter>Source Files\light</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\light\ImportFixtureListener.hpp">
+      <Filter>Source Files\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="IA_System_ClassDiagram.cd" />

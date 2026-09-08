@@ -91,7 +91,7 @@ void act::system::FixtureDescriptionImporter::update() {
 		auto const& fixture = m_importQueue.front();
 		ci::Json internalDesc = OFLDescriptionMapper::getInternalDescription(fixture);
 
-		if (act::room::DMXManagerRef dmxManagerRef = m_dmxManagerWRef.lock())
+		if (auto const dmxManagerRef = m_importFixtureListenerWRef.lock())
 			dmxManagerRef->importFixture(internalDesc);
 
 		m_importQueue.pop_front();
@@ -354,8 +354,8 @@ void act::system::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtur
 	}
 }
 
-void act::system::FixtureDescriptionImporter::registerDMXManager(std::weak_ptr<act::room::DMXManager> dmxManagerWRef) {
-	m_dmxManagerWRef = dmxManagerWRef;
+void act::system::FixtureDescriptionImporter::registerImportFixtureListener(std::weak_ptr<ImportFixtureListener> listenerWRef) {
+	m_importFixtureListenerWRef = listenerWRef;
 }
 
 void act::system::FixtureDescriptionImporter::filterOFLFixtures() {

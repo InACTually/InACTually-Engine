@@ -48,7 +48,7 @@ act::room::DMXManager::~DMXManager()
 
 void act::room::DMXManager::setup()
 {
-	m_fixtureDescriptionImporter->registerDMXManager(weak_from_this());
+	m_fixtureDescriptionImporter->registerImportFixtureListener(weak_from_this());
 }
 
 void act::room::DMXManager::update()
