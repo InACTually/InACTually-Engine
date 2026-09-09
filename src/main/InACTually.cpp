@@ -41,10 +41,11 @@ using namespace act;
 
 GeneralAppState AppState::m_state = AS_STARTUP;
 
-InACTually::InACTually(ci::app::App* app)
-	: m_app(app)
+InACTually::InACTually()
 {
 	AppState::set(AS_STARTUP);
+	m_app = m_app;
+
 	ci::app::getWindow()->setUserData(new WindowData());
 	m_mainWindowUID = ci::app::getWindow()->getUserData<WindowData>()->getUID();
 	ci::app::getWindow()->setBorderless();
@@ -291,7 +292,7 @@ void InACTually::draw()
 	}
 	if (ImGui::IsKeyDown(ImGuiKey_Escape)) {
 		AppState::set(AS_CLOSING);
-		ci::app::App::get()->quit();
+		m_app->quit();
 	}
 
 	if (windowData->isFullscreen() && windowData->getFullscreenTex()) {
@@ -432,7 +433,7 @@ void act::InACTually::drawFullGUI()
 
 		if (ImGui::Button("Close")) {
 			AppState::set(AS_CLOSING);
-			ci::app::App::get()->quit();
+			m_app->quit();
 		}
 
 		ImGui::EndMenu();

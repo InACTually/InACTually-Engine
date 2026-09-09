@@ -58,9 +58,8 @@ namespace act {
 	public:
 		/**
 		* @brief InACTually is the main-class
-		* @param app pointer to cinderAppBase to controll the window
 		*/
-		InACTually(ci::app::App* app);
+		InACTually();
 		~InACTually();
 
 		/**
@@ -113,7 +112,7 @@ namespace act {
 
 
 	private:
-		ci::app::App* m_app;
+		ci::app::AppBase* m_app;
 		UID m_mainWindowUID;
 
 		std::shared_ptr<input::MouseRawListener> m_mouseRawListener;

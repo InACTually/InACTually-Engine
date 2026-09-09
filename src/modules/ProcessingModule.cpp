@@ -14,7 +14,9 @@
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
 */
+
 #define IM_ASSERT(_EXPR) do { if (!(_EXPR)) __debugbreak(); } while (0)
+
 #include "ProcessingModule.hpp"
 #include "cinder/CinderImGui.h"
 #include "imnodes.h"

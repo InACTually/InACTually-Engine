@@ -76,7 +76,7 @@ void InACTuallyApp::setup()
 	RegisterModule(mod::NetworkModule);
 	RegisterModule(mod::LLMModule);
 
-	inACTually = make_shared<InACTually>(this);
+	inACTually = make_shared<InACTually>();
 	inACTually->setRawListener(mouseRawListener);
 	inACTually->setRawListener(touchRawListener);
 	inACTually->setRawListener(keyRawListener);
