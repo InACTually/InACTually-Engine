@@ -400,8 +400,8 @@ void act::room::MovingHeadRoomNode::setColor(ci::Color color, bool publish)
 	if (m_hasAmber)
 		setValue("A", col.a);
 
-	if(publish)
-		publishParam("color", util::valueToJson(m_color));
+	//if(publish)
+	//	publishParam("color", util::valueToJson(m_color));
 }
 
 glm::vec3 toPitchYawRoll(glm::quat data)
