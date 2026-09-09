@@ -56,3 +56,5 @@ assets/recentLLM.json
 projects/
 3rd/oneTBB/lib/
 3rd/OpenCV5/
+3rd/doctest/doc/
+3rd/doctest/examples/

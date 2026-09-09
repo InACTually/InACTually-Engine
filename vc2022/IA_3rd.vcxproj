@@ -212,6 +212,7 @@
     <ClInclude Include="..\3rd\Cinder-PortAudio\src\cinder\audio\ContextPortAudio.h" />
     <ClInclude Include="..\3rd\Cinder-PortAudio\src\cinder\audio\DeviceManagerPortAudio.h" />
     <ClInclude Include="..\3rd\dmx\DMXPro.hpp" />
+    <ClInclude Include="..\3rd\doctest\doctest\doctest.h" />
     <ClInclude Include="..\3rd\filter\Filter.hpp" />
     <ClInclude Include="..\3rd\filter\OneEuroFilter.hpp" />
     <ClInclude Include="..\3rd\IconFontCppHeaders\IconsFontAwesome5.h" />

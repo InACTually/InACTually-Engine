@@ -91,6 +91,9 @@
     <Filter Include="Source Files\OpenCV5">
       <UniqueIdentifier>{48fdb7f5-3d92-426b-adab-52f5b6d8035f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\doctest">
+      <UniqueIdentifier>{4a43b39e-f928-42d2-86fe-361dab6faf62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rd\imnodes\imnodes.cpp">
@@ -1396,6 +1399,9 @@
     </ClInclude>
     <ClInclude Include="..\3rd\OpenCV5\include\opencv2\opencv_modules.hpp">
       <Filter>Source Files\OpenCV5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rd\doctest\doctest\doctest.h">
+      <Filter>Source Files\doctest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

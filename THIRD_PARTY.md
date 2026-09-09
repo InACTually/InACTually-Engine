@@ -158,6 +158,11 @@ These third party projects may contain other projects to function. Please refer 
 - Notes: Proprietary license. Not redistributed with this project. Users must download separately. It is included as [nuget-package](https://www.nuget.org/packages/Microsoft.Azure.Kinect.BodyTracking/1.1.2?_src=template). \
  The package has dependencies under same license terms (with-in the same package namespace) to  `.Dependencies`, `.Dependencies.cuDNN`, and `.ONNXRuntime`.
 
+### doctest
+- License: [MIT License](3rd/doctest/LICENSE.txt)
+- Copyright (c) 2016-2023 Viktor Kirilov
+- Source on [GitHub](https://github.com/doctest/doctest)
+
 ## Optional Frameworks
 The optional frameworks are not included in the sources but can be added on own behalf.
 
