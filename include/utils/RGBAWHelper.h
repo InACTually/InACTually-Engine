@@ -148,4 +148,18 @@ public:
 
 		return res;
 	}
+
+	static ci::Color HEXtoRGB(std::string hexString)
+	{
+		size_t startPos = hexString.find("#");
+		if (startPos != std::string::npos)
+			if (startPos == 0)
+				hexString.erase(0, 1);
+			else
+				throw std::invalid_argument("hexString contains # but not as first character!");
+
+		uint32_t const& hexuint = std::stoul(hexString, nullptr, 16);
+
+		return ci::Color::hex(hexuint);
+	}
 };

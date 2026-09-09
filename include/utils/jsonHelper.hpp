@@ -9,10 +9,11 @@
     Licensed under the MIT License.
     See LICENSE file in the project root for full license information.
 
-    This file is created and substantially modified: 2021-2023
+    This file is created and substantially modified: 2021-2023, 2026
 
     contributors:
     Lars Engeln - mail@lars-engeln.de
+    ein-christoph
 */
 
 #pragma once
@@ -226,6 +227,38 @@ namespace act {
             json["z"] = q.z;
             json["w"] = q.w;
             return json;
+        }
+
+        // Checks if array of objects contains the specified key-value pair
+        // returns index or -1 if nothing is found
+        static int isInJsonObjArray(std::string key, std::string value, ci::Json const& array){
+            if (!array.is_array()) return -1;
+
+            if (key.empty()) return -1;
+
+            for (int idx = 0; idx < array.size(); idx++){
+                for (auto const& [elemKey, elemValue] : array[idx].items()){
+                    if (!elemValue.is_string())
+                        continue;
+
+                    if (key == elemKey && value == elemValue) 
+                        return idx; // return if key and value match
+                }
+            }
+
+            return -1;
+        }
+
+        static bool isInJsonArray(std::string value, ci::Json const& array){
+            if (!array.is_array())
+                return false;
+            for (auto const& entry : array){
+                if (!entry.is_string())
+                    continue;
+                if (entry == value)
+                    return true;
+            }
+            return false;
         }
 	}
 }

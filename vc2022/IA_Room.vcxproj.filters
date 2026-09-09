@@ -189,6 +189,15 @@
     <ClInclude Include="..\include\room\lidar\LidarManager.hpp">
       <Filter>Source Files\lidar</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\room\dmx\OFLDescriptionMapper.hpp">
+      <Filter>Source Files\dmx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\room\dmx\FixtureDescriptionImporter.hpp">
+      <Filter>Source Files\dmx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\room\dmx\OFLHelper.hpp">
+      <Filter>Source Files\dmx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="IA_Room_ClassDiagram.cd" />
@@ -326,6 +335,12 @@
     </ClCompile>
     <ClCompile Include="..\src\room\lidar\LidarRoomNodeBase.cpp">
       <Filter>Source Files\lidar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\room\dmx\OFLDescriptionMapper.cpp">
+      <Filter>Source Files\dmx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\room\dmx\FixtureDescriptionImporter.cpp">
+      <Filter>Source Files\dmx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

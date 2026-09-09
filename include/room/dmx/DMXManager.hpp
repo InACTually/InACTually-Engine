@@ -9,10 +9,11 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
+	ein-christoph
 */
 
 #pragma once
@@ -21,6 +22,8 @@
 #include "dmx/DMXRoomNodeBase.hpp"
 #include "dmx/MovingHeadRoomNode.hpp"
 #include "dmx/DimmerRoomNode.hpp"
+#include "light/ImportFixtureListener.hpp"
+#include "light/FixtureDescriptionImporter.hpp"
 
 #include "dmx/DMXPro.hpp"
 
@@ -28,7 +31,7 @@
 namespace act {
 	namespace room {
 
-		class DMXManager : public RoomNodeManagerBase {
+		class DMXManager : public RoomNodeManagerBase, public system::ImportFixtureListener, public std::enable_shared_from_this<DMXManager> {
 		public:
 			DMXManager();
 			~DMXManager();
@@ -36,7 +39,7 @@ namespace act {
 			static	std::shared_ptr<DMXManager> create() { return std::make_shared<DMXManager>(); };
 
 			void	setup() override;
-			// void	update() override;
+			void	update() override;
 			// void	draw() override;
 			void	cleanUp() override;
 
@@ -54,6 +57,7 @@ namespace act {
 			virtual ci::Json toJson();
 			virtual void fromJson(ci::Json json);
 			void saveDevicesToJson();
+			void onImportFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
  
 		private:
@@ -69,6 +73,8 @@ namespace act {
 			std::vector<ci::Json>				m_fixtureDescriptions;
 			std::vector<std::string>			m_fixtureNames;
 			int									m_selectedFixture;
+
+			act::system::FixtureDescriptionImporterRef m_fixtureDescriptionImporter;
 
 			void refreshLists() override;
 			std::vector<std::string>			m_availableDeviceNames;

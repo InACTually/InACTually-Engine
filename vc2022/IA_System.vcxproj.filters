@@ -10,9 +10,6 @@
     <Filter Include="Source Files\audio\mixer">
       <UniqueIdentifier>{81f112f3-8617-4542-8de3-756248dae61c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\dmx">
-      <UniqueIdentifier>{235c85af-1d00-4a06-a571-ed778053ba83}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{ef656c0e-0977-4e35-a4ec-2c6db556fe01}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     </Filter>
     <Filter Include="Source Files\llm">
       <UniqueIdentifier>{1991e163-586a-456e-882f-33a6dfe1bbb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\light">
+      <UniqueIdentifier>{235c85af-1d00-4a06-a571-ed778053ba83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +113,12 @@
     </ClCompile>
     <ClCompile Include="..\src\llm\LLMToolManager.cpp">
       <Filter>Source Files\llm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\light\FixtureDescriptionImporter.cpp">
+      <Filter>Source Files\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\light\OFLDescriptionMapper.cpp">
+      <Filter>Source Files\light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +241,18 @@
     </ClInclude>
     <ClInclude Include="..\include\llm\LLMToolManager.hpp">
       <Filter>Source Files\llm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\light\FixtureDescriptionImporter.hpp">
+      <Filter>Source Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\light\OFLDescriptionMapper.hpp">
+      <Filter>Source Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\light\OFLHelper.hpp">
+      <Filter>Source Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\light\ImportFixtureListener.hpp">
+      <Filter>Source Files\light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

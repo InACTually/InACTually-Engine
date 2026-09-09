@@ -4,15 +4,16 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021-2025 Lars Engeln, Fabian Töpfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
+	ein-christoph
 */
 
 #include "roompch.hpp"
@@ -32,6 +33,8 @@ act::room::DMXManager::DMXManager()
 	m_fixtureNames = std::vector<std::string>(0);
 	m_availableDeviceNames = std::vector<std::string>(0);
 
+	m_fixtureDescriptionImporter = act::system::FixtureDescriptionImporter::create();
+
 	refreshInterfaceNames();
 	loadFixtures();
 	refreshLists();
@@ -40,11 +43,17 @@ act::room::DMXManager::DMXManager()
 }
 
 act::room::DMXManager::~DMXManager()
-{	
+{
 }
 
 void act::room::DMXManager::setup()
 {
+	m_fixtureDescriptionImporter->registerImportFixtureListener(weak_from_this());
+}
+
+void act::room::DMXManager::update()
+{
+	m_fixtureDescriptionImporter->update();
 }
 
 void act::room::DMXManager::cleanUp()
@@ -56,6 +65,8 @@ void act::room::DMXManager::cleanUp()
 
 act::room::RoomNodeBaseRef act::room::DMXManager::drawMenu()
 {
+	ImGui::Text("DMX Interfaces:");
+
 	if (ImGui::Button("refresh Interfacelist")) {
 		refreshInterfaceNames();
 	}
@@ -68,6 +79,9 @@ act::room::RoomNodeBaseRef act::room::DMXManager::drawMenu()
 		}
 	}
 
+	ImGui::Separator();
+	ImGui::Text("Add Device(s):");
+
 	//ImGui::SetNextItemWidth(m_displaySize.x - ImGui::CalcTextSize("Device").x);
 	ImGui::Combo("Device", &m_selectedFixture, m_fixtureNames);
 	if (ImGui::InputInt("address", &m_currentAddress)) {
@@ -77,7 +91,10 @@ act::room::RoomNodeBaseRef act::room::DMXManager::drawMenu()
 		// add input for name
 		return addDevice(m_fixtureDescriptions[m_selectedFixture]["name"], m_selectedFixture, m_currentAddress);
 	}
-	
+
+	//Fixture Importer
+	m_fixtureDescriptionImporter->draw();
+
 	return nullptr;
 }
 
@@ -169,7 +186,7 @@ void act::room::DMXManager::fromJson(ci::Json json)
 			util::setValueFromJson(node, "name", name);
 			auto dmxDevice = addDevice(name, fixtureIndex, startAddress);
 
-			dmxDevice->fromJson(node);		
+			dmxDevice->fromJson(node);
 		}
 	}
 	refreshLists();
@@ -214,6 +231,30 @@ void act::room::DMXManager::loadFixtures()
 	}
 }
 
+void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
+{
+	if (!fixtureDescription.contains("name")
+	 || !fixtureDescription["name"].is_string()
+	 || !fixtureDescription.contains("type")
+	 || !fixtureDescription.contains("mapping")) {
+		CI_LOG_E("importFixture called with malformed fixtureDescription. Fixture description has to have a name, a type and a mapping!");
+		return;
+	}
+
+	std::string fixturename = fixtureDescription["name"];
+
+	if (std::find(m_fixtureNames.begin(), m_fixtureNames.end(), fixturename) != m_fixtureNames.end()) {
+		CI_LOG_E("Fixture with the name '" + fixturename + "' already exists!");
+		return;
+	}
+
+	m_fixtureDescriptions.push_back(fixtureDescription);
+	m_fixtureNames.push_back(fixturename);
+	CI_LOG_I("imported Fixture loaded:" << fixturename);
+
+	saveFixtures();
+}
+
 void act::room::DMXManager::saveDevicesToJson() {
 	ci::fs::path path = ci::app::getAssetPath("recentRoomSetup.json");
 	ci::Json wholeFile = ci::loadJson(ci::loadFile(path));
@@ -232,7 +273,7 @@ void act::room::DMXManager::saveDevicesToJson() {
 	catch (cinder::Exception e) {
 		CI_LOG_E(e.what());
 	}
-	
+
 }
 
 void act::room::DMXManager::saveFixtures()
@@ -243,7 +284,8 @@ void act::room::DMXManager::saveFixtures()
 		ci::writeJson(path, ""); // touch
 	}
 
-	ci::Json fixtureDescriptions = ci::Json("{\"devices\":[]");
+	ci::Json fixtureDescriptions = ci::Json::object();
+	fixtureDescriptions["devices"] = ci::Json::array();
 	auto& devices = fixtureDescriptions["devices"];
 
 	for (auto&& desc : m_fixtureDescriptions) {
@@ -269,7 +311,7 @@ void act::room::DMXManager::refreshLists()
 	}
 }
 
- 
+
 act::room::RoomNodeBaseRef act::room::DMXManager::addDevice(std::string name, int fixtureIndex, int startAddress)
 {
 	if (fixtureIndex < 0 || fixtureIndex >= m_fixtureDescriptions.size())
@@ -294,7 +336,7 @@ int act::room::DMXManager::hasAvailableDevice(std::string deviceName) {
 	int i = 0;
 
 	for (auto&& d : m_fixtureNames) {
-		
+
 		if (d.compare(deviceName) == 0) {
 			return i;
 		}
