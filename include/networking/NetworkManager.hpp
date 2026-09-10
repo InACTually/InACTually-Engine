@@ -37,10 +37,10 @@ namespace act {
 
 		class NetworkManager : public act::net::MsgReciever, public act::net::NetworkPublisher, public std::enable_shared_from_this<NetworkManager> {
 		public:
-			NetworkManager(act::room::RoomManagers roomMgrs);
+			NetworkManager(act::room::RoomManagersRef roomMgrs);
 			~NetworkManager();
 
-			static	std::shared_ptr<NetworkManager> create(act::room::RoomManagers roomMgrs) { return std::make_shared<NetworkManager>(roomMgrs); };
+			static	std::shared_ptr<NetworkManager> create(act::room::RoomManagersRef roomMgrs) { return std::make_shared<NetworkManager>(roomMgrs); };
 
 			void	setup();
 			void	update();
@@ -60,7 +60,6 @@ namespace act {
 
 		private:
 
-			act::room::RoomManagers						m_roomMgrs;
 			std::shared_ptr<act::net::Middleware>		m_middleware;
 			std::shared_ptr<act::net::WebUIServer>		m_webUI;
 			std::shared_ptr<act::net::WebUISecureServer> m_secureWebUI;

@@ -1,10 +1,9 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -33,7 +32,7 @@ act::room::Stage::~Stage()
 {
 }
 
-void act::room::Stage::setup(act::room::RoomManagers roomMgrs)
+void act::room::Stage::setup(act::room::RoomManagersRef roomMgrs)
 {
 	m_roomMgrs = roomMgrs;
 }
@@ -78,7 +77,7 @@ void act::room::Stage::draw()
 	for (auto&& node : m_nodes) {
 		node->draw();
 	}
-	for(auto&& mgr : m_roomMgrs.list)
+	for(auto&& mgr : m_roomMgrs->list)
 		mgr->draw();
 
 	ci::gl::popMatrices();
@@ -96,7 +95,7 @@ act::room::RoomNodeBaseRef act::room::Stage::getNodeByUID(act::UID uid)
 		if (node->getUID() == uid)
 			return node;
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		auto node = mgr->getNodeByUID(uid);
 		if (node)
 			return node;
@@ -110,7 +109,7 @@ bool act::room::Stage::hit(glm::vec3 pos)
 		if (node->hit(pos)) 
 			return true;
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		if (mgr->hit(pos))
 			return true;
 	}
@@ -123,7 +122,7 @@ bool act::room::Stage::hitRay(ci::Ray ray)
 		if (node->hitRay(ray))
 			return true;
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		if (mgr->hitRay(ray))
 			return true;
 	}
@@ -136,7 +135,7 @@ act::room::RoomNodeBaseRef act::room::Stage::getNodeAtPos(glm::vec3 pos)
 		if (node->hit(pos))
 			return node;
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		auto node = mgr->getNodeAtPos(pos);
 		if (node)
 			return node;
@@ -158,7 +157,7 @@ act::room::RoomNodeBaseRef act::room::Stage::getNodeOnRay(ci::Ray ray)
 			}
 		}
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		auto node = mgr->getNodeOnRay(ray);
 		if (node) {
 			float d = ci::distance(node->getPosition(), ray.getOrigin());
@@ -185,7 +184,7 @@ bool act::room::Stage::removeNode(act::UID uid)
 	removed = removed || nsize != m_nodes.size();
 
 	if(!removed)
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		removed = removed || mgr->removeNode(uid);
 		if (removed)
 			return removed;
@@ -196,7 +195,7 @@ bool act::room::Stage::removeNode(act::UID uid)
 
 void act::room::Stage::clear()
 {
-	for (auto&& mgr : m_roomMgrs.list)
+	for (auto&& mgr : m_roomMgrs->list)
 		mgr->clear();
 	m_nodes.clear();
 }
@@ -207,7 +206,7 @@ std::vector<act::room::RoomNodeBaseRef> act::room::Stage::getAllNodes()
 	for (auto&& node : m_nodes) {
 		nodes.push_back(node);
 	}
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		for (auto node : mgr->getNodes()) {
 			nodes.push_back(node);
 		}

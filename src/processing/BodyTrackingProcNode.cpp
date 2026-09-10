@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021�2025 Lars Engeln, Fabian T�pfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -31,8 +31,8 @@ act::proc::BodyTrackingProcNode::BodyTrackingProcNode() : ProcNodeBase("BodyTrac
 act::proc::BodyTrackingProcNode::~BodyTrackingProcNode() {
 }
 
-void act::proc::BodyTrackingProcNode::setup(act::room::RoomManagers roomMgrs) {
-	m_bodyTrackingMgr = roomMgrs.bodyTrackingMgr;
+void act::proc::BodyTrackingProcNode::setup(act::room::RoomManagersRef roomMgrs) {
+	m_bodyTrackingMgr = roomMgrs->bodyTrackingMgr;
 
 	m_bodiesInPort = InputPort<room::BodyRefList>::create(PT_BODYLIST, "bodies", [&](room::BodyRefList bodies) {
 		m_bodies = bodies;

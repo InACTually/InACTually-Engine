@@ -29,7 +29,7 @@ act::proc::AddProcNode::AddProcNode() : ProcNodeBase("Add") {
 act::proc::AddProcNode::~AddProcNode() {
 }
 
-void act::proc::AddProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::AddProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::AddProcNode::update() {

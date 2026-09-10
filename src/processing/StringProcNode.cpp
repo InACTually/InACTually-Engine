@@ -26,7 +26,7 @@ act::proc::StringProcNode::StringProcNode() : ProcNodeBase("String") {
 act::proc::StringProcNode::~StringProcNode() {
 }
 
-void act::proc::StringProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::StringProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::StringProcNode::update() {

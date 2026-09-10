@@ -39,7 +39,7 @@ namespace act {
 		public:
 			ModuleBase() {};
 
-			virtual void setup(act::room::RoomManagers roomMgrs, std::shared_ptr<act::net::NetworkManager> networkMgr) = 0;
+			virtual void setup(act::room::RoomManagersRef roomMgrs, std::shared_ptr<act::net::NetworkManager> networkMgr) = 0;
 			virtual void cleanUp() = 0;
 			virtual void update() = 0;
 			virtual void draw() = 0;

@@ -27,7 +27,7 @@ act::proc::NumberProcNode::NumberProcNode() : ProcNodeBase("Number") {
 act::proc::NumberProcNode::~NumberProcNode() {
 }
 
-void act::proc::NumberProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::NumberProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::NumberProcNode::update() {

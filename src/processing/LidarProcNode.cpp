@@ -28,8 +28,8 @@ act::proc::LidarProcNode::LidarProcNode() : ProcNodeBase("Lidar", NT_INPUT) {
 act::proc::LidarProcNode::~LidarProcNode() {
 }
 
-void act::proc::LidarProcNode::setup(act::room::RoomManagers roomMgrs) {
-	m_lidarMgr = roomMgrs.lidarMgr;
+void act::proc::LidarProcNode::setup(act::room::RoomManagersRef roomMgrs) {
+	m_lidarMgr = roomMgrs->lidarMgr;
 
 }
 

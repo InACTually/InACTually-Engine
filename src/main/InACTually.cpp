@@ -18,6 +18,9 @@
 #include "main/InACTually.hpp"
 #include "Logger.hpp"
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest.h"
+
 #include <opencv2/core.hpp>
 #include <opencv2/core/ocl.hpp>
 #include <opencv2/core/opengl.hpp>
@@ -44,7 +47,7 @@ GeneralAppState AppState::m_state = AS_STARTUP;
 InACTually::InACTually()
 {
 	AppState::set(AS_STARTUP);
-	m_app = m_app;
+	m_app = ci::app::App::get();
 
 	ci::app::getWindow()->setUserData(new WindowData());
 	m_mainWindowUID = ci::app::getWindow()->getUserData<WindowData>()->getUID();
@@ -120,34 +123,7 @@ void InACTually::init()
 
 	initStyle();
 
-	m_roomMgrs.positionMgr		= room::PositionManager::create();
-	m_roomMgrs.cameraMgr		= room::CameraManager::create();
-	m_roomMgrs.dmxMgr			= room::DMXManager::create();
-	m_roomMgrs.kinectMgr		= room::KinectManager::create();
-	m_roomMgrs.markerMgr		= room::MarkerManager::create(m_roomMgrs.cameraMgr);
-	m_roomMgrs.objectMgr		= room::ObjectManager::create(m_roomMgrs.cameraMgr);
-	m_roomMgrs.audioMgr			= room::AudioManager::create();
-	m_roomMgrs.displayMgr		= room::DisplayManager::create();
-	m_roomMgrs.computerMgr		= room::ComputerManager::create();
-	m_roomMgrs.actionspaceMgr	= room::ActionspaceManager::create();
-	m_roomMgrs.projectorMgr		= room::ProjectorManager::create();
-	m_roomMgrs.lidarMgr			= room::LidarManager::create();
-
-	m_roomMgrs.bodyTrackingMgr	= room::BodyTrackingManager::create(m_roomMgrs.kinectMgr);
-
-	m_roomMgrs.list.push_back(m_roomMgrs.actionspaceMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.positionMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.cameraMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.projectorMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.dmxMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.kinectMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.bodyTrackingMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.markerMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.objectMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.audioMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.displayMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.computerMgr);
-	m_roomMgrs.list.push_back(m_roomMgrs.lidarMgr);
+	m_roomMgrs = act::room::RoomManagers::get();
 
 	m_networkMgr = net::NetworkManager::create(m_roomMgrs);
 	m_networkMgr->setup();
@@ -167,7 +143,7 @@ void InACTually::init()
 	}
 	
 	if (!m_drawGUI) {
-		size = Settings::get().guiSize;
+		size = Settings::get().guiSize; 
 	}
 
 	ci::app::getWindow()->setSize(size);
@@ -182,6 +158,14 @@ void InACTually::init()
 	//m_mouseRawListener->addListener(m_inputMgr->getMouseRawListener());
 	//m_keyRawListener->addListener(m_inputMgr->getKeyRawListener());
 	//m_touchRawListener->addListener(m_inputMgr->getTouchRawListener());
+
+
+	doctest::Context context;
+	context.setOption("exit", false);
+	int res = context.run(); // run doctest
+	if (context.shouldExit())
+		onClose();
+
 
 	AppState::set(AS_RUNNING);
 
@@ -203,7 +187,7 @@ void act::InACTually::onClose()
 	//ImNodes::SaveCurrentEditorStateToIniFile(ci::app::getAssetPath("editor.ini").string().c_str());
 	ImNodes::DestroyContext();
 
-	for (auto&& mgr : m_roomMgrs.list)
+	for (auto&& mgr : m_roomMgrs->list)
 		mgr->cleanUp();
 }
 
@@ -225,7 +209,7 @@ void InACTually::update()
 	if (AppState::get() == AS_RUNNING) {
 		m_networkMgr->update();
 		
-		for (auto&& mgr : m_roomMgrs.list)
+		for (auto&& mgr : m_roomMgrs->list)
 			mgr->update();
 
 		for (auto module : reg_modules) {

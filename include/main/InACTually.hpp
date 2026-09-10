@@ -134,7 +134,7 @@ namespace act {
 
 		act::net::NetworkManagerRef			m_networkMgr;
 
-		act::room::RoomManagers				m_roomMgrs;
+		act::room::RoomManagersRef			m_roomMgrs;
 
 		bool								m_drawGUI;
 		bool								m_prevDrawGUI;

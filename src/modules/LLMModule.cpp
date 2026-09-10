@@ -26,7 +26,7 @@ act::mod::LLMModule::LLMModule() {
 act::mod::LLMModule::~LLMModule() {
 };
 
-void act::mod::LLMModule::setup(act::room::RoomManagers roomMgrs, act::net::NetworkManagerRef networkMgr) {
+void act::mod::LLMModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs       = roomMgrs;
 	m_networkMgr     = networkMgr;
 	m_llmConnector   = llm::LLMConnector::create();

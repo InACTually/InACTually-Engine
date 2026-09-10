@@ -26,7 +26,7 @@ act::proc::Vector3ProcNode::Vector3ProcNode() : ProcNodeBase("Vector3") {
 act::proc::Vector3ProcNode::~Vector3ProcNode() {
 }
 
-void act::proc::Vector3ProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::Vector3ProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::Vector3ProcNode::update() {

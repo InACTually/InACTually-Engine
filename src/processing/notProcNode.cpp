@@ -27,7 +27,7 @@ act::proc::notProcNode::notProcNode() : ProcNodeBase("not") {
 act::proc::notProcNode::~notProcNode() {
 }
 
-void act::proc::notProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::notProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::notProcNode::update() {

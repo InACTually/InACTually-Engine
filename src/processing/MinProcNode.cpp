@@ -29,7 +29,7 @@ act::proc::MinProcNode::MinProcNode() : ProcNodeBase("Min") {
 act::proc::MinProcNode::~MinProcNode() {
 }
 
-void act::proc::MinProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::MinProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::MinProcNode::update() {

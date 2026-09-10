@@ -21,7 +21,6 @@
 #include "Design.hpp"
 
 
-
 act::mod::DisplayModule::DisplayModule() {
 	setName("Displaying");
 
@@ -30,7 +29,7 @@ act::mod::DisplayModule::DisplayModule() {
 act::mod::DisplayModule::~DisplayModule() {
 }
 
-void act::mod::DisplayModule::setup(act::room::RoomManagers roomMgrs, act::net::NetworkManagerRef networkMgr) {
+void act::mod::DisplayModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
 
@@ -64,7 +63,7 @@ void act::mod::DisplayModule::drawGUI() {
 	ImGuiID dockspace_id = ImGui::GetID("DisplayDockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
 
-	for(auto source : m_roomMgrs.displayMgr->getSources()) {
+	for(auto source : m_roomMgrs->displayMgr->getSources()) {
 		ImGui::Begin(source.first.c_str());
 		ImVec2 region = ImGui::GetContentRegionAvail();
 		glm::vec2 size = glm::vec2(region.x, region.y);

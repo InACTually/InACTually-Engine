@@ -34,10 +34,10 @@ namespace act {
 		class Middleware : public act::mod::ModuleRegistry
 		{
 		public:
-			Middleware(act::room::RoomManagers roomMgrs);
+			Middleware(act::room::RoomManagersRef roomMgrs);
 			~Middleware();
 
-			static std::shared_ptr<Middleware> create(act::room::RoomManagers roomMgrs) { return std::make_shared<Middleware>(roomMgrs); }
+			static std::shared_ptr<Middleware> create(act::room::RoomManagersRef roomMgrs) { return std::make_shared<Middleware>(roomMgrs); }
 
 			void		update();
 			void		draw();
@@ -78,7 +78,7 @@ namespace act {
 
 			std::string						m_text;
 
-			act::room::RoomManagers			m_roomMgrs;
+			act::room::RoomManagersRef		m_roomMgrs;
 			act::mod::ProcessingModuleRef	m_procMod;
 			act::mod::RoomModuleRef			m_roomMod;
 

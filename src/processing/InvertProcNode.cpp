@@ -29,7 +29,7 @@ act::proc::InvertProcNode::InvertProcNode() : ProcNodeBase("Invert") {
 act::proc::InvertProcNode::~InvertProcNode() {
 }
 
-void act::proc::InvertProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::InvertProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::InvertProcNode::update() {

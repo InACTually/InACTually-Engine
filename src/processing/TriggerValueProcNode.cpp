@@ -30,7 +30,7 @@ act::proc::TriggerValueProcNode::TriggerValueProcNode() : ProcNodeBase("TriggerV
 act::proc::TriggerValueProcNode::~TriggerValueProcNode() {
 }
 
-void act::proc::TriggerValueProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::TriggerValueProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::TriggerValueProcNode::update() {

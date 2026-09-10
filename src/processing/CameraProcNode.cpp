@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021�2025 Lars Engeln, Fabian T�pfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -47,8 +47,8 @@ act::proc::CameraProcNode::~CameraProcNode() {
 		m_cameraRoomNode->getCameraImagePort()->disconnect(m_cameraImageInPort);
 }
 
-void act::proc::CameraProcNode::setup(act::room::RoomManagers roomMgrs) {
-	m_camMgr = roomMgrs.cameraMgr;
+void act::proc::CameraProcNode::setup(act::room::RoomManagersRef roomMgrs) {
+	m_camMgr = roomMgrs->cameraMgr;
 
 	auto camera = m_camMgr->getCameraByIndex(m_selectedCamera);
 	if (camera) {

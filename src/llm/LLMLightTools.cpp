@@ -16,7 +16,7 @@
 #include "llm/LLMLightTools.hpp"
 
 #include <algorithm>
-std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act::room::RoomManagers roomMgrs) {
+std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act::room::RoomManagersRef roomMgrs) {
 
 	std::vector<act::llm::ToolEntry> definitions;
 	definitions.push_back({
@@ -26,8 +26,8 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			{}
 		},
 		[roomMgrs](const ToolCall&) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
-			auto names = roomMgrs.dmxMgr->getFixtureNames();
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			auto names = roomMgrs->dmxMgr->getFixtureNames();
 			if (names.empty()) return "[]";
 			ci::Json arr = ci::Json::array();
 			for (int i = 0; i < (int)names.size(); i++) {
@@ -35,12 +35,12 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 				e["index"] = i;
 				//e["name"]  = names[i];
 
-				auto dimmer = roomMgrs.dmxMgr->getDimmerByIndex(i);
+				auto dimmer = roomMgrs->dmxMgr->getDimmerByIndex(i);
 				if (dimmer) {
 					e["type"]  = "dimmer";
 					e["state"] = dimmer->toJson();
 				} else {
-					auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(i);
+					auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(i);
 					if (mh) {
 						e["type"]  = "light";
 						e["color"] = mh->toJson()["params"]["color"];
@@ -61,13 +61,13 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int index = call.arguments.value("index", 0);
 
 			ci::Json e = ci::Json::object();
 			e["index"] = index;
 
-			auto dimmer = roomMgrs.dmxMgr->getDimmerByIndex(index);
+			auto dimmer = roomMgrs->dmxMgr->getDimmerByIndex(index);
 			if (dimmer) {
 				e["type"] = "dimmer";
 				e["name"] = dimmer->getName();
@@ -75,7 +75,7 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 				return e.dump();
 			}
 
-			auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(index);
+			auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(index);
 			if (mh) {
 				e["type"] = "movingHead";
 				e["name"] = mh->getName();
@@ -97,11 +97,11 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int   index = call.arguments.value("index",      0);
 			float dimmer = std::clamp(static_cast<float>(call.arguments.value("dimmer", 1.0)), 0.0f, 1.0f);
 
-			auto dim = roomMgrs.dmxMgr->getDimmerByIndex(index);
+			auto dim = roomMgrs->dmxMgr->getDimmerByIndex(index);
 			if (!dim)
 				return "{\"error\":\"Dimmer not found at index " + std::to_string(index) + "\"}";
 			dim->setDimmer(dimmer);
@@ -120,11 +120,11 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int   index      = call.arguments.value("index",      0);
 			float dimmer = std::clamp(static_cast<float>(call.arguments.value("dimmer", 1.0)), 0.0f, 1.0f);
 
-			auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(index);
+			auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(index);
 			if (!mh)
 				return "{\"error\":\"Moving head not found at index " + std::to_string(index) + "\"}";
 			mh->setDimmer(dimmer);
@@ -145,13 +145,13 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int   index = call.arguments.value("index", 0);
 			float r     = std::clamp(static_cast<float>(call.arguments.value("r", 1.0)), 0.0f, 1.0f);
 			float g     = std::clamp(static_cast<float>(call.arguments.value("g", 1.0)), 0.0f, 1.0f);
 			float b     = std::clamp(static_cast<float>(call.arguments.value("b", 1.0)), 0.0f, 1.0f);
 
-			auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(index);
+			auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(index);
 			if (!mh)
 				return "{\"error\":\"Moving head not found at index " + std::to_string(index) + "\"}";
 			mh->setColor(ci::Color(r, g, b));
@@ -170,15 +170,15 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int   index = call.arguments.value("index", 0);
 			float r = std::clamp(static_cast<float>(call.arguments.value("r", 1.0)), 0.0f, 1.0f);
 			float g = std::clamp(static_cast<float>(call.arguments.value("g", 1.0)), 0.0f, 1.0f);
 			float b = std::clamp(static_cast<float>(call.arguments.value("b", 1.0)), 0.0f, 1.0f);
 
-			auto nodes = roomMgrs.dmxMgr->getNodes();
+			auto nodes = roomMgrs->dmxMgr->getNodes();
 			for (int i = 0; i < (int)nodes.size(); i++) {
-				auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(i);
+				auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(i);
 				if (!mh)
 					continue;
 				mh->setColor(ci::Color(r, g, b));
@@ -200,13 +200,13 @@ std::vector<act::llm::ToolEntry> act::llm::LLMLightTools::getToolDefinitions(act
 			}
 		},
 		[roomMgrs](const ToolCall& call) -> std::string {
-			if (!roomMgrs.dmxMgr) return "{\"error\":\"DMX manager not available\"}";
+			if (!roomMgrs->dmxMgr) return "{\"error\":\"DMX manager not available\"}";
 			int   index = call.arguments.value("index", 0);
 			float x = static_cast<float>(call.arguments.value("x", 0.0));
 			float y = static_cast<float>(call.arguments.value("y", 0.0));
 			float z = static_cast<float>(call.arguments.value("z", 0.0));
 
-			auto mh = roomMgrs.dmxMgr->getMovingHeadByIndex(index);
+			auto mh = roomMgrs->dmxMgr->getMovingHeadByIndex(index);
 			if (!mh)
 				return "{\"error\":\"Moving head not found at index " + std::to_string(index) + "\"}";
 			mh->lookAt(glm::vec3(x, y, z));

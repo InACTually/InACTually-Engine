@@ -1,10 +1,9 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -44,13 +43,13 @@ act::mod::RoomModule::~RoomModule() {
 
 }
 
-void act::mod::RoomModule::setup(act::room::RoomManagers roomMgrs, act::net::NetworkManagerRef networkMgr) {
+void act::mod::RoomModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
 
 	act::room::RoomNodeBase::setPublisher(m_networkMgr);
 
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		mgr->setup();
 	}
 
@@ -288,7 +287,7 @@ void act::mod::RoomModule::drawDevicePool() {
 	}
 
 	ImGui::NewLine();
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		if (mgr->getName() != "bodyTrackingManager") {
 
 			if (ImGui::CollapsingHeader(mgr->getName().c_str())) {
@@ -341,7 +340,7 @@ ci::Json act::mod::RoomModule::getFullDescription()
 	description["stage"] = m_stage->toJson();
 	description["roomParams"] = toParams();
 
-	for (auto&& mgr : m_roomMgrs.list)
+	for (auto&& mgr : m_roomMgrs->list)
 		description[mgr->getName()] = mgr->toJson();
 
 	return description;
@@ -355,7 +354,7 @@ void act::mod::RoomModule::loadFromFile(ci::fs::path path) {
 	if (description.contains("roomParams"))
 		fromParams(description["roomParams"]);
 
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		if (description.contains(mgr->getName()))
 			mgr->fromJson(description[mgr->getName()]);
 	}
@@ -373,7 +372,7 @@ std::vector<std::string> act::mod::RoomModule::getNodeNames()
 
 bool act::mod::RoomModule::hasNodeWithUID(act::UID uid)
 {
-	return !!m_roomMgrs.getRoomNodeByUID(uid);
+	return !!m_roomMgrs->getRoomNodeByUID(uid);
 }
 
 act::room::RoomNodeBaseRef act::mod::RoomModule::createRoomNode(ci::Json data, act::UID replyUID) {
@@ -402,34 +401,34 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 	util::setValueFromJson(params, "deviceName", deviceName);
 
 	if (roomNodeName == "actionspace") {
-		node = m_roomMgrs.actionspaceMgr->addActionspace(name);
+		node = m_roomMgrs->actionspaceMgr->addActionspace(name);
 	}
 
 	if (roomNodeName == "camera") {
-		node = m_roomMgrs.cameraMgr->addDevice(deviceName, name);
+		node = m_roomMgrs->cameraMgr->addDevice(deviceName, name);
 	}
 
 	if (roomNodeName == "kinect") {
-		node = m_roomMgrs.kinectMgr->addDevice(deviceName, name);
+		node = m_roomMgrs->kinectMgr->addDevice(deviceName, name);
 	}
 
 	if (roomNodeName == "speaker") {
 		int channel = 0;
 		util::setValueFromJson(params, "channel", channel);
 
-		node = m_roomMgrs.audioMgr->addSpeaker(channel);
+		node = m_roomMgrs->audioMgr->addSpeaker(channel);
 	}
 	if (roomNodeName == "subwoofer") {
 		int channel = 0;
 		util::setValueFromJson(params, "channel", channel);
 
-		node = m_roomMgrs.audioMgr->addSubwoofer(channel);
+		node = m_roomMgrs->audioMgr->addSubwoofer(channel);
 	}
 	if (roomNodeName == "microphone") {
 		int channel = 0;
 		util::setValueFromJson(params, "channel", channel);
 
-		node = m_roomMgrs.audioMgr->addMicrophone(channel);
+		node = m_roomMgrs->audioMgr->addMicrophone(channel);
 	}
 
 	if (roomNodeName == "light") {
@@ -439,14 +438,14 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 		int startAdress = 0;
 		util::setValueFromJson(params, "startAdress", startAdress);
 
-		node = m_roomMgrs.dmxMgr->addDevice(name, fixtureIndex, startAdress);
+		node = m_roomMgrs->dmxMgr->addDevice(name, fixtureIndex, startAdress);
 	}
 
 	if (roomNodeName == "lidar") {
 		std::string fixtureName = "";
 		util::setValueFromJson(params, "fixtureName", fixtureName);
 
-		node = m_roomMgrs.lidarMgr->addDevice(fixtureName);
+		node = m_roomMgrs->lidarMgr->addDevice(fixtureName);
 	}
 
 	return node;
@@ -456,7 +455,7 @@ bool act::mod::RoomModule::updateRoomNode(ci::Json data, act::UID replyUID) {
 	ci::Json params = data["params"];
 
 	// refactor into roomMod (that uses the stage)
-	auto roomNode = m_roomMgrs.getRoomNodeByUID(uid);
+	auto roomNode = m_roomMgrs->getRoomNodeByUID(uid);
 	if (!roomNode) {
 		CI_LOG_E("Could not find RoomNode with UID: " << uid);
 		return false;
@@ -467,7 +466,7 @@ bool act::mod::RoomModule::updateRoomNode(ci::Json data, act::UID replyUID) {
 }
 bool act::mod::RoomModule::deleteRoomNode(act::UID uid, act::UID replyUID) {
 	bool somethingDeleted = false;
-	for (auto&& mgr : m_roomMgrs.list) {
+	for (auto&& mgr : m_roomMgrs->list) {
 		if (mgr->getNodeByUID(uid) != nullptr) {
 			mgr->removeNode(uid);
 			somethingDeleted = true;
@@ -478,7 +477,7 @@ bool act::mod::RoomModule::deleteRoomNode(act::UID uid, act::UID replyUID) {
 
 bool act::mod::RoomModule::callRPC(act::UID uid, std::string functionName)
 {
-	auto node = m_roomMgrs.getRoomNodeByUID(uid);
+	auto node = m_roomMgrs->getRoomNodeByUID(uid);
 	if (node) {
 		return node->call(functionName);
 	}

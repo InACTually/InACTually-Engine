@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021�2025 Lars Engeln, Fabian T�pfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -33,9 +33,9 @@ act::proc::PositionProcNode::PositionProcNode() : ProcNodeBase("Position") {
 act::proc::PositionProcNode::~PositionProcNode() {
 }
 
-void act::proc::PositionProcNode::setup(act::room::RoomManagers dMgrs)
+void act::proc::PositionProcNode::setup(act::room::RoomManagersRef dMgrs)
 {
-	m_posMgr = dMgrs.positionMgr;
+	m_posMgr = dMgrs->positionMgr;
 	auto node = std::dynamic_pointer_cast<room::PositionRoomNode>(m_posMgr->addPosition(glm::vec3(0.0f)));
 	if (node)
 		m_positionRoomNode = node;

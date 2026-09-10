@@ -45,7 +45,7 @@ act::proc::TweenProcNode::TweenProcNode() : ProcNodeBase("Tween") {
 act::proc::TweenProcNode::~TweenProcNode() {
 }
 
-void act::proc::TweenProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::TweenProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::TweenProcNode::update() {

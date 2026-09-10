@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -39,7 +38,7 @@ namespace act {
 			ProcessingModule();
 			~ProcessingModule();
 
-			void setup(act::room::RoomManagers roomMgrs, act::net::NetworkManagerRef networkMgr)	override;
+			void setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr)	override;
 			void cleanUp()	override;
 			void update()	override;
 			void draw()		override;
@@ -69,7 +68,7 @@ namespace act {
 		protected:
 			std::vector<proc::ContainerProcNodeRef>				m_containers;
 
-			act::room::RoomManagers								m_roomMgrs;
+			act::room::RoomManagersRef								m_roomMgrs;
 			act::net::NetworkManagerRef							m_networkMgr;
 
 			std::shared_ptr<act::proc::ProcNodeRegistry>		m_nodeRegistry;

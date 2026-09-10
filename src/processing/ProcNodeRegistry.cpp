@@ -157,7 +157,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Math & Logic", "not", act::proc::notProcNode::create);
 
     act::proc::ProcNodeRegistry::add("Network", "JsonMsg", act::proc::JsonMsgProcNode::create);
-    act::proc::ProcNodeRegistry::add("Network", "Network", act::proc::NetworkProcNode::create);
+   // act::proc::ProcNodeRegistry::add("Network", "Network", act::proc::NetworkProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "OSCMsg", act::proc::OSCMsgProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "OSCReciever", act::proc::OSCRecieverProcNode::create);
     act::proc::ProcNodeRegistry::add("Network", "OSCSender", act::proc::OSCSenderProcNode::create);

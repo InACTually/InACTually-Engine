@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021�2025 Lars Engeln, Fabian T�pfer
+	Copyright (c) 2021Ã¯Â¿Â½2025 Lars Engeln, Fabian TÃ¯Â¿Â½pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -37,8 +37,8 @@ act::proc::MonitorProcNode::MonitorProcNode() : ProcNodeBase("Monitor") {
 act::proc::MonitorProcNode::~MonitorProcNode() {
 }
 
-void act::proc::MonitorProcNode::setup(act::room::RoomManagers roomMgrs) {
-	m_displayMgr = roomMgrs.displayMgr;
+void act::proc::MonitorProcNode::setup(act::room::RoomManagersRef roomMgrs) {
+	m_displayMgr = roomMgrs->displayMgr;
 }
 
 void act::proc::MonitorProcNode::update() {

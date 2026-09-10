@@ -29,7 +29,7 @@ act::proc::MultiplyProcNode::MultiplyProcNode() : ProcNodeBase("Multiply") {
 act::proc::MultiplyProcNode::~MultiplyProcNode() {
 }
 
-void act::proc::MultiplyProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::MultiplyProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::MultiplyProcNode::update() {

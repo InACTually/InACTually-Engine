@@ -124,7 +124,7 @@ void act::proc::AFSynthProcNode::draw() {
 	endNodeDraw();
 }
 
-void act::proc::AFSynthProcNode::setup(act::room::RoomManagers rmgr)
+void act::proc::AFSynthProcNode::setup(act::room::RoomManagersRef rmgr)
 {
 	
 }

@@ -29,7 +29,7 @@ act::proc::ModuloProcNode::ModuloProcNode() : ProcNodeBase("Modulo") {
 act::proc::ModuloProcNode::~ModuloProcNode() {
 }
 
-void act::proc::ModuloProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::ModuloProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::ModuloProcNode::update() {

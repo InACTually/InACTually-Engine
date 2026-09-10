@@ -48,9 +48,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\modules\RoomManagers.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\room\RoomNodeBase.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -189,14 +186,8 @@
     <ClInclude Include="..\include\room\lidar\LidarManager.hpp">
       <Filter>Source Files\lidar</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\room\dmx\OFLDescriptionMapper.hpp">
-      <Filter>Source Files\dmx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\room\dmx\FixtureDescriptionImporter.hpp">
-      <Filter>Source Files\dmx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\room\dmx\OFLHelper.hpp">
-      <Filter>Source Files\dmx</Filter>
+    <ClInclude Include="..\include\room\RoomManagers.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,11 +327,8 @@
     <ClCompile Include="..\src\room\lidar\LidarRoomNodeBase.cpp">
       <Filter>Source Files\lidar</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\room\dmx\OFLDescriptionMapper.cpp">
-      <Filter>Source Files\dmx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\room\dmx\FixtureDescriptionImporter.cpp">
-      <Filter>Source Files\dmx</Filter>
+    <ClCompile Include="..\src\room\RoomManagers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

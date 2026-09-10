@@ -26,7 +26,7 @@ act::proc::BooleanProcNode::BooleanProcNode() : ProcNodeBase("Boolean") {
 act::proc::BooleanProcNode::~BooleanProcNode() {
 }
 
-void act::proc::BooleanProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::BooleanProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::BooleanProcNode::update() {

@@ -152,7 +152,7 @@ void act::llm::LLMConnector::updateLastAssistant(const std::string& content, con
 	if (!msg.content.empty())  upsertSegment(msg.segments, "content",  msg.content);
 }
 
-void act::llm::LLMConnector::setup(act::room::RoomManagers roomMgrs) {
+void act::llm::LLMConnector::setup(act::room::RoomManagersRef roomMgrs) {
 	auto lightTools = LLMLightTools::getToolDefinitions(roomMgrs);
 	m_toolManager.add(lightTools);
 }

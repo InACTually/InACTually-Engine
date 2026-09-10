@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -46,7 +46,7 @@ act::proc::SpectrumProcNode::~SpectrumProcNode() {
 
 }
 
-void act::proc::SpectrumProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::SpectrumProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 	auto ctx = ci::audio::Context::master();
 	
 	auto monitorFormat = ci::audio::MonitorSpectralNode::Format().fftSize(4096).windowSize(2048);

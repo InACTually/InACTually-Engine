@@ -28,10 +28,9 @@
 
 #include <algorithm>
 
-act::net::NetworkManager::NetworkManager(act::room::RoomManagers roomMgrs)
-	: m_roomMgrs(roomMgrs)
+act::net::NetworkManager::NetworkManager(act::room::RoomManagersRef roomMgrs)
 {
-	m_middleware = net::Middleware::create(m_roomMgrs);
+	m_middleware = net::Middleware::create(roomMgrs);
 
 	m_lastT = 0.0;
 }

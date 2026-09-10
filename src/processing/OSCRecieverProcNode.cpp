@@ -34,7 +34,7 @@ act::proc::OSCRecieverProcNode::OSCRecieverProcNode() : ProcNodeBase("OSCRecieve
 act::proc::OSCRecieverProcNode::~OSCRecieverProcNode() {
 }
 
-void act::proc::OSCRecieverProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::OSCRecieverProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 	initialize();
 }
 

@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -66,7 +66,7 @@ act::proc::AudioInProcNode::~AudioInProcNode() {
 	
 }
 
-void act::proc::AudioInProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::AudioInProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 	
 }
 
@@ -222,8 +222,8 @@ void act::proc::AudioInProcNode::calculateFeatures() {
 		}
 		float last = m_spectrum[i - 1];
 		if (last > current && up) {
-			// berechnung höchster Peak bis
-			// index 170 (sind ca 2000 hz um harmonieanalyse einzuschränken)
+			// berechnung hÃ¶chster Peak bis
+			// index 170 (sind ca 2000 hz um harmonieanalyse einzuschrÃ¤nken)
 			if (i < 170) {
 				if (current > lagestPeakSize) {
 					lagestPeakSize = current;

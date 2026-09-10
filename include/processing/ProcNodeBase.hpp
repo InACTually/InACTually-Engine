@@ -53,7 +53,7 @@ namespace act {
 				m_inputPorts.clear();
 			};
 
-			virtual void setup(act::room::RoomManagers) {};
+			virtual void setup(act::room::RoomManagersRef) {};
 			virtual void update() = 0;
 			virtual void draw() = 0;
 

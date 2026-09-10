@@ -128,7 +128,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\modules\RoomManagers.hpp" />
     <ClInclude Include="..\include\room\actionspace\ActionspaceManager.hpp" />
     <ClInclude Include="..\include\room\actionspace\ActionspaceRoomNode.hpp" />
     <ClInclude Include="..\include\room\audio\AudioManager.hpp" />
@@ -170,6 +169,7 @@
     <ClInclude Include="..\include\room\position\PositionRoomNode.hpp" />
     <ClInclude Include="..\include\room\projector\ProjectorManager.hpp" />
     <ClInclude Include="..\include\room\projector\ProjectorRoomNode.hpp" />
+    <ClInclude Include="..\include\room\RoomManagers.hpp" />
     <ClInclude Include="..\include\room\RoomNodeBase.hpp" />
     <ClInclude Include="..\include\room\RoomNodeManagerBase.hpp" />
     <ClInclude Include="..\include\room\roompch.hpp" />
@@ -221,6 +221,7 @@
     <ClCompile Include="..\src\room\position\PositionRoomNode.cpp" />
     <ClCompile Include="..\src\room\projector\ProjectorManager.cpp" />
     <ClCompile Include="..\src\room\projector\ProjectorRoomNode.cpp" />
+    <ClCompile Include="..\src\room\RoomManagers.cpp" />
     <ClCompile Include="..\src\room\RoomNodeBase.cpp" />
     <ClCompile Include="..\src\room\RoomNodeManagerBase.cpp" />
     <ClCompile Include="..\src\room\roompch.cpp" />

@@ -35,7 +35,7 @@ act::proc::LLMProcNode::~LLMProcNode() {
 	m_llmConnector->waitForCompletion();
 }
 
-void act::proc::LLMProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::LLMProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 	m_llmConnector->setup(roomMgrs);
 }
 

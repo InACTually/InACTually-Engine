@@ -32,7 +32,7 @@ namespace act {
 
 			void update()			override;
 			void draw()				override;
-			void setup(act::room::RoomManagers) override;
+			void setup(act::room::RoomManagersRef) override;
 
 			ci::Json toParams() override;
 			void fromParams(ci::Json json) override;

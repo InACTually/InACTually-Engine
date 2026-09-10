@@ -23,8 +23,8 @@ namespace act {
 	namespace llm {
 
 		class LLMLightTools {
-		public:
-			static std::vector<ToolEntry> getToolDefinitions(act::room::RoomManagers roomMgrs);
+			public:
+			static std::vector<ToolEntry> getToolDefinitions(act::room::RoomManagersRef roomMgrs);
 		};
 
 	}

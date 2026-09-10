@@ -20,7 +20,6 @@
 #include "cinder/Log.h"
 
 
-
 using namespace std;
 
 using namespace act;
@@ -28,7 +27,7 @@ using namespace act;
 class InACTuallyApp : public ci::app::App {
   public:
 		
-	  void setup() override;
+	  void setup() override; 
 
 	  void cleanup() override;
 	  void update() override;

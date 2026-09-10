@@ -26,7 +26,7 @@ act::proc::Vector2ProcNode::Vector2ProcNode() : ProcNodeBase("Vector2") {
 act::proc::Vector2ProcNode::~Vector2ProcNode() {
 }
 
-void act::proc::Vector2ProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::Vector2ProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::Vector2ProcNode::update() {

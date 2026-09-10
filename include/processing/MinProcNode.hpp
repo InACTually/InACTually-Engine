@@ -29,7 +29,7 @@ namespace act {
 
 			PROCNODECREATE(MinProcNode);
 
-			void setup(act::room::RoomManagers roomMgrs)	override;
+			void setup(act::room::RoomManagersRef roomMgrs)	override;
 			void update()			override;
 			void draw()				override;
 

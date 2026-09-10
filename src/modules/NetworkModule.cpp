@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -31,7 +30,7 @@ act::mod::NetworkModule::~NetworkModule() {
 }
 
 
-void act::mod::NetworkModule::setup(act::room::RoomManagers roomMgrs, act::net::NetworkManagerRef networkMgr) {
+void act::mod::NetworkModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
 

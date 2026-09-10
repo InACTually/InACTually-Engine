@@ -28,7 +28,7 @@ using namespace act::proc;
 //#include "MatToBase64.hpp"
 
 
-act::net::Middleware::Middleware(act::room::RoomManagers roomMgrs)
+act::net::Middleware::Middleware(act::room::RoomManagersRef roomMgrs)
 	: m_roomMgrs(roomMgrs)
 {
 	for (auto&& module : reg_modules) {

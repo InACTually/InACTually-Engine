@@ -29,7 +29,7 @@ act::proc::MaxProcNode::MaxProcNode() : ProcNodeBase("Max") {
 act::proc::MaxProcNode::~MaxProcNode() {
 }
 
-void act::proc::MaxProcNode::setup(act::room::RoomManagers roomMgrs) {
+void act::proc::MaxProcNode::setup(act::room::RoomManagersRef roomMgrs) {
 }
 
 void act::proc::MaxProcNode::update() {

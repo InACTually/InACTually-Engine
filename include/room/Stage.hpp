@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -33,7 +32,7 @@ namespace act {
 			static	std::shared_ptr<Stage> create() { return std::make_shared<Stage>(); };
 
 			void	setup() override {};
-			void	setup(act::room::RoomManagers roomMgrs);
+			void	setup(act::room::RoomManagersRef roomMgrs);
 			void	update() override;
 			void	draw() override;
 
@@ -59,7 +58,7 @@ namespace act {
 		private:
 
 			std::vector<RoomNodeBaseRef>	m_nodes;
-			act::room::RoomManagers			m_roomMgrs;
+			act::room::RoomManagersRef		m_roomMgrs;
 
 			act::room::RoomNodeBaseRef		m_selectedNode;
 

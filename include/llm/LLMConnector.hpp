@@ -33,6 +33,7 @@ namespace act {
 
 	namespace room {
 		class RoomManagers;
+		using RoomManagersRef = std::shared_ptr<RoomManagers>;
 	}
 
 	namespace llm {
@@ -70,7 +71,7 @@ namespace act {
 
 			static std::shared_ptr<LLMConnector> create() { return std::make_shared<LLMConnector>(); }
 
-			void setup(act::room::RoomManagers roomMgrs);
+			void setup(act::room::RoomManagersRef roomMgrs);
 
 			void setHost(const std::string& host)           { m_host = host; }
 			void setPort(int port)                          { m_port = port; }
