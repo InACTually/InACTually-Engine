@@ -236,6 +236,9 @@ void act::proc::Audio3DPlayerTimestretchProcNode::onTrigger(bool event) {
 
 bool act::proc::Audio3DPlayerTimestretchProcNode::play()
 {
+	if (!m_soundRoomNode)
+		return false;
+
 	bool wasPlaying = m_isPlaying;
 	m_soundRoomNode->play();
 	m_isPlaying = true;
