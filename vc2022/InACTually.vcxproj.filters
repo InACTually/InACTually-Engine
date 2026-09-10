@@ -55,6 +55,9 @@
     <ClCompile Include="..\src\processing\ProcNodeRegistry.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
+    <ClCompile Include="src\processing\ProcNodeRegistryTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\utils\ColorGradient.hpp">

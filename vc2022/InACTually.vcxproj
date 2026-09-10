@@ -274,6 +274,7 @@
     <ClCompile Include="..\src\modules\RoomModule.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeRegistry.cpp" />
     <ClCompile Include="..\src\utils\Logger.cpp" />
+    <ClCompile Include="src\processing\ProcNodeRegistryTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
