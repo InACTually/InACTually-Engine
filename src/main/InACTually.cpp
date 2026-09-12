@@ -125,8 +125,7 @@ void InACTually::init()
 
 	m_roomMgrs = act::room::RoomManagers::get();
 
-	m_networkMgr = net::NetworkManager::create(m_roomMgrs);
-	m_networkMgr->setup();
+	m_networkMgr = net::NetworkManager::get(m_roomMgrs);
 
 	for (auto&& module : reg_modules) {
 		module->setup(m_roomMgrs, m_networkMgr);
