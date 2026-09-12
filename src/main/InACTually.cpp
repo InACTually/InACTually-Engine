@@ -94,7 +94,12 @@ void InACTually::init()
 
 	if (cv::ocl::haveOpenCL()) {
 		cv::ocl::setUseOpenCL(false);
-		cv::ogl::ocl::initializeContextFromGL();
+		try {
+			cv::ogl::ocl::initializeContextFromGL();
+		}
+		catch (cv::Exception err) {
+			CI_LOG_F(err.what());
+		}
 		cv::ocl::setUseOpenCL(true);
 
 		std::vector<cv::ocl::PlatformInfo> plattformInfo;

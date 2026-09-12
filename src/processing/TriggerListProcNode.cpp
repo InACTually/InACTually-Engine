@@ -173,6 +173,9 @@ void act::proc::TriggerListProcNode::fromParams(ci::Json json) {
 
 void act::proc::TriggerListProcNode::fireTrigger()
 {
+	if (m_outputPorts.empty())
+		return;
+
 	auto port = std::dynamic_pointer_cast<OutputPort<bool>>(m_outputPorts[m_nextTrigger]);
 	stepDown();
 	if (port)

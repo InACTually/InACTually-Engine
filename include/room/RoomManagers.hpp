@@ -62,7 +62,7 @@ namespace act {
 				return m_roomMgrs;
 			}
 
-			act::room::RoomNodeBaseRef	getRoomNodeByUID(act::UID uid) {
+			act::room::RoomNodeBaseRef getRoomNodeByUID(act::UID uid) {
 				for (auto&& mgr : list) {
 					act::room::RoomNodeBaseRef roomNode = mgr->getNodeByUID(uid);
 					if (roomNode)

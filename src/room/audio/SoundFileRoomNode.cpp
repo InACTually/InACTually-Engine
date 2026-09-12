@@ -122,6 +122,9 @@ void act::room::SoundFileRoomNode::disconnectExternals()
 
 void act::room::SoundFileRoomNode::play()
 {
+	if (!m_bufferPlayerNode && !m_stretcherNode)
+		return;
+
 	if (m_isPlaying) {
 		stop();
 		//setVolume(m_targetVolume, 0.0f);
@@ -145,6 +148,9 @@ void act::room::SoundFileRoomNode::play()
 
 void act::room::SoundFileRoomNode::stop()
 {
+	if (!m_bufferPlayerNode && !m_stretcherNode)
+		return;
+
 	m_isFading = false;
  
 	
@@ -158,6 +164,9 @@ void act::room::SoundFileRoomNode::stop()
 
 void act::room::SoundFileRoomNode::loop(bool isLooping)
 { 
+	if (!m_bufferPlayerNode)
+		return;
+
 	m_isLooping = isLooping;
 	m_bufferPlayerNode->setLoopEnabled(m_isLooping);
 }

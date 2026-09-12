@@ -47,11 +47,13 @@ act::proc::Audio3DPlayerProcNode::Audio3DPlayerProcNode() : ProcNodeBase("Audio3
 	
 	auto trigger	= createBoolInput("fire",		[&](bool event)  { onTrigger(event); });
 	auto reset		= createBoolInput("reset",		[&](bool event)  { onReset(event); });
-	auto gain		= createNumberInput("gain",		[&](float event)  { 
+	auto gain		= createNumberInput("gain", [&](float event) {
 		m_toVolume = ci::audio::linearToDecibel(event);
-		for(auto& node : m_soundRoomNodes) 
+		for (auto& node : m_soundRoomNodes)
+			ci::app::App::get()->dispatchAsync([this, node]() {
 			node->setVolume(m_toVolume, 0.0f);
 		});
+	});
 	auto position	= createVec3Input("position",	[&](glm::vec3 event)  { set3DPosition(event); });
 	auto speed		= createNumberInput("speed",	[&](float event) { setPlaySpeed(event); });
 	

@@ -60,7 +60,7 @@ act::proc::Audio3DPlayerTimestretchProcNode::Audio3DPlayerTimestretchProcNode() 
 }
 
 act::proc::Audio3DPlayerTimestretchProcNode::~Audio3DPlayerTimestretchProcNode() {
-	if(m_isPlaying) {
+	if(m_isPlaying && m_soundRoomNode) {
 		m_soundRoomNode->stop();
 		m_soundRoomNode->disconnectExternals();
 	}
