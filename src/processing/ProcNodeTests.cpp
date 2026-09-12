@@ -22,6 +22,7 @@
 
 #include "ProcNodeRegistry.hpp"
 #include "RoomManagers.hpp"
+#include "FlowRuntime.hpp"
 
 #include "implot.h"
 
@@ -32,24 +33,25 @@ void testPort(act::proc::PortBaseRef port) {
     auto boolPort = std::dynamic_pointer_cast<act::proc::InputPort<bool>>(port);
 
     switch (port->getType()) {
-        case act::proc::PortType::PT_JSON:
-        case act::proc::PortType::PT_OSC:
+        case act::proc::PortType::PT_JSON: break;
+        case act::proc::PortType::PT_OSC: break;
         case act::proc::PortType::PT_BOOL:
+            
+            boolPort->recieve(false);
+            boolPort->recieve(true);
+            // boolPort->recieve(true);
+            // boolPort->recieve(false);
             // boolPort->recieve(false);
             // boolPort->recieve(true);
-            // boolPort->recieve(true);
-            // boolPort->recieve(false);
-            // boolPort->recieve(false);
-            // boolPort->recieve(true);
-        case act::proc::PortType::PT_NUMBER:
-        case act::proc::PortType::PT_NUMBERLIST:
-        case act::proc::PortType::PT_VEC2:
-        case act::proc::PortType::PT_VEC2LIST:
-        case act::proc::PortType::PT_VEC3:
-        case act::proc::PortType::PT_VEC3LIST:
-        case act::proc::PortType::PT_QUAT:
-        case act::proc::PortType::PT_COLOR:
-        case act::proc::PortType::PT_COLORLIST:
+        case act::proc::PortType::PT_NUMBER: break;
+        case act::proc::PortType::PT_NUMBERLIST: break;
+        case act::proc::PortType::PT_VEC2: break;
+        case act::proc::PortType::PT_VEC2LIST: break;
+        case act::proc::PortType::PT_VEC3: break;
+        case act::proc::PortType::PT_VEC3LIST: break;
+        case act::proc::PortType::PT_QUAT: break;
+        case act::proc::PortType::PT_COLOR: break;
+        case act::proc::PortType::PT_COLORLIST: break;
         case act::proc::PortType::PT_TEXT:
 
         break;
@@ -78,17 +80,21 @@ TEST_SUITE("ProcNodeRegistry") {
             auto node = registry.create(entry.first);
             REQUIRE(node != nullptr);
 
-            CAPTURE(entry.first);
-			CI_LOG_D("Testing ProcNode: " << entry.first);
+            //SUBCASE("Testing: " + entry.first) {
+                CAPTURE(entry.first);
+                CI_LOG_D("Testing ProcNode: " << entry.first);
 
-            CHECK_NOTHROW(node->setup(roomMgrs));
-            CHECK_NOTHROW(node->update());
+                CHECK_NOTHROW(node->setup(roomMgrs));
+                CHECK_NOTHROW(node->update());
 
-            for(auto&& port : node->getAllInputPorts()) {
-                testPort(port);
-            }
+                for (auto&& port : node->getAllInputPorts()) {
+                    testPort(port);
+                }
 
-            CHECK_NOTHROW(node.reset());
+                act::proc::FlowRuntime::wait();
+
+                CHECK_NOTHROW(node.reset());
+            //}
         }
         CI_LOG_D("All ProcNodes have been tested..");
     }

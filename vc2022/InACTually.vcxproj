@@ -266,6 +266,7 @@
     <ClCompile Include="..\src\InACTuallyApp.cpp" />
     <ClCompile Include="..\src\main\InACTually.cpp" />
     <ClCompile Include="..\src\main\ModuleRegistry.cpp" />
+    <ClCompile Include="..\src\modules\ModuleTests.cpp" />
     <ClCompile Include="..\src\modules\ProcessingModule.cpp" />
     <ClCompile Include="..\src\modules\ModuleBase.cpp" />
     <ClCompile Include="..\src\modules\DisplayModule.cpp" />
@@ -273,8 +274,8 @@
     <ClCompile Include="..\src\modules\LLMModule.cpp" />
     <ClCompile Include="..\src\modules\RoomModule.cpp" />
     <ClCompile Include="..\src\processing\ProcNodeRegistry.cpp" />
+    <ClCompile Include="..\src\processing\ProcNodeTests.cpp" />
     <ClCompile Include="..\src\utils\Logger.cpp" />
-    <ClCompile Include="src\processing\ProcNodeRegistryTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -158,15 +158,10 @@ void InACTually::init()
 	//m_keyRawListener->addListener(m_inputMgr->getKeyRawListener());
 	//m_touchRawListener->addListener(m_inputMgr->getTouchRawListener());
 
-
-	doctest::Context context;
-	context.setOption("exit", false);
-	int res = context.run(); // run doctest
-	if (context.shouldExit())
-		onClose();
-
-
-	AppState::set(AS_RUNNING);
+	if (/* do testing*/ true)
+		AppState::set(AS_FEATURETEST);
+	else
+		AppState::set(AS_RUNNING);
 
 	resize();	
 
@@ -339,7 +334,14 @@ void act::InACTually::drawFullGUI()
 
 	if (AppState::get() == AS_FEATURETEST) {
 		ci::gl::pushMatrices();
-		// test something
+		
+		doctest::Context context;
+		context.setOption("exit", false);
+		int res = context.run(); // run doctest
+		if (context.shouldExit())
+			onClose();
+
+		act::AppState::set(AS_RUNNING);
 
 		ci::gl::popMatrices();
 	}
