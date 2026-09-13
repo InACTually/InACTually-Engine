@@ -62,7 +62,7 @@
 #define Ref(className, refName) class ClassName; using refName = std::shared_ptr<className>;
 
 #define CREATE(className, base) static std::shared_ptr<base> create() { return std::make_shared<className>(); }; \
-static std::shared_ptr<className> cast(std::shared_ptr<base> baseRef) { return std::dynamic_pointer_cast<className>(baseRef); };
+								static std::shared_ptr<className> cast(std::shared_ptr<base> baseRef) { return std::dynamic_pointer_cast<className>(baseRef); };
 
 
 namespace act {

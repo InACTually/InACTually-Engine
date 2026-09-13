@@ -18,17 +18,9 @@
 #pragma once
 
 #include "RoomManagers.hpp"
-#include "procpch.hpp"
+#include "PortRefs.hpp"
 
 #define PROCNODECREATE(node) CREATE(node, ProcNodeBase);
-#define USINGPORTREF(name, datatype)	using name##InputPort = InputPort<datatype>; \
-										using name##InputPortRef = std::shared_ptr<name##InputPort>; \
-										using name##OutputPort = OutputPort<datatype>; \
-										using name##OutputPortRef = std::shared_ptr<name##OutputPort>; \
-										name##InputPortRef to##name##InputPort(act::proc::PortBaseRef port) { \
-											return std::dynamic_pointer_cast<name##InputPort>(port); } \
-										name##OutputPortRef to##name##OutputPort(act::proc::PortBaseRef port) {	\
-											return std::dynamic_pointer_cast<name##OutputPort>(port); }
 
 #define PORTCREATE(name, type, datatype) name##InputPortRef create##name##Input(std::string label, std::function<void(datatype)> cb, bool display = true) { \
 											auto port = InputPort<datatype>::create(type, label, cb); \
@@ -58,30 +50,6 @@ namespace act {
 			NT_PROCESSOR,
 			NT_CONTAINER
 		};
-
-		USINGPORTREF(Json,			ci::Json);
-		//USINGPORTREF(Osc,			ci::osc::Message);
-		USINGPORTREF(Bool,			bool);
-		USINGPORTREF(Number,		number);
-		USINGPORTREF(NumberList,	numberList);
-		USINGPORTREF(Vec2,			glm::vec2);
-		USINGPORTREF(Vec2List,		vec2List);
-		USINGPORTREF(Vec3,			glm::vec3);
-		USINGPORTREF(Vec3List,		vec3List);
-		USINGPORTREF(Quat,			glm::quat);
-		USINGPORTREF(Color,			ci::Color);
-		USINGPORTREF(ColorList,		colorList);
-		USINGPORTREF(Text,			std::string);
-		USINGPORTREF(Body,			room::BodyRef);
-		USINGPORTREF(Image,			proc::image);
-		USINGPORTREF(Audio,			ci::audio::BufferRef);
-		USINGPORTREF(AudioNode,		ci::audio::NodeRef);
-		//USINGPORTREF(Pointcloud,	/**/);
-		USINGPORTREF(Feature,		feature);
-		USINGPORTREF(FeatureList,	featureList);	
-		USINGPORTREF(Body,			room::BodyRef);
-		USINGPORTREF(BodyList,		std::vector<room::BodyRef>);
-
 
 		class ProcNodeBase : public UniqueIDBase, public IDBase, public net::RPCHandler
 		{
@@ -162,7 +130,6 @@ namespace act {
 				}
 				return nullptr;
 			}
-
 
 			virtual PortBaseRef getOutputPortByName(std::string name)  {
 				for (auto&& port : m_outputPorts) {
@@ -271,6 +238,7 @@ namespace act {
 			bool removeOutputPort(PortBaseRef outputPort) { return removePort(outputPort, m_outputPorts); };
 
 			PORTCREATE(Json,		PT_JSON,		ci::Json);
+			PORTCREATE(Osc,			PT_OSC,			ci::osc::Message);
 			PORTCREATE(Bool,		PT_BOOL,		bool);
 			PORTCREATE(Number,		PT_NUMBER,		number);
 			PORTCREATE(NumberList,	PT_NUMBERLIST,	numberList);
@@ -287,9 +255,9 @@ namespace act {
 			PORTCREATE(AudioNode,	PT_AUDIONODE,	ci::audio::NodeRef);
 			PORTCREATE(Feature,		PT_FEATURE,		feature);
 			PORTCREATE(FeatureList, PT_FEATURELIST, featureList);
-			PORTCREATE(Body,		PT_BODY,		room::BodyRef);
-			PORTCREATE(BodyList,	PT_BODYLIST,	std::vector<room::BodyRef>);
-			
+			PORTCREATE(Body,		PT_BODY,		act::room::BodyRef);
+			PORTCREATE(BodyList,	PT_BODYLIST,	std::vector<act::room::BodyRef>);
+
 		private:
 			std::string	m_name;
 

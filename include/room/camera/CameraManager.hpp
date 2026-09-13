@@ -29,6 +29,7 @@
 #include "computing/CameraCalibrator.hpp"
 
 #include "camera/CameraRoomNode.hpp"
+#include "processing/PortRefs.hpp"
 
 namespace act {
 	namespace room {

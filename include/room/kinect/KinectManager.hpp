@@ -29,7 +29,7 @@
 
 #include "pointcloud/PointcloudRoomNode.hpp"
 
-#include "PortType.hpp"
+#include "PortRefs.hpp"
 
 
 namespace act {

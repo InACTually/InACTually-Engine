@@ -184,6 +184,7 @@
     <ClInclude Include="..\include\processing\NumberSwitchProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCRecieverProcNode.hpp" />
     <ClInclude Include="..\include\processing\OSCSplitterProcNode.hpp" />
+    <ClInclude Include="..\include\processing\PortRefs.hpp" />
     <ClInclude Include="..\include\processing\ProcNodeBase.hpp" />
     <ClInclude Include="..\include\processing\NoiseProcNode.hpp" />
     <ClInclude Include="..\include\processing\NumberEnhancerProcNode.hpp" />

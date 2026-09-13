@@ -29,7 +29,8 @@ act::proc::Audio3DProcNode::Audio3DProcNode() : ProcNodeBase("Audio3D", NT_OUTPU
 	m_drawSize = glm::ivec2(400, 150);
 	
 	auto in = createAudioNodeInput("audio in", [&](ci::audio::NodeRef node) {
-		node >> m_soundRoomNode->getIn();
+		if(node)
+			node >> m_soundRoomNode->getIn();
 	});
 	in->setConnectionCB([&]() {
 
