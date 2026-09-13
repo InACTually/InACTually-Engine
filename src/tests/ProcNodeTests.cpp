@@ -26,35 +26,177 @@
 
 #include "implot.h"
 
-
 void testPort(act::proc::PortBaseRef port) {
     CAPTURE(port->getName());
 
-    auto boolPort = std::dynamic_pointer_cast<act::proc::InputPort<bool>>(port);
+    auto jsonPort       = act::proc::toJsonInputPort(port);
+	auto oscPort        = act::proc::toOscInputPort(port);
+	auto boolPort       = act::proc::toBoolInputPort(port);
+	auto numberPort     = act::proc::toNumberInputPort(port);
+	auto numberListPort = act::proc::toNumberListInputPort(port);
+	auto vec2Port       = act::proc::toVec2InputPort(port);
+	auto vec2ListPort   = act::proc::toVec2ListInputPort(port);
+	auto vec3Port       = act::proc::toVec3InputPort(port);
+	auto vec3ListPort   = act::proc::toVec3ListInputPort(port);
+	auto quatPort       = act::proc::toQuatInputPort(port);
+	auto colorPort      = act::proc::toColorInputPort(port);
+	auto colorListPort  = act::proc::toColorListInputPort(port);
+	auto textPort       = act::proc::toTextInputPort(port);
+	auto imagePort      = act::proc::toImageInputPort(port);
+	auto audioPort      = act::proc::toAudioInputPort(port);
+	auto audioNodePort  = act::proc::toAudioNodeInputPort(port);
+	//auto pointcloudPort = act::proc::toPointcloudInputPort(port);
+	auto featurePort    = act::proc::toFeatureInputPort(port);
+	auto featureListPort = act::proc::toFeatureListInputPort(port);
+	auto bodyPort       = act::proc::toBodyInputPort(port);
+	auto bodyListPort   = act::proc::toBodyListInputPort(port);
+
+    ci::Json testJson = ci::app::getAssetPath("bodies.json");;
+
+    ci::osc::Message testMsg("/test");
+
+	auto testBools = std::vector<bool>{ true, true, false, true, false, false, true, false };
+    for (int i = 0; i < 10; i++)
+		testBools.push_back(i % 2 == 0);
+	for (int i = 0; i < 100; i++)
+		testBools.push_back(i > 50);
+
+    auto testNumbers = act::proc::numberList{ 0.0f, -1.0f, 1.0f, FLT_MAX, FLT_MIN, 42 };
+    for (float f = -1.2f; f <= 1.2f; f += 0.01f)
+        testNumbers.push_back(f);
+    for (float f = -100.0f; f <= 100.0f; f += 1.0f)
+        testNumbers.push_back(f);
+
+    auto testVec2s = act::proc::vec2List{ glm::vec2(0.0f, 0.0f), glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f), glm::vec2(42.0f, -42.0f), glm::vec2(FLT_MAX, FLT_MAX), glm::vec2(FLT_MAX, FLT_MIN), glm::vec2(FLT_MIN, FLT_MAX), glm::vec2(FLT_MIN, FLT_MIN) };
+	auto testVec3s = act::proc::vec3List{ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(42.0f, -42.0f, 42.0f), glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX), glm::vec3(FLT_MAX, FLT_MIN, FLT_MAX), glm::vec3(FLT_MIN, FLT_MAX, FLT_MIN), glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN) };
+	auto testQuats = std::vector<glm::quat>{ glm::quat(0.0f, 0.0f, 0.0f, 1.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::quat(42.0f, 1.0f, -21.0f, 1.1f), glm::quat(FLT_MAX, FLT_MAX, FLT_MAX, 1.0f), glm::quat(FLT_MIN, FLT_MIN, FLT_MIN, -1.0f) };
+	
+    auto testColors = std::vector<ci::Color>{ ci::Color::black(), ci::Color::white(), ci::Color::hex(0xFF0000) };
+    for(float f = 0.0f; f <= 1.0f; f += 0.01f)
+		testColors.push_back(ci::Color::gray(f));
+
+	auto testTexts = std::vector<std::string>{ "", "test", "The quick brown fox jumps over the lazy dog.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." };
+
+	auto testImages = std::vector<act::proc::image>{ cv::UMat() };
+    testImages.push_back(cv::UMat(0, 0, CV_8UC3, cv::Scalar(0, 0, 0)));
+    testImages.push_back(cv::UMat(1, 1, CV_8UC3, cv::Scalar(0, 0, 0)));
+    testImages.push_back(cv::UMat(100, 100, CV_8UC3, cv::Scalar(255, 255, 255)));
+    testImages.push_back(cv::UMat(5000, 5000, CV_8UC3, cv::Scalar(128, 128, 128)));
+    testImages.push_back(toOcv(ci::loadImage(ci::app::getAssetPath("design/splash.png"))).getUMat(cv::ACCESS_FAST));
+    testImages.push_back(toOcv(ci::loadImage(ci::app::getAssetPath("design/icon.png"))).getUMat(cv::ACCESS_FAST));
+
+	auto testAudioBuffers = std::vector<ci::audio::BufferRef>{ nullptr };
+    testAudioBuffers.push_back(std::make_shared<ci::audio::Buffer>(1, 44100));
+    testAudioBuffers.push_back(std::make_shared<ci::audio::Buffer>(2, 48000));
+    testAudioBuffers.push_back(std::make_shared<ci::audio::Buffer>(4, 96000));
+    auto testAudioBuffer = ci::audio::load(ci::loadFile(ci::app::getAssetPath("sounds/soundscape/soundscape_LarsEngeln (1).wav")), ci::audio::Context::master()->getSampleRate())->loadBuffer();
+    testAudioBuffers.push_back(testAudioBuffer);
+
+	auto testAudioNodes = std::vector<ci::audio::NodeRef>{ nullptr };
+	testAudioNodes.push_back(ci::audio::Context::master()->makeNode<ci::audio::GainNode>());
+	testAudioNodes.push_back(ci::audio::Context::master()->makeNode<ci::audio::BufferPlayerNode>(testAudioBuffer));
+
+	auto testFeatures = std::vector<act::proc::feature>{{"", 0.0f}};
+	for (act::proc::number n : testNumbers)
+		testFeatures.push_back({ "feature" + std::to_string(n), n });
+
+	auto testBodies = std::vector<act::room::BodyRef>{ nullptr };
+    auto testBody = act::room::Body::create();
+    if(testJson.contains("body"))
+        testBody->fromJson(testJson["body"]);
+	testBodies.push_back(testBody);
+    for (int i = 0; i < 15; i++) {
+		testBody = act::room::Body::create();
+		testBody->setUID("testBody" + std::to_string(i));
+        testBodies.push_back(testBody);
+    }
 
     switch (port->getType()) {
-        case act::proc::PortType::PT_JSON: break;
-        case act::proc::PortType::PT_OSC: break;
+        case act::proc::PortType::PT_JSON: 
+            jsonPort->recieve(ci::Json::object());
+            jsonPort->recieve(nullptr);
+            jsonPort->recieve(ci::Json::array());
+            jsonPort->recieve(ci::Json::parse("{}"));
+            jsonPort->recieve(ci::Json::parse("{ value: 42 }"));
+            jsonPort->recieve(testJson);
+            break;
+        case act::proc::PortType::PT_OSC: 
+            oscPort->recieve(ci::osc::Message());
+            testMsg.append(42);
+			oscPort->recieve(testMsg);
+            testMsg.append("42");
+            oscPort->recieve(testMsg);
+            break;
         case act::proc::PortType::PT_BOOL:
-            
-            boolPort->recieve(false);
-            boolPort->recieve(true);
-            // boolPort->recieve(true);
-            // boolPort->recieve(false);
-            // boolPort->recieve(false);
-            // boolPort->recieve(true);
-        case act::proc::PortType::PT_NUMBER: break;
+            for (auto b : testBools)
+				boolPort->recieve(b);
+            break;
+        case act::proc::PortType::PT_NUMBER: 
+            for (act::proc::number n : testNumbers)
+				numberPort->recieve(n);
         case act::proc::PortType::PT_NUMBERLIST: break;
-        case act::proc::PortType::PT_VEC2: break;
-        case act::proc::PortType::PT_VEC2LIST: break;
-        case act::proc::PortType::PT_VEC3: break;
-        case act::proc::PortType::PT_VEC3LIST: break;
-        case act::proc::PortType::PT_QUAT: break;
-        case act::proc::PortType::PT_COLOR: break;
-        case act::proc::PortType::PT_COLORLIST: break;
+            numberListPort->recieve(act::proc::numberList{});
+            numberListPort->recieve(testNumbers);
+        case act::proc::PortType::PT_VEC2: 
+			for (auto&& v : testVec2s)
+				vec2Port->recieve(v);
+            break;
+        case act::proc::PortType::PT_VEC2LIST:
+			vec2ListPort->recieve(act::proc::vec2List{});
+			vec2ListPort->recieve(testVec2s);
+            break;
+        case act::proc::PortType::PT_VEC3: 
+			for (auto&& v : testVec3s)
+				vec3Port->recieve(v);
+            break;
+        case act::proc::PortType::PT_VEC3LIST:
+			vec3ListPort->recieve(act::proc::vec3List{});
+			vec3ListPort->recieve(testVec3s);
+            break;
+        case act::proc::PortType::PT_QUAT: 
+			for (auto&& q : testQuats)
+				quatPort->recieve(q);
+            break;
+        case act::proc::PortType::PT_COLOR:
+			for (auto&& c : testColors)
+				colorPort->recieve(c);
+            break;
+        case act::proc::PortType::PT_COLORLIST:
+			colorListPort->recieve(std::vector<ci::Color>{});
+			colorListPort->recieve(testColors);
+            break;
         case act::proc::PortType::PT_TEXT:
-
-        break;
+			for (auto&& t : testTexts)
+				textPort->recieve(t);
+            break;
+		case act::proc::PortType::PT_IMAGE:
+            for (auto&& img : testImages)
+				imagePort->recieve(img);
+            break;
+		case act::proc::PortType::PT_AUDIO:
+			for (auto&& audio : testAudioBuffers)
+				audioPort->recieve(audio);
+            break;
+		case act::proc::PortType::PT_AUDIONODE: 
+			for (auto&& audioNode : testAudioNodes)
+				audioNodePort->recieve(audioNode);
+            break;
+		case act::proc::PortType::PT_FEATURE: 
+			for (auto&& feature : testFeatures)
+				featurePort->recieve(feature);
+            break;
+		case act::proc::PortType::PT_FEATURELIST:
+			featureListPort->recieve(std::vector<act::proc::feature>{});
+			featureListPort->recieve(testFeatures);
+            break;
+		case act::proc::PortType::PT_BODY: 
+			for (auto&& body : testBodies)
+				bodyPort->recieve(body);
+            break;
+		case act::proc::PortType::PT_BODYLIST:
+			bodyListPort->recieve(std::vector<act::room::BodyRef>{});
+			bodyListPort->recieve(testBodies);
+            break;
     default:
         break;
     }
