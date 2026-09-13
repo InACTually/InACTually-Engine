@@ -80,23 +80,22 @@ TEST_SUITE("ProcNodeRegistry") {
             auto node = registry.create(entry.first);
             REQUIRE(node != nullptr);
 
-            //SUBCASE("Testing: " + entry.first) {
-                CAPTURE(entry.first);
-                CI_LOG_D("Testing ProcNode: " << entry.first);
+            CAPTURE(entry.first);
+            CI_LOG_D("Testing ProcNode: " << entry.first);
 
-                CHECK_NOTHROW(node->setup(roomMgrs));
-                CHECK_NOTHROW(node->update());
+            CHECK_NOTHROW(node->setup(roomMgrs));
+            CHECK_NOTHROW(node->update());
 
-                for (auto&& port : node->getAllInputPorts()) {
-                    testPort(port);
-                }
-
+            for (auto&& port : node->getAllInputPorts()) {
+                testPort(port);
                 act::proc::FlowRuntime::wait();
+            }
 
-                CHECK_NOTHROW(node.reset());
-            //}
+            act::proc::FlowRuntime::wait();
+
+            CHECK_NOTHROW(node.reset());
         }
-        CI_LOG_D("All ProcNodes have been tested..");
+        CI_LOG_D("All ProcNodes have been tested.");
     }
 
 }
