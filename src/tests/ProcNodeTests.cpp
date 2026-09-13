@@ -229,7 +229,7 @@ TEST_SUITE("ProcNodeRegistry") {
             CHECK_NOTHROW(node->update());
 
             for (auto&& port : node->getAllInputPorts()) {
-                testPort(port);
+                CHECK_NOTHROW(testPort(port));
                 act::proc::FlowRuntime::wait();
             }
 
