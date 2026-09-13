@@ -1,10 +1,10 @@
-
+ï»¿
 /*
 	InACTually
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021–2025 Lars Engeln, Fabian Töpfer
+	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -25,6 +25,10 @@ namespace act {
 
 		using number = float;
 		using numberList = std::vector<number>;
+
+		using vec2List = std::vector<glm::vec2>;
+		using vec3List = std::vector<glm::vec3>;
+		using colorList = std::vector<ci::Color>;
 
 		using feature = std::pair<std::string, float>;
 		using featureList = std::vector<feature>;
@@ -61,8 +65,8 @@ namespace act {
 			
 			PT_FEATURE,		// std::pair<string,float>
 			PT_FEATURELIST, // std::vector<feature>
-			PT_BODY,		// proc::BodyRef
-			PT_BODYLIST,	// std::vector<proc::BodyRef>
+			PT_BODY,		// room::BodyRef
+			PT_BODYLIST,	// std::vector<room::BodyRef>
 			
 			PT_METAMODEL
 		};

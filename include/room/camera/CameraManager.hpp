@@ -30,9 +30,6 @@
 
 #include "camera/CameraRoomNode.hpp"
 
-#include "PortMsg.hpp"
-
-
 namespace act {
 	namespace room {
 

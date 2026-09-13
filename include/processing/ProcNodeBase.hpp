@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -20,10 +20,20 @@
 #include "RoomManagers.hpp"
 #include "procpch.hpp"
 
-#include "PortMsg.hpp"
-
-
 #define PROCNODECREATE(node) CREATE(node, ProcNodeBase);
+#define USINGPORTREF(name, datatype)	using name##InputPort = InputPort<datatype>; \
+										using name##InputPortRef = std::shared_ptr<name##InputPort>; \
+										using name##OutputPort = OutputPort<datatype>; \
+										using name##OutputPortRef = std::shared_ptr<name##OutputPort>;
+
+#define PORTCREATE(name, type, datatype) name##InputPortRef create##name##Input(std::string label, std::function<void(datatype)> cb, bool display = true) { \
+											auto port = InputPort<datatype>::create(type, label, cb); \
+											if (display) m_inputPorts.push_back(port); \
+											return port; } \
+										 name##OutputPortRef create##name##Output(std::string label, bool display = true) { \
+											auto port = OutputPort<datatype>::create(type, label); \
+											if (display) m_outputPorts.push_back(port); \
+											return port; }
 
 namespace act {
 	namespace proc {
@@ -41,6 +51,29 @@ namespace act {
 			NT_PROCESSOR,
 			NT_CONTAINER
 		};
+
+		USINGPORTREF(Json,			ci::Json);
+		//USINGPORTREF(Osc,			ci::osc::Message);
+		USINGPORTREF(Bool,			bool);
+		USINGPORTREF(Number,		number);
+		USINGPORTREF(NumberList,	numberList);
+		USINGPORTREF(Vec2,			glm::vec2);
+		USINGPORTREF(Vec2List,		vec2List);
+		USINGPORTREF(Vec3,			glm::vec3);
+		USINGPORTREF(Vec3List,		vec3List);
+		USINGPORTREF(Quat,			glm::quat);
+		USINGPORTREF(Color,			ci::Color);
+		USINGPORTREF(ColorList,		colorList);
+		USINGPORTREF(Text,			std::string);
+		USINGPORTREF(Body,			room::BodyRef);
+		USINGPORTREF(Image,			proc::image);
+		USINGPORTREF(Audio,			ci::audio::BufferRef);
+		USINGPORTREF(AudioNode,		ci::audio::NodeRef);
+		//USINGPORTREF(Pointcloud,	/**/);
+		USINGPORTREF(Feature,		feature);
+		USINGPORTREF(FeatureList,	featureList);	
+		USINGPORTREF(Body,			room::BodyRef);
+		USINGPORTREF(BodyList,		std::vector<room::BodyRef>);
 
 		class ProcNodeBase : public UniqueIDBase, public IDBase, public net::RPCHandler
 		{
@@ -229,45 +262,25 @@ namespace act {
 			bool removeInputPort(PortBaseRef inputPort) { return removePort(inputPort, m_inputPorts); };
 			bool removeOutputPort(PortBaseRef outputPort) { return removePort(outputPort, m_outputPorts); };
 
-			InputPortRef<ci::Json>					createJsonInput			(std::string label, std::function<void(ci::Json)> cb, bool display = true)				{ auto port = InputPort<ci::Json>::create(PT_JSON, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<bool>						createBoolInput			(std::string label, std::function<void(bool)> cb, bool display = true)					{ auto port = InputPort<bool>::create(PT_BOOL, label, cb);							if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<number>					createNumberInput		(std::string label, std::function<void(number)> cb, bool display = true)				{ auto port = InputPort<number>::create(PT_NUMBER, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<std::vector<number>>		createNumberListInput	(std::string label, std::function<void(std::vector<number>)> cb, bool display = true)	{ auto port = InputPort<std::vector<number>>::create(PT_NUMBERLIST, label, cb);		if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<glm::vec2>					createVec2Input			(std::string label, std::function<void(glm::vec2)> cb, bool display = true)				{ auto port = InputPort<glm::vec2>::create(PT_VEC2, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<std::vector<glm::vec2>>	createVec2ListInput		(std::string label, std::function<void(std::vector<glm::vec2>)> cb, bool display = true){ auto port = InputPort<std::vector<glm::vec2>>::create(PT_VEC2LIST, label, cb);	if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<glm::vec3>					createVec3Input			(std::string label, std::function<void(glm::vec3)> cb, bool display = true)				{ auto port = InputPort<glm::vec3>::create(PT_VEC3, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<std::vector<glm::vec3>>	createVec3ListInput		(std::string label, std::function<void(std::vector<glm::vec3>)> cb, bool display = true){ auto port = InputPort<std::vector<glm::vec3>>::create(PT_VEC3LIST, label, cb);	if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<glm::quat>					createQuatInput			(std::string label, std::function<void(glm::quat)> cb, bool display = true)				{ auto port = InputPort<glm::quat>::create(PT_QUAT, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<ci::Color>					createColorInput		(std::string label, std::function<void(ci::Color)> cb, bool display = true)				{ auto port = InputPort<ci::Color>::create(PT_COLOR, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<std::vector<ci::Color>>	createColorListInput	(std::string label, std::function<void(std::vector<ci::Color>)> cb, bool display = true){ auto port = InputPort<std::vector<ci::Color>>::create(PT_COLORLIST, label, cb);	if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<std::string>				createTextInput			(std::string label, std::function<void(std::string)> cb, bool display = true)			{ auto port = InputPort<std::string>::create(PT_TEXT, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<image>						createImageInput		(std::string label, std::function<void(image)> cb, bool display = true)					{ auto port = InputPort<image>::create(PT_IMAGE, label, cb);						if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<ci::audio::BufferRef>		createAudioInput		(std::string label, std::function<void(ci::audio::BufferRef)> cb, bool display = true)	{ auto port = InputPort<ci::audio::BufferRef>::create(PT_AUDIO, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<ci::audio::NodeRef>		createAudioNodeInput	(std::string label, std::function<void(ci::audio::NodeRef)> cb, bool display = true)	{ auto port = InputPort<ci::audio::NodeRef>::create(PT_AUDIONODE, label, cb);		if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<feature>					createFeatureInput		(std::string label, std::function<void(feature)> cb, bool display = true)				{ auto port = InputPort<feature>::create(PT_FEATURE, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<featureList>				createFeatureListInput	(std::string label, std::function<void(featureList)> cb, bool display = true)			{ auto port = InputPort<featureList>::create(PT_FEATURELIST, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<room::BodyRef>				createBodyInput			(std::string label, std::function<void(room::BodyRef)> cb, bool display = true)			{ auto port = InputPort<room::BodyRef>::create(PT_BODY, label, cb);					if (display) m_inputPorts.push_back(port); return port; }
-			InputPortRef<room::BodyRefList>			createBodyListInput		(std::string label, std::function<void(room::BodyRefList)> cb, bool display = true)		{ auto port = InputPort<room::BodyRefList>::create(PT_BODYLIST, label, cb);			if (display) m_inputPorts.push_back(port); return port; }
-
-			OutputPortRef<ci::Json>					createJsonOutput		(std::string label, bool display = true) { auto port = OutputPort<ci::Json>::create(PT_JSON, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<bool>						createBoolOutput		(std::string label, bool display = true) { auto port = OutputPort<bool>::create(PT_BOOL, label);						if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<number>					createNumberOutput		(std::string label, bool display = true) { auto port = OutputPort<number>::create(PT_NUMBER, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<std::vector<number>>		createNumberListOutput	(std::string label, bool display = true) { auto port = OutputPort<std::vector<number>>::create(PT_NUMBERLIST, label);	if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<glm::vec2>						createVec2Output		(std::string label, bool display = true) { auto port = OutputPort<glm::vec2>::create(PT_VEC2, label);						if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<std::vector<glm::vec2>>		createVec2ListOutput	(std::string label, bool display = true) { auto port = OutputPort<std::vector<glm::vec2>>::create(PT_VEC2LIST, label);		if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<glm::vec3>						createVec3Output		(std::string label, bool display = true) { auto port = OutputPort<glm::vec3>::create(PT_VEC3, label);						if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<std::vector<glm::vec3>>		createVec3ListOutput	(std::string label, bool display = true) { auto port = OutputPort<std::vector<glm::vec3>>::create(PT_VEC3LIST, label);		if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<glm::quat>						createQuatOutput		(std::string label, bool display = true) { auto port = OutputPort<glm::quat>::create(PT_QUAT, label);						if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<ci::Color>				createColorOutput		(std::string label, bool display = true) { auto port = OutputPort<ci::Color>::create(PT_COLOR, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<std::vector<ci::Color>>	createColorListOutput	(std::string label, bool display = true) { auto port = OutputPort<std::vector<ci::Color>>::create(PT_COLORLIST, label);	if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<std::string>				createTextOutput		(std::string label, bool display = true) { auto port = OutputPort<std::string>::create(PT_TEXT, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<image>					createImageOutput		(std::string label, bool display = true) { auto port = OutputPort<image>::create(PT_IMAGE, label);						if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<ci::audio::BufferRef>		createAudioOutput		(std::string label, bool display = true) { auto port = OutputPort<ci::audio::BufferRef>::create(PT_AUDIO, label);		if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<ci::audio::NodeRef>		createAudioNodeOutput	(std::string label, bool display = true) { auto port = OutputPort<ci::audio::NodeRef>::create(PT_AUDIONODE, label);		if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<feature>					createFeatureOutput		(std::string label, bool display = true) { auto port = OutputPort<feature>::create(PT_FEATURE, label);					if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<featureList>				createFeatureListOutput	(std::string label, bool display = true) { auto port = OutputPort<featureList>::create(PT_FEATURELIST, label);			if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<room::BodyRef>			createBodyOutput		(std::string label, bool display = true) { auto port = OutputPort<room::BodyRef>::create(PT_BODY, label);				if (display) m_outputPorts.push_back(port); return port; }
-			OutputPortRef<room::BodyRefList>		createBodyListOutput	(std::string label, bool display = true) { auto port = OutputPort<room::BodyRefList>::create(PT_BODYLIST, label);		if (display) m_outputPorts.push_back(port); return port; }
+			PORTCREATE(Json,		PT_JSON,		ci::Json);
+			PORTCREATE(Bool,		PT_BOOL,		bool);
+			PORTCREATE(Number,		PT_NUMBER,		number);
+			PORTCREATE(NumberList,	PT_NUMBERLIST,	numberList);
+			PORTCREATE(Vec2,		PT_VEC2,		glm::vec2);
+			PORTCREATE(Vec2List,	PT_VEC2LIST,	vec2List);
+			PORTCREATE(Vec3,		PT_VEC3,		glm::vec3);
+			PORTCREATE(Vec3List,	PT_VEC3LIST,	vec3List);
+			PORTCREATE(Quat,		PT_QUAT,		glm::quat);
+			PORTCREATE(Color,		PT_COLOR,		ci::Color);
+			PORTCREATE(ColorList,	PT_COLORLIST,	colorList);
+			PORTCREATE(Text,		PT_TEXT,		std::string);
+			PORTCREATE(Image,		PT_IMAGE,		proc::image);
+			PORTCREATE(Audio,		PT_AUDIO,		ci::audio::BufferRef);
+			PORTCREATE(AudioNode,	PT_AUDIONODE,	ci::audio::NodeRef);
+			PORTCREATE(Feature,		PT_FEATURE,		feature);
+			PORTCREATE(FeatureList, PT_FEATURELIST, featureList);
+			PORTCREATE(Body,		PT_BODY,		room::BodyRef);
+			PORTCREATE(BodyList,	PT_BODYLIST,	std::vector<room::BodyRef>);
 			
 		private:
 			std::string	m_name;

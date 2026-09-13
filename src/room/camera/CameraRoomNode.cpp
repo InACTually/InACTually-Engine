@@ -17,9 +17,10 @@
 
 #include "roompch.hpp"
 #include "camera/CameraRoomNode.hpp"
-#include "PortMsg.hpp"
+#include "PortType.hpp"
 
 #include "computing/DepthDetector.hpp"
+
 
 act::room::CameraRoomNode::CameraRoomNode(CameraDeviceRef camera, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
 	: RoomNodeBase("camera", position, rotation, radius, replyUID)

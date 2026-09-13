@@ -17,7 +17,8 @@
 
 #include "roompch.hpp"
 #include "kinect/KinectRoomNode.hpp"
-#include "PortMsg.hpp"
+#include "PortType.hpp"
+
 
 act::room::KinectRoomNode::KinectRoomNode(KinectDeviceRef kinect, std::string deviceName, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
 	: RoomNodeBase(deviceName, position, rotation, radius, replyUID)

@@ -34,9 +34,5 @@
  
 namespace act {
 	namespace proc {
-		using ImageInputPort		= InputPort<image>; //InputPort<image, room::CameraRoomNodeRef>;
-		using ImageInputPortRef		= std::shared_ptr<ImageInputPort>;
-		using ImageOutputPort		= OutputPort<image>; //OutputPort<image, room::CameraRoomNodeRef>;
-		using ImageOutputPortRef	= std::shared_ptr<ImageOutputPort>;
-	}
+		}
 }
