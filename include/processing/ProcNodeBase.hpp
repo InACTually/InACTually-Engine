@@ -24,16 +24,23 @@
 #define USINGPORTREF(name, datatype)	using name##InputPort = InputPort<datatype>; \
 										using name##InputPortRef = std::shared_ptr<name##InputPort>; \
 										using name##OutputPort = OutputPort<datatype>; \
-										using name##OutputPortRef = std::shared_ptr<name##OutputPort>;
+										using name##OutputPortRef = std::shared_ptr<name##OutputPort>; \
+										name##InputPortRef to##name##InputPort(act::proc::PortBaseRef port) { \
+											return std::dynamic_pointer_cast<name##InputPort>(port); } \
+										name##OutputPortRef to##name##OutputPort(act::proc::PortBaseRef port) {	\
+											return std::dynamic_pointer_cast<name##OutputPort>(port); }
 
 #define PORTCREATE(name, type, datatype) name##InputPortRef create##name##Input(std::string label, std::function<void(datatype)> cb, bool display = true) { \
 											auto port = InputPort<datatype>::create(type, label, cb); \
 											if (display) m_inputPorts.push_back(port); \
 											return port; } \
-										 name##OutputPortRef create##name##Output(std::string label, bool display = true) { \
+										name##OutputPortRef create##name##Output(std::string label, bool display = true) { \
 											auto port = OutputPort<datatype>::create(type, label); \
 											if (display) m_outputPorts.push_back(port); \
-											return port; }
+											return port; } \
+										 name##OutputPortRef to##name##OutputPort(act::proc::PortBaseRef port) { \
+											return std::dynamic_pointer_cast<name##OutputPort>(port); }
+
 
 namespace act {
 	namespace proc {
@@ -74,6 +81,7 @@ namespace act {
 		USINGPORTREF(FeatureList,	featureList);	
 		USINGPORTREF(Body,			room::BodyRef);
 		USINGPORTREF(BodyList,		std::vector<room::BodyRef>);
+
 
 		class ProcNodeBase : public UniqueIDBase, public IDBase, public net::RPCHandler
 		{
