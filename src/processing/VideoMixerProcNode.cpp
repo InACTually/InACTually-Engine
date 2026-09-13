@@ -68,6 +68,9 @@ void act::proc::VideoMixerProcNode::mix()
 	if(m_mixedImage.empty())
 		m_mixedImage = cv::UMat(m_primaryImage.size(), m_primaryImage.type());
 
+	if(m_primaryImage.size() != m_secondaryImage.size())
+		cv::resize(m_secondaryImage, m_secondaryImage, m_primaryImage.size());
+
 	float alpha = std::clamp(m_mixValue, 0.0f, 1.0f);
 	cv::addWeighted(m_primaryImage, alpha, m_secondaryImage, 1.0f - alpha, 0.0f, m_mixedImage);
 	m_output->send(m_mixedImage);
