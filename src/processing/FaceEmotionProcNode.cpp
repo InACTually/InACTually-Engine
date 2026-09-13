@@ -72,6 +72,9 @@ void act::proc::FaceEmotionProcNode::draw() {
 }
 
 void act::proc::FaceEmotionProcNode::onMat(cv::UMat event) {
+	if (event.empty())
+		return;
+
 	m_imagePort->send(event);
 	if (m_show) {
 		m_texture = ci::gl::Texture2d::create(ci::fromOcv(event));
@@ -99,6 +102,9 @@ cv::Mat	act::proc::FaceEmotionProcNode::detectCurrentEmotions(cv::UMat uframe) {
 	frame = uframe.getMat(cv::ACCESS_RW);
 
 	frame = cv::dnn::blobFromImage(frame, 1.0f, cv::Size(64, 64));
+
+	if (frame.empty() || frame.cols <= 0 || frame.rows <= 0)
+		return cv::Mat(64, 64, CV_8UC1);
 
 	m_network.setInput(frame);
 

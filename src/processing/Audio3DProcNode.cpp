@@ -39,9 +39,10 @@ act::proc::Audio3DProcNode::Audio3DProcNode() : ProcNodeBase("Audio3D", NT_OUTPU
 
 	});
 
-	auto gain = createNumberInput("gain", [&](bool event) {
-		m_volume = ci::audio::linearToDecibel(event);
-		m_soundRoomNode->setVolume(m_volume); 
+	m_hasNewVolumeValue = false;
+	auto gain = createNumberInput("gain", [&](number event) {
+		m_volume.value() = ci::audio::linearToDecibel(event);
+		m_hasNewVolumeValue = true;
 	});
 	auto position = createVec3Input("position", [&](glm::vec3 event) { set3DPosition(event); });
 
@@ -73,7 +74,10 @@ void act::proc::Audio3DProcNode::init() {
 }
 
 void act::proc::Audio3DProcNode::update() {
-	
+	if (m_hasNewVolumeValue) {
+		m_hasNewVolumeValue = false;
+		m_soundRoomNode->setVolume(m_volume.value());
+	}
 }
 
 void act::proc::Audio3DProcNode::draw() {

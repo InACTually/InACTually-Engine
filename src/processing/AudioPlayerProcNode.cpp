@@ -324,7 +324,8 @@ void act::proc::AudioPlayerProcNode::setPlaySpeed(float speed)
 			m_isStretching = true;
 			init();
 		}
-		m_stretch->setPlaybackSpeed(m_playSpeed);
+		if(m_stretch)
+			m_stretch->setPlaybackSpeed(m_playSpeed);
 	/* }
 	else if (m_isStretching) {
 		m_isStretching = false;

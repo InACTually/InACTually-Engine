@@ -82,7 +82,7 @@ act::proc::BodyToSoundProcNode::~BodyToSoundProcNode() {
 
 void act::proc::BodyToSoundProcNode::onBody(room::BodyRef body)
 {
-	if (m_oldBody == nullptr) {
+	if (!body || m_oldBody == nullptr) {
 		m_oldBody = body;
 		return;
 	}
@@ -131,8 +131,6 @@ float act::proc::BodyToSoundProcNode::calcLocalMovement(room::BodyRef body) {
 	float distX, distY, distZ;
 
 	for (int i = 0; i < numJoints; i++){
-
-
 		glm::vec3 currJointPos = body->joints[i]->position;
 		glm::vec3 oldJointPos = m_oldBody->joints[i]->position;
 

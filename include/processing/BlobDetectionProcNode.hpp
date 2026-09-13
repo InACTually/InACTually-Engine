@@ -71,6 +71,8 @@ namespace act {
 			ImageOutputPortRef	m_fgCutoutPort;
 			ImageOutputPortRef	m_bgCutoutPort;
 
+			std::atomic_bool	m_isProcessing{ false };
+
 		}; using BlobDetectionProcNodeRef = std::shared_ptr<BlobDetectionProcNode>;
 
 	}

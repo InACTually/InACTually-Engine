@@ -46,7 +46,7 @@ act::proc::Audio3DPlayerTimestretchProcNode::Audio3DPlayerTimestretchProcNode() 
 	addRPC("stop", [&]() { return stop(); });
 	
 	auto trigger	= createBoolInput(		"fire",		[&](bool event) { this->onTrigger(event); });
-	auto gain		= createNumberInput(	"gain",		[&](float event) { m_soundRoomNode->setVolume(ci::audio::linearToDecibel(event)); });
+	auto gain		= createNumberInput(	"gain",		[&](float event) { if(m_soundRoomNode) m_soundRoomNode->setVolume(ci::audio::linearToDecibel(event)); });
 	auto position	= createVec3Input(		"position", [&](glm::vec3 event) { set3DPosition(event); });
 	auto speed		= createNumberInput(	"speed",	[&](float event) { setPlaySpeed(event); });
 
@@ -247,6 +247,9 @@ bool act::proc::Audio3DPlayerTimestretchProcNode::play()
 
 bool act::proc::Audio3DPlayerTimestretchProcNode::stop()
 {
+	if (!m_soundRoomNode)
+		return false;
+
 	bool wasPlaying = m_isPlaying;
 	m_isPlaying = false;
 	m_soundRoomNode->stop();
@@ -257,7 +260,8 @@ bool act::proc::Audio3DPlayerTimestretchProcNode::stop()
 void act::proc::Audio3DPlayerTimestretchProcNode::setPlaySpeed(float speed)
 {
 	m_playSpeed = speed;
-	m_soundRoomNode->setSpeed(speed);
+	if(m_soundRoomNode)
+		m_soundRoomNode->setSpeed(speed);
 }
 
 void act::proc::Audio3DPlayerTimestretchProcNode::loadSound(std::filesystem::path path) {
@@ -312,7 +316,7 @@ ci::Json act::proc::Audio3DPlayerTimestretchProcNode::toParams() {
 	json["isCollapsed"]		= m_isCollapsed;
 	json["toVolume"]		= m_toVolume;
 	json["volume"]			= m_volume.value();
-	json["isLooping"]			= m_isLooping;
+	json["isLooping"]		= m_isLooping;
 	json["fadeInPosition"]  = m_fadeInPosition;
 	json["fadeOutPosition"] = m_fadeOutPosition;
 	json["playPosition"]	= m_playPosition;

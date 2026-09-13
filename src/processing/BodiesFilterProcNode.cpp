@@ -135,6 +135,9 @@ act::room::BodyRef act::proc::BodiesFilterProcNode::findNearestBody(room::BodyRe
 	float distance = m_nearestToPositionDistance;
 	room::BodyRef body;
 	for (auto&& b : bodies) {
+		if (!b)
+			continue;
+
 		m_currentPosition = b->joints[K4ABT_JOINT_SPINE_CHEST]->position;
 		
 		float d = ci::distance(glm::vec2(m_currentPosition.x, m_currentPosition.z), glm::vec2(m_nearestToPosition.x, m_nearestToPosition.z));

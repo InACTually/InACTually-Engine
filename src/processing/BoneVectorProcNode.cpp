@@ -62,7 +62,7 @@ void act::proc::BoneVectorProcNode::draw() {
 }
 
 void act::proc::BoneVectorProcNode::onSkeleton(room::BodyRef event) {
-	if (m_fromJoint == m_toJoint)
+	if (!event || m_fromJoint == m_toJoint || event->joints.size() < m_fromJoint || event->joints.size() < m_toJoint)
 		return;
 
 	glm::vec3 from = event->joints[m_fromJoint]->position;

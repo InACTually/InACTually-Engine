@@ -33,7 +33,12 @@ act::room::AudioRoomNodeBase::~AudioRoomNodeBase()
 
 void act::room::AudioRoomNodeBase::setVolume(float volume, float rampDuration)
 {
-	//m_gain->getParam()->applyRamp();
+	if (rampDuration == 0.0f) {
+		m_volume.stop();
+		m_volume = volume;
+		m_gain->setValue(ci::audio::decibelToLinear(m_volume));
+		return;
+	}
 	ci::app::timeline().apply(&m_volume, volume, rampDuration).updateFn([&]() {
 		m_gain->setValue(ci::audio::decibelToLinear(m_volume));
 	});

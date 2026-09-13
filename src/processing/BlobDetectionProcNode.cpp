@@ -92,20 +92,34 @@ void act::proc::BlobDetectionProcNode::draw() {
 }
 
 void act::proc::BlobDetectionProcNode::onMat(cv::UMat event) {
+	bool expected = false;
+	if (!m_isProcessing.compare_exchange_strong(expected, true))
+		return;
+	m_isProcessing = false;
 
+	if (event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
+		return;
 	if (m_foregroundMask.empty()) {
 		m_foregroundMask.create(event.size(), event.type());
 	}
-	GaussianBlur(event, m_foregroundMask, cv::Size(11, 11), 3.5, 3.5);
-	m_bgModel->apply(m_foregroundMask, m_foregroundMask, (double)m_learningRate);
+	else if (m_foregroundMask.size() != event.size() || m_foregroundMask.type() != event.type())
+		return;
+
+	try {
+		GaussianBlur(event, m_foregroundMask, cv::Size(11, 11), 3.5, 3.5);
+		m_bgModel->apply(m_foregroundMask, m_foregroundMask, (double)m_learningRate);
 	
-	threshold(m_foregroundMask, m_foregroundMask, 10, 255, cv::THRESH_BINARY);
-	m_foregroundCutout = cv::UMat(event.size(), event.type(), cv::Scalar(0));
+		threshold(m_foregroundMask, m_foregroundMask, 10, 255, cv::THRESH_BINARY);
+		m_foregroundCutout = cv::UMat(event.size(), event.type(), cv::Scalar(0));
 
-	event.copyTo(m_foregroundCutout, m_foregroundMask);
+		event.copyTo(m_foregroundCutout, m_foregroundMask);
 
-	bitwise_not(m_foregroundMask, m_backgroundMask);
-	event.copyTo(m_backgroundCutout, m_backgroundMask);
+		bitwise_not(m_foregroundMask, m_backgroundMask);
+		event.copyTo(m_backgroundCutout, m_backgroundMask);
+	}
+	catch (cv::Exception exc) {
+		CI_LOG_E(exc.what());
+	}
 
 	//m_bgModel->getBackgroundImage(backgroundImg);
 	//m_texture_bg = ci::gl::Texture2d::create(ci::fromOcv(backgroundImg));
@@ -114,14 +128,17 @@ void act::proc::BlobDetectionProcNode::onMat(cv::UMat event) {
 	m_fgCutoutPort->send(m_foregroundCutout);
 	m_fgMaskPort->send(m_foregroundMask);
 
-
-	m_texture_fgMask = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundMask));
-	m_texture_bgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_backgroundCutout));
-	m_texture_fgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundCutout));
-
-	float sizeFactor = 0.4;
-	if (m_texture_fgMask)
-		m_drawSize = glm::ivec2(m_texture_fgMask->getWidth() * sizeFactor, m_texture_fgMask->getHeight() * sizeFactor);
+	ci::app::App::get()->dispatchAsync([this]() {
+		if (!m_foregroundMask.empty())
+			m_texture_fgMask = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundMask));
+		if (!m_backgroundCutout.empty())
+			m_texture_bgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_backgroundCutout));
+		if (!m_foregroundCutout.empty())
+			m_texture_fgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundCutout)); 
+		float sizeFactor = 0.4;
+		if (m_texture_fgMask)
+			m_drawSize = glm::ivec2(m_texture_fgMask->getWidth() * sizeFactor, m_texture_fgMask->getHeight() * sizeFactor);
+	});
 }
 
 ci::Json act::proc::BlobDetectionProcNode::toParams() {

@@ -46,11 +46,12 @@ namespace act {
 			void init();
 			room::AudioManagerRef				m_audioMgr;
 
+			bool								m_hasNewVolumeValue;
 			ci::Anim<float>						m_volume;
 			float								m_toVolume;
 			float								m_currentLoudness;
 
-			glm::vec3								m_3DPosition;
+			glm::vec3							m_3DPosition;
 			void								set3DPosition(glm::vec3 position);
 			room::SoundRoomNodeRef				m_soundRoomNode;
 
