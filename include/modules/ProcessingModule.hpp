@@ -68,7 +68,7 @@ namespace act {
 		protected:
 			std::vector<proc::ContainerProcNodeRef>				m_containers;
 
-			act::room::RoomManagersRef								m_roomMgrs;
+			act::room::RoomManagersRef							m_roomMgrs;
 			act::net::NetworkManagerRef							m_networkMgr;
 
 			std::shared_ptr<act::proc::ProcNodeRegistry>		m_nodeRegistry;

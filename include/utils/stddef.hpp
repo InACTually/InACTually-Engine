@@ -72,13 +72,15 @@ namespace act {
 	*
 	*/
 	enum GeneralAppState {
-		AS_ERROR = -1,  /**< panic */
-		AS_STARTUP = 0, /**< setup */
-		AS_INITIALISING,/**< init */
-		AS_RUNNING,     /**< update/draw */
-		AS_CLOSING,		/**< requested to close */
-		AS_CLEANUP,     /**< preparing shutdown */
-		AS_FEATURETEST  /**< special for testing purposes */
+		AS_ERROR = -1,		/**< panic */
+		AS_STARTUP = 0,		/**< setup */
+		AS_INITIALISING,	/**< init */
+		AS_FEATURETEST,		/**< special for testing purposes */
+		AS_LOADINGRECENT,	/**< load recent project */
+		AS_INITIMGUI,		/**< ImGui setup */
+		AS_RUNNING,			/**< update/draw */
+		AS_CLOSING,			/**< requested to close */
+		AS_CLEANUP			/**< preparing shutdown */
 	};
 
 	/**

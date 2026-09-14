@@ -44,18 +44,7 @@ void act::mod::ProcessingModule::setup(act::room::RoomManagersRef roomMgrs, act:
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
 
-	ci::fs::path path = ci::app::getAssetPath("recentProcessing.json");
-	
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "recentProcessing.json";
-		ci::writeJson(path,""); // touch
-		saveToFile(path);
-	}
-
-	loadFromFile(path);
-
-	if (getContainerByName("Root") == nullptr)
-	{
+	if (getContainerByName("Root") == nullptr) {
 		m_rootContainerNode = std::make_shared<proc::ContainerProcNode>(0, "Root", m_onFocusCallback);
 		m_containers.push_back(m_rootContainerNode);
 	}

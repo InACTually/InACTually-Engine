@@ -16,3 +16,16 @@
 */
 
 #include "ModuleBase.hpp"
+
+void act::mod::ModuleBase::loadRecentProject() {
+	std::string recentProjectPath = "recent" + getName() + ".json";
+	ci::fs::path path = ci::app::getAssetPath(recentProjectPath);
+
+	if (path.empty()) {
+		path = ci::app::getAssetPath("").string() + recentProjectPath;
+		ci::writeJson(path, ""); // touch
+		save(path);
+	}
+
+	load(path);
+}

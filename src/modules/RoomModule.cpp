@@ -54,13 +54,6 @@ void act::mod::RoomModule::setup(act::room::RoomManagersRef roomMgrs, act::net::
 	}
 
 	m_stage->setup(m_roomMgrs);
-	ci::fs::path path = ci::app::getAssetPath("recentRoom.json");
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "recentRoom.json";
-		ci::writeJson(path, ""); // touch
-		saveToFile(path);
-	}
-	loadFromFile(path);
 }
 
 void act::mod::RoomModule::cleanUp() {

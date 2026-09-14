@@ -33,14 +33,6 @@ void act::mod::LLMModule::setup(act::room::RoomManagersRef roomMgrs, act::net::N
 
 	m_llmConnector->fetchAvailableModels();
 	m_llmConnector->setup(roomMgrs);
-
-	ci::fs::path path = ci::app::getAssetPath("recentLLM.json");
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "recentLLM.json";
-		ci::writeJson(path, "");
-		saveToFile(path);
-	}
-	loadFromFile(path);
 }
 
 void act::mod::LLMModule::cleanUp() {

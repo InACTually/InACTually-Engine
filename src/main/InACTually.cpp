@@ -67,11 +67,11 @@ InACTually::InACTually()
 
 	}
 
-	glm::ivec2 size = glm::ivec2(400, 200);
+	m_splashScreenTex = ci::gl::Texture::create(*ci::Surface::create(ci::loadImage(ci::app::getAssetPath("design/splash.png"))));
+
+	glm::ivec2 size = m_splashScreenTex->getSize();
 	ci::app::getWindow()->setSize(size);
 	ci::app::getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
-
-	m_splashScreenTex = ci::gl::Texture::create(*ci::Surface::create(ci::loadImage(ci::app::getAssetPath("design/splash.png"))));
 }
 
 InACTually::~InACTually()
@@ -112,7 +112,6 @@ void InACTually::init()
 	m_drawDebug = false;
 
 
-
 	auto options = ImGui::Options().window(ci::app::getWindow());
 	//options(true);
 	Initialize(options);
@@ -127,6 +126,7 @@ void InACTually::init()
 	ImPlot::PushColormap(ImPlotColormap_Deep);
 
 	initStyle();
+
 
 	m_roomMgrs = act::room::RoomManagers::get();
 
@@ -145,17 +145,8 @@ void InACTually::init()
 		Settings::get().debugGUISize = size;
 		Settings::save();
 	}
+
 	
-	if (!m_drawGUI) {
-		size = Settings::get().guiSize; 
-	}
-
-	ci::app::getWindow()->setSize(size);
-	ci::app::getWindow()->setPos((m_app->getDisplay()->getSize() / 2) - (size / 2));
-	ci::app::getWindow()->setBorderless(false);
-
-	ci::app::setFullScreen(Settings::get().fullscreen);
-
 	//m_interactionMgr = make_shared<ia::InteractionManager>();
 	//m_inputMgr = make_shared<input::InputManager>(m_interactionMgr);
 
@@ -166,7 +157,7 @@ void InACTually::init()
 	if (/* do testing*/ true)
 		AppState::set(AS_FEATURETEST);
 	else
-		AppState::set(AS_RUNNING);
+		AppState::set(AS_LOADINGRECENT);
 
 	resize();	
 
@@ -238,16 +229,56 @@ void InACTually::draw()
 
 	ci::app::getWindow()->getRenderer()->makeCurrentContext(true);
 
-	if (AppState::get() == AS_INITIALISING || AppState::get() == AS_STARTUP) {
-		ci::gl::clear(ci::Color::gray(0.0f));
-		ci::gl::color(ci::Color::white());
-		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), true).scaledCentered(1.0f);
-		ci::gl::draw(m_splashScreenTex, destRect);
-
+	if (AppState::get() != AS_RUNNING) {
+		ci::gl::clear(util::Design::backgroundColor());
+		
 		if (AppState::get() == AS_STARTUP && ci::app::getElapsedFrames() > 2) {
 			AppState::set(AS_INITIALISING);
 			init();
 		}
+
+		if (AppState::get() == AS_FEATURETEST) {
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
+			ImGui::SetNextWindowViewport(viewport->ID);
+			
+			ci::gl::pushMatrices();
+			
+			doctest::Context context;
+			context.setOption("exit", false);
+			int res = context.run(); // run doctest
+			if (context.shouldExit())
+				onClose();
+			
+			ci::gl::popMatrices();
+
+			act::AppState::set(AS_LOADINGRECENT);
+		}
+
+		if (AppState::get() == AS_LOADINGRECENT) {
+			for (auto&& module : reg_modules) {
+				module->loadRecentProject();
+			}
+
+			glm::ivec2 size = Settings::get().debugGUISize;
+			if (!m_drawGUI) {
+				size = Settings::get().guiSize;
+			}
+
+			ci::app::getWindow()->setSize(size);
+			ci::app::getWindow()->setPos((ci::app::getWindow()->getDisplay()->getSize() / 2) - (size / 2));
+			ci::app::getWindow()->setBorderless(false);
+
+			ci::app::setFullScreen(Settings::get().fullscreen);
+
+			AppState::set(AS_RUNNING);
+		}
+
+		ci::gl::color(ci::Color::white());
+		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), false).scaledCentered(1.0f);
+		ci::gl::draw(m_splashScreenTex, destRect);
+
 		return;
 	}
 
@@ -337,54 +368,27 @@ void act::InACTually::drawFullGUI()
 	ImGui::SetNextWindowSize(viewport->WorkSize);
 	ImGui::SetNextWindowViewport(viewport->ID);
 
-	if (AppState::get() == AS_FEATURETEST) {
-		ci::gl::pushMatrices();
-		
-		doctest::Context context;
-		context.setOption("exit", false);
-		int res = context.run(); // run doctest
-		if (context.shouldExit())
-			onClose();
+	ci::gl::pushMatrices();
+	for (auto module : reg_modules) {
+		if (module->getIsActive()) {
+			module->draw();
+		}
+	}
+	ci::gl::popMatrices();
 
-		act::AppState::set(AS_RUNNING);
+	ci::gl::color(ci::Color::white());
+
+
+	if (m_drawDebug) {
+		ci::gl::pushMatrices();
+		// getCurrentModule()->drawDebug();
+
+		ci::gl::color(ci::Color::white());
+		ci::gl::drawLine(glm::vec2(0, 0), glm::vec2(50, 0));
+		ci::gl::drawLine(glm::vec2(0, 0), glm::vec2(0, 50));
 
 		ci::gl::popMatrices();
 	}
-	else {
-
-		{
-			ci::gl::pushMatrices();
-			for (auto module : reg_modules) {
-				if (module->getIsActive()) {
-					module->draw();
-				}
-			}
-			ci::gl::popMatrices();
-		}
-
-		ci::gl::color(ci::Color::white());
-
-
-		if (m_drawDebug) {
-			ci::gl::pushMatrices();
-			// getCurrentModule()->drawDebug();
-
-			ci::gl::color(ci::Color::white());
-			ci::gl::drawLine(glm::vec2(0, 0), glm::vec2(50, 0));
-			ci::gl::drawLine(glm::vec2(0, 0), glm::vec2(0, 50));
-
-			ci::gl::popMatrices();
-		}
-
-
-		// draw "gui"
-
-		if (m_drawDebug) {
-			//m_inputMgr->drawDebug();
-		}
-	}
-
-
 
 	// Menu Bar
 	//ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
@@ -462,6 +466,7 @@ void act::InACTually::drawFullGUI()
 	m_networkMgr->drawStatusBar();
 
 	ImGui::EndMainMenuBar();
+
 
 	ImGui::SetNextWindowPos(ImVec2(.0f, act::Settings::get().fontSize + 12.0f), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(ci::app::getWindowWidth(), ci::app::getWindowHeight() - (act::Settings::get().fontSize + 12.0f)), ImGuiCond_Always);

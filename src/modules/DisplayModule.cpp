@@ -32,17 +32,6 @@ act::mod::DisplayModule::~DisplayModule() {
 void act::mod::DisplayModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
-
-	ci::fs::path path = ci::app::getAssetPath("displaying.json");
-
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "displaying.json";
-		ci::writeJson(path, ""); // touch
-		saveToFile(path);
-	}
-
-	loadFromFile(path);
-
 }
 
 void act::mod::DisplayModule::cleanUp() {

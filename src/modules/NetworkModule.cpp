@@ -33,16 +33,6 @@ act::mod::NetworkModule::~NetworkModule() {
 void act::mod::NetworkModule::setup(act::room::RoomManagersRef roomMgrs, act::net::NetworkManagerRef networkMgr) {
 	m_roomMgrs = roomMgrs;
 	m_networkMgr = networkMgr;
-
-	ci::fs::path path = ci::app::getAssetPath("recentNetwork.json");
-	
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "recentNetwork.json";
-		ci::writeJson(path,""); // touch
-		saveToFile(path);
-	}
-
-	loadFromFile(path);
 }
 
 void act::mod::NetworkModule::cleanUp() {

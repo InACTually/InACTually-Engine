@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2023
+	This file is created and substantially modified: 2021-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -40,6 +40,7 @@ namespace act {
 			ModuleBase() {};
 
 			virtual void setup(act::room::RoomManagersRef roomMgrs, std::shared_ptr<act::net::NetworkManager> networkMgr) = 0;
+			virtual void loadRecentProject();
 			virtual void cleanUp() = 0;
 			virtual void update() = 0;
 			virtual void draw() = 0;
