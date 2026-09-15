@@ -37,7 +37,10 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 	m_faceImagePort = createImageOutput("biggest face image");
 	m_faceAvailablePort = createBoolOutput("face is available");
 
-	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
+	auto image = createImageInput("image", [&](cv::UMat mat) { 
+		try { this->onMat(mat); } 
+		catch (cv::Exception exc) { CI_LOG_E(exc.what()); }
+	});
 
 
 	std::string path = ci::app::getAssetPath("3rd/haarcascade_cuda/haarcascade_frontalface_alt.xml").string();

@@ -34,7 +34,10 @@ act::proc::SpectrumProcNode::SpectrumProcNode() : ProcNodeBase("Spectrum") {
 	auto audioNodeIn = createAudioNodeInput(
 		"audioNode",
 		[&](ci::audio::NodeRef audioNode) {
-			ci::app::App::get()->dispatchAsync([this, audioNode]() {
+			std::weak_ptr<SpectrumProcNode> weakSelf = std::static_pointer_cast<SpectrumProcNode>(shared_from_this());
+			ci::app::App::get()->dispatchAsync([weakSelf, this, audioNode]() {
+				if (!weakSelf.lock())
+					return;
 				audioNode >> m_monitorSpectralNode;
 			});
 		}

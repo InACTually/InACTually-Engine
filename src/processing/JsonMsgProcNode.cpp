@@ -84,6 +84,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto jsonMsg = createColorInput("json", [&](ci::Json j) {
+		if (j.empty())
+			return;
 		auto json = ci::Json::object();
 		json["params"]["name"] = m_msgName;
 		json["params"]["type"] = "json";
@@ -111,6 +113,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto image = createImageInput("image", [&](cv::UMat uMat) {
+		if (uMat.empty())
+			return;
 		std::string base64 = matToBase64(uMat.getMat(cv::ACCESS_FAST), ".jpg", 85, true, 1280);
 		auto json = ci::Json::object();
 		json["params"]["name"]		= m_msgName;
@@ -125,6 +129,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 		json["params"]["type"] = "bodies";
 		ci::Json bodiesJson = ci::Json::array();
 		for (auto&& body : bodies) {
+			if (!body)
+				continue;
 			bodiesJson.push_back(body->toJson());
 		}
 		json["params"]["bodies"] = bodiesJson;
@@ -132,6 +138,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto body = InputPort<room::BodyRef>::create(PT_BODY, "body", [&](room::BodyRef body) {
+		if (!body)
+			return;
 		auto json = ci::Json::object();
 		json["params"]["name"] = m_msgName;
 		json["params"]["type"] = "body";
@@ -140,6 +148,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto metamodal = InputPort<MetaModelRef>::create(PT_METAMODEL, "metamodal", [&](MetaModelRef metaModal) {
+		if (!metaModal)
+			return;
 		auto json = ci::Json::object();
 		json["params"]["name"] = m_msgName;
 		json["params"]["type"] = "metamodel";
@@ -148,7 +158,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto pointCloudInput = InputPort<act::room::Pointcloud>::create(PT_POINTCLOUD, "pointcloud", [&](act::room::Pointcloud pointcloud) {
-		if (pointcloud == nullptr) return;
+		if (!pointcloud) 
+			return;
 		
 		auto json = ci::Json::object();
 		auto points = *pointcloud;// ->points;
@@ -171,7 +182,8 @@ act::proc::JsonMsgProcNode::JsonMsgProcNode() : ProcNodeBase("JsonMsg") {
 	});
 
 	auto audioBufferInput = createAudioInput("audio buffer", [&](ci::audio::BufferRef buffer) {
-		if (buffer == nullptr) return;
+		if (!buffer) 
+			return;
 
 		auto	json = ci::Json::object();
 		auto	data = std::vector<float>(buffer->getData(), buffer->getData() + buffer->getSize());

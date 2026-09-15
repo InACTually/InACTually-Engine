@@ -51,7 +51,7 @@ namespace act {
 			NT_CONTAINER
 		};
 
-		class ProcNodeBase : public UniqueIDBase, public IDBase, public net::RPCHandler
+		class ProcNodeBase : public UniqueIDBase, public IDBase, public net::RPCHandler, public std::enable_shared_from_this<ProcNodeBase>
 		{
 		public:
 			ProcNodeBase(std::string name, ProcNodeType type = ProcNodeType::NT_PROCESSOR) : m_name(name), m_title(name), m_nodeType(type), m_position(glm::vec2(0,0)) {

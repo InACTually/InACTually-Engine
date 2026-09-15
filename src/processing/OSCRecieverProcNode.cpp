@@ -59,7 +59,7 @@ void act::proc::OSCRecieverProcNode::initialize()
 }
 
 void act::proc::OSCRecieverProcNode::update() {
-	
+	m_reciever.reset();
 }
 
 void act::proc::OSCRecieverProcNode::draw() {

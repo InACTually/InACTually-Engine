@@ -124,6 +124,9 @@ act::proc::OSCMsgProcNode::OSCMsgProcNode() : ProcNodeBase("OSCMsg") {
 
 		int i = 0;
 		for (auto&& body : bodies) {
+			if (!body)
+				return;
+
 			auto osc = ci::osc::Message(m_msgName);
 			ci::Json json = ci::Json::object();
 			json["uid"] = uid;

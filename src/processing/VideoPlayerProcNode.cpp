@@ -161,6 +161,9 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 {
+	if (!m_video)
+		return;
+
 	if (event && !m_isPlaying && m_video) {
 		m_isPlaying = true;
 	}
@@ -173,6 +176,9 @@ void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 
 void act::proc::VideoPlayerProcNode::seek(number playPosition)
 {
+	if (!m_video)
+		return;
+
 	playPosition = std::clamp(playPosition, 0.0f, 1.0f);
 	m_video->seekToTime(m_video->getDuration() * playPosition);
 }

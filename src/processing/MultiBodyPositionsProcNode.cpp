@@ -27,11 +27,13 @@ act::proc::MultiBodyPositionsProcNode::MultiBodyPositionsProcNode() : ProcNodeBa
 			std::stringstream strstr;
 			strstr << "Position " << (i + 1);
 			auto positionOutPort = createVec3Output(strstr.str());
+			m_positionPorts.push_back(positionOutPort);
 		}
 		{
 			std::stringstream strstr;
 			strstr << "Number " << (i + 1);
 			auto distanceOutPort = createNumberOutput(strstr.str());
+			m_distancePorts.push_back(distanceOutPort);
 		}
 	}
 
@@ -58,22 +60,26 @@ void act::proc::MultiBodyPositionsProcNode::draw() {
 
 	ImGui::Combo("Joint Selection", &m_currentJoint, m_jointSelection, IM_ARRAYSIZE(m_jointSelection));
 
-
 	endNodeDraw();
 }
 
 
-void act::proc::MultiBodyPositionsProcNode::onBodies(room::BodyRefList event)
-{
+void act::proc::MultiBodyPositionsProcNode::onBodies(room::BodyRefList event) {
+	if (event.empty() || event.size() == 0)
+		return;
+
 	if (event.size() > 4)
 		event.resize(4);
 
 	for (int i = 0; i < event.size(); i++) {
+		if (!event[i])
+			continue;
+
 		float minDistance = 1000.f;
 
 		auto pos = onSkeleton(event[i]);
 		for (int j = 0; j < event.size(); j++) {
-			if (i == j)
+			if (!event[j] || i == j)
 				continue;
 
 			float distance = ci::distance(pos, onSkeleton(event[j]));

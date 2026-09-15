@@ -30,7 +30,10 @@ act::proc::BackgroundSubstractionProcNode::BackgroundSubstractionProcNode() : Pr
 
 	m_bgModel = cv::createBackgroundSubtractorMOG2(m_historyLength, m_threshold, m_detectShadows);
 
-	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
+	auto image = createImageInput("image", [&](cv::UMat mat) {
+		try { this->onMat(mat); }
+		catch (cv::Exception exc) { CI_LOG_E(exc.what()); }
+	});
 
 	m_fgMaskPort = createImageOutput("foreground mask");
 	m_fgCutoutPort = createImageOutput("foreground cutout");
@@ -93,18 +96,19 @@ void act::proc::BackgroundSubstractionProcNode::draw() {
 }
 
 void act::proc::BackgroundSubstractionProcNode::onMat(cv::UMat event) {
-	bool expected = false;
-	if (!m_isProcessing.compare_exchange_strong(expected, true))
-		return;
-	m_isProcessing = false;
 
-	if(event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
-		return;
-	if (m_foregroundMask.empty()) {
-		m_foregroundMask.create(event.size(), event.type());
+	try {
+		if (event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
+			return;
+		if (m_foregroundMask.empty()) {
+			m_foregroundMask = cv::UMat(event.size(), event.type(), cv::Scalar(0));
+		}
+		else if (m_foregroundMask.size() != event.size() || m_foregroundMask.type() != event.type())
+			return;
 	}
-	else if (m_foregroundMask.size() != event.size() || m_foregroundMask.type() != event.type())
-		return;
+	catch (cv::Exception exc) {
+		CI_LOG_E(exc.what());
+	}
 
 	try {
 		m_bgModel->apply(event, m_foregroundMask, (double)m_learningRate);
@@ -131,7 +135,11 @@ void act::proc::BackgroundSubstractionProcNode::onMat(cv::UMat event) {
 	m_fgCutoutPort->send(m_foregroundCutout);
 	m_fgMaskPort->send(m_foregroundMask);
 
-	ci::app::App::get()->dispatchAsync([this]() {
+	std::weak_ptr<BackgroundSubstractionProcNode> weakSelf = std::static_pointer_cast<BackgroundSubstractionProcNode>(shared_from_this());
+	ci::app::App::get()->dispatchAsync([weakSelf, this]() {
+		if (!weakSelf.lock())
+			return;
+
 		if (!m_foregroundMask.empty())
 			m_texture_fgMask = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundMask));
 		if(!m_backgroundCutout.empty())

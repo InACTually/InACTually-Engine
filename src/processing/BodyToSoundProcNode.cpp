@@ -125,12 +125,10 @@ float act::proc::BodyToSoundProcNode::calcLocalMovement(room::BodyRef body) {
 		return 0;
 	}
 
-	int numJoints = body->joints.size();
-
 	float totalDist = 0.0f;
 	float distX, distY, distZ;
 
-	for (int i = 0; i < numJoints; i++){
+	for (int i = 0; i < body->joints.size(); i++){
 		glm::vec3 currJointPos = body->joints[i]->position;
 		glm::vec3 oldJointPos = m_oldBody->joints[i]->position;
 
@@ -145,7 +143,7 @@ float act::proc::BodyToSoundProcNode::calcLocalMovement(room::BodyRef body) {
 		return m_localMovement/m_scaleValue;
 	}
 
-	return totalDist/(float)numJoints;
+	return totalDist/(float)body->joints.size();
 }
 
 float act::proc::BodyToSoundProcNode::calcGlobalMovement(room::BodyRef body) {

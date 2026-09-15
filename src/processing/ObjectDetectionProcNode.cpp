@@ -147,6 +147,8 @@ void act::proc::ObjectDetectionProcNode::onMat(cv::UMat event) {
     
 
     m_thread = std::thread([&](cv::UMat mat) {
+        if (event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
+            return;
 
         cv::Mat input_blob = cv::dnn::blobFromImage(mat, 1 / 255.0, cv::Size(416, 416), false, false);
         m_network.setInput(input_blob, "data");

@@ -54,17 +54,8 @@ namespace act {
 
 			int m_currentJoint;
 
-			OutputPortRef<glm::vec3>	m_position1OutPort;
-			OutputPortRef<glm::vec3>	m_position2OutPort;
-			OutputPortRef<glm::vec3>	m_position3OutPort;
-			OutputPortRef<glm::vec3>	m_position4OutPort;
-			std::vector<OutputPortRef<glm::vec3>> m_positionPorts;
-
-			OutputPortRef<float>	m_distance1OutPort;
-			OutputPortRef<float>	m_distance2OutPort;
-			OutputPortRef<float>	m_distance3OutPort;
-			OutputPortRef<float>	m_distance4OutPort;
-			std::vector<OutputPortRef<float>> m_distancePorts;
+			std::vector<OutputPortRef<glm::vec3>>	m_positionPorts;
+			std::vector<OutputPortRef<float>>		m_distancePorts;
 
 			static bool	m_registered;
 
