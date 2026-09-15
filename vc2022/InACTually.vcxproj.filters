@@ -17,6 +17,9 @@
     <Filter Include="Source Files\main">
       <UniqueIdentifier>{b044206c-e02e-4b85-9eb7-4000029afbbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tests">
+      <UniqueIdentifier>{79fb4788-98be-4ee8-b9da-6dee1e8b51c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\modules\ModuleBase.cpp">
@@ -55,8 +58,11 @@
     <ClCompile Include="..\src\processing\ProcNodeRegistry.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
-    <ClCompile Include="src\processing\ProcNodeRegistryTests.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\tests\ProcNodeTests.cpp">
+      <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tests\ModuleTests.cpp">
+      <Filter>Source Files\tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

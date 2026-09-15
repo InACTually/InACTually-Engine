@@ -51,7 +51,7 @@ void testPort(act::proc::PortBaseRef port) {
 	auto bodyPort       = act::proc::toBodyInputPort(port);
 	auto bodyListPort   = act::proc::toBodyListInputPort(port);
 
-    ci::Json testJson = ci::app::getAssetPath("bodies.json");;
+    ci::Json testJson = ci::app::getAssetPath("bodies.json");
 
     ci::osc::Message testMsg("/test");
 
@@ -108,93 +108,105 @@ void testPort(act::proc::PortBaseRef port) {
     for (int i = 0; i < 15; i++) {
 		testBody = act::room::Body::create();
 		testBody->setUID("testBody" + std::to_string(i));
-        testBodies.push_back(testBody);
+        //testBodies.push_back(testBody);
     }
 
     switch (port->getType()) {
-        case act::proc::PortType::PT_JSON: 
-            jsonPort->recieve(ci::Json::object());
-            jsonPort->recieve(nullptr);
-            jsonPort->recieve(ci::Json::array());
-            jsonPort->recieve(ci::Json::parse("{}"));
-            jsonPort->recieve(ci::Json::parse("{ value: 42 }"));
-            jsonPort->recieve(testJson);
-            break;
-        case act::proc::PortType::PT_OSC: 
-            oscPort->recieve(ci::osc::Message());
-            testMsg.append(42);
-			oscPort->recieve(testMsg);
-            testMsg.append("42");
-            oscPort->recieve(testMsg);
-            break;
-        case act::proc::PortType::PT_BOOL:
-            for (auto b : testBools)
-				boolPort->recieve(b);
-            break;
-        case act::proc::PortType::PT_NUMBER: 
-            for (act::proc::number n : testNumbers)
-				numberPort->recieve(n);
-        case act::proc::PortType::PT_NUMBERLIST: break;
-            numberListPort->recieve(act::proc::numberList{});
-            numberListPort->recieve(testNumbers);
-        case act::proc::PortType::PT_VEC2: 
-			for (auto&& v : testVec2s)
-				vec2Port->recieve(v);
-            break;
-        case act::proc::PortType::PT_VEC2LIST:
-			vec2ListPort->recieve(act::proc::vec2List{});
-			vec2ListPort->recieve(testVec2s);
-            break;
-        case act::proc::PortType::PT_VEC3: 
-			for (auto&& v : testVec3s)
-				vec3Port->recieve(v);
-            break;
-        case act::proc::PortType::PT_VEC3LIST:
-			vec3ListPort->recieve(act::proc::vec3List{});
-			vec3ListPort->recieve(testVec3s);
-            break;
-        case act::proc::PortType::PT_QUAT: 
-			for (auto&& q : testQuats)
-				quatPort->recieve(q);
-            break;
-        case act::proc::PortType::PT_COLOR:
-			for (auto&& c : testColors)
-				colorPort->recieve(c);
-            break;
-        case act::proc::PortType::PT_COLORLIST:
-			colorListPort->recieve(std::vector<ci::Color>{});
-			colorListPort->recieve(testColors);
-            break;
-        case act::proc::PortType::PT_TEXT:
-			for (auto&& t : testTexts)
-				textPort->recieve(t);
-            break;
-		case act::proc::PortType::PT_IMAGE:
-            for (auto&& img : testImages)
-				imagePort->recieve(img);
-            break;
-		case act::proc::PortType::PT_AUDIO:
-			for (auto&& audio : testAudioBuffers)
-				audioPort->recieve(audio);
-            break;
-		case act::proc::PortType::PT_AUDIONODE: 
-			for (auto&& audioNode : testAudioNodes)
-				audioNodePort->recieve(audioNode);
-            break;
-		case act::proc::PortType::PT_FEATURE: 
-			for (auto&& feature : testFeatures)
-				featurePort->recieve(feature);
-            break;
-		case act::proc::PortType::PT_FEATURELIST:
-			featureListPort->recieve(std::vector<act::proc::feature>{});
-			featureListPort->recieve(testFeatures);
-            break;
-		case act::proc::PortType::PT_BODY: 
-			for (auto&& body : testBodies)
-				bodyPort->recieve(body);
+    case act::proc::PortType::PT_JSON:
+        jsonPort->recieve(ci::Json::object()); act::proc::FlowRuntime::wait();
+        jsonPort->recieve(nullptr); act::proc::FlowRuntime::wait();
+        jsonPort->recieve(ci::Json::array()); act::proc::FlowRuntime::wait();
+        jsonPort->recieve(ci::Json::parse("{}")); act::proc::FlowRuntime::wait();
+        jsonPort->recieve(ci::Json::parse(R"({ "value": 42 })")); act::proc::FlowRuntime::wait();
+        jsonPort->recieve(testJson);
+        break;
+    case act::proc::PortType::PT_OSC:
+        oscPort->recieve(ci::osc::Message()); act::proc::FlowRuntime::wait();
+        testMsg.append(42);
+        oscPort->recieve(testMsg); act::proc::FlowRuntime::wait();
+        testMsg.append("42");
+        oscPort->recieve(testMsg);
+        break;
+    case act::proc::PortType::PT_BOOL:
+        for (auto b : testBools) {
+            boolPort->recieve(b);
+        }
+        break;
+    case act::proc::PortType::PT_NUMBER:
+        for (act::proc::number n : testNumbers) {
+            numberPort->recieve(n); act::proc::FlowRuntime::wait();
+        }
+    case act::proc::PortType::PT_NUMBERLIST: break;
+        numberListPort->recieve(act::proc::numberList{}); act::proc::FlowRuntime::wait();
+        numberListPort->recieve(testNumbers);
+    case act::proc::PortType::PT_VEC2:
+        for (auto&& v : testVec2s) {
+            vec2Port->recieve(v); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_VEC2LIST:
+        vec2ListPort->recieve(act::proc::vec2List{}); act::proc::FlowRuntime::wait();
+        vec2ListPort->recieve(testVec2s);
+        break;
+    case act::proc::PortType::PT_VEC3:
+        for (auto&& v : testVec3s) {
+            vec3Port->recieve(v); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_VEC3LIST:
+        vec3ListPort->recieve(act::proc::vec3List{}); act::proc::FlowRuntime::wait();
+        vec3ListPort->recieve(testVec3s);
+        break;
+    case act::proc::PortType::PT_QUAT:
+        for (auto&& q : testQuats) {
+            quatPort->recieve(q); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_COLOR:
+        for (auto&& c : testColors) {
+            colorPort->recieve(c); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_COLORLIST:
+        colorListPort->recieve(std::vector<ci::Color>{}); act::proc::FlowRuntime::wait();
+        colorListPort->recieve(testColors);
+        break;
+    case act::proc::PortType::PT_TEXT:
+        for (auto&& t : testTexts) {
+            textPort->recieve(t); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_IMAGE:
+        for (auto&& img : testImages) {
+            imagePort->recieve(img); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_AUDIO:
+        for (auto&& audio : testAudioBuffers) {
+            audioPort->recieve(audio); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_AUDIONODE:
+        for (auto&& audioNode : testAudioNodes) {
+            audioNodePort->recieve(audioNode); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_FEATURE:
+        for (auto&& feature : testFeatures) {
+            featurePort->recieve(feature); act::proc::FlowRuntime::wait();
+        }
+        break;
+    case act::proc::PortType::PT_FEATURELIST:
+        featureListPort->recieve(std::vector<act::proc::feature>{}); act::proc::FlowRuntime::wait();
+        featureListPort->recieve(testFeatures);
+        break;
+    case act::proc::PortType::PT_BODY:
+        for (auto&& body : testBodies) {
+            bodyPort->recieve(body); act::proc::FlowRuntime::wait();
+        }
             break;
 		case act::proc::PortType::PT_BODYLIST:
-			bodyListPort->recieve(std::vector<act::room::BodyRef>{});
+			bodyListPort->recieve(std::vector<act::room::BodyRef>{}); act::proc::FlowRuntime::wait();
 			bodyListPort->recieve(testBodies);
             break;
     default:
