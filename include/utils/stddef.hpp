@@ -113,6 +113,7 @@ namespace act {
 		glm::ivec2	guiSize			= glm::ivec2(600, 400);	/**< window size if performace-GUI will be shown */
 		bool		showDebugGUI	= false;			/**< show debug-GUI */
 		bool		fullscreen		= false;			/**< start in fullscreen */	
+		bool		runTests		= false;		/**< run tests on startup */
 	};
 	/**
 	* @brief Settings contain all fundamental parameter (SpectralParameter)

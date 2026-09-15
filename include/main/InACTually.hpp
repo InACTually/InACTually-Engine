@@ -140,6 +140,7 @@ namespace act {
 		bool								m_prevDrawGUI;
 
 		bool								m_drawDebug;
+		bool								m_runTests;
 
 		ci::gl::TextureRef					m_splashScreenTex;
 

@@ -111,6 +111,10 @@ void InACTually::init()
 	m_prevDrawGUI = m_drawGUI;
 	m_drawDebug = false;
 
+	m_runTests = Settings::get().runTests;
+#ifdef RUN_TESTS
+	m_runTests = true;
+#endif
 
 	auto options = ImGui::Options().window(ci::app::getWindow());
 	//options(true);
@@ -245,11 +249,13 @@ void InACTually::draw()
 			
 			ci::gl::pushMatrices();
 			
-			doctest::Context context;
-			context.setOption("exit", false);
-			int res = context.run(); // run doctest
-			if (context.shouldExit())
-				onClose();
+			if (m_runTests) {
+				doctest::Context context;
+				context.setOption("exit", false);
+				int res = context.run(); // run doctest
+				if (context.shouldExit())
+					onClose();
+			}
 			
 			ci::gl::popMatrices();
 
