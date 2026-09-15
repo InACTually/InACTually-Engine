@@ -69,16 +69,7 @@
     <ClCompile Include="..\src\processing\SpectrumProcNode.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\HandProcNode.cpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\HeadProcNode.cpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\processing\KinectProcNode.cpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\SkeletonFilterProcNode.cpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\DMXDimmerProcNode.cpp">
@@ -323,16 +314,7 @@
     <ClInclude Include="..\include\processing\SpectrumProcNode.hpp">
       <Filter>Source Files\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\processing\HandProcNode.hpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\HeadProcNode.hpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\processing\KinectProcNode.hpp">
-      <Filter>Source Files\azure kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\SkeletonFilterProcNode.hpp">
       <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\DMXDimmerProcNode.hpp">
