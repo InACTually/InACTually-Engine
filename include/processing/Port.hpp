@@ -279,10 +279,28 @@ namespace act {
 			}
 
 		protected:
+			std::atomic_bool m_isProcessing = false;
+
 			tbb::flow::function_node<std::pair<T, K>, tbb::flow::continue_msg> m_functionNode {
 				FlowRuntime::getGraph(), tbb::flow::unlimited, [&](std::pair<T, K> input) {
-					executeRecieve(input.first, input.second);
-					//return tbb::flow::continue_msg{};
+					bool expected = false;
+					if (!m_isProcessing.compare_exchange_strong(expected, true))
+						return tbb::flow::continue_msg{};
+
+					try {
+						executeRecieve(input.first, input.second);
+					}
+					catch (const cv::Exception& exc) {
+						CI_LOG_E("InputPort " + PortBase::getName() + ": " + exc.what());
+					}
+					catch (const std::exception& exc) {
+						CI_LOG_E("InputPort " + PortBase::getName() + ": " + exc.what());
+					}
+					catch (...) {
+						CI_LOG_E("InputPort " + PortBase::getName() + ": Unknown exception");
+					}
+
+					m_isProcessing = false;
 				}
 			};
 
