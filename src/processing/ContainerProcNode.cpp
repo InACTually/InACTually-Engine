@@ -47,8 +47,9 @@ void act::proc::ContainerProcNode::update() {
 			m_nodes.erase(m_nodes.begin() + i);
 			continue;
 		}
-		if(m_nodes[i]->isEnabled())
-			m_nodes[i]->update();
+		if (m_nodes[i]->isEnabled()) {
+			m_functionNode.try_put(m_nodes[i]);
+		}
 
 		i++;
 	}
@@ -400,7 +401,7 @@ bool act::proc::ContainerProcNode::deleteNodeByUID(UID uid)
 
 		return true;
 	}
-
+	 
 	return false;
 };
 

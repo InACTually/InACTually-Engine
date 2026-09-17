@@ -112,18 +112,25 @@ namespace act {
 			bool	m_updateNodePosition;
 
 			//nodes/links in current container
-			std::vector<ProcNodeBaseRef>						m_nodes;
+			std::vector<ProcNodeBaseRef>					m_nodes;
  			std::vector<std::pair<int, int>>				m_links;
 			act::proc::PortBaseRef findPortByRuntimeID(int id);
 			bool disconnectLink(std::pair<int, int> link);
   
-
 			std::vector<std::pair<act::UID, ImVec2>>		m_nodePositions;
   
 
-			std::function <void(ContainerProcNode*)>			m_onFocusCallback;
+			std::function <void(ContainerProcNode*)>		m_onFocusCallback;
 
 			ImNodesEditorContext*							m_editorContext;
+
+			tbb::flow::function_node<act::proc::ProcNodeBaseRef, tbb::flow::continue_msg> m_functionNode {
+				FlowRuntime::getGraph(), tbb::flow::unlimited, [&](act::proc::ProcNodeBaseRef node) { 
+					ci::ThreadSetup threadSetup;
+					node->update();
+					return tbb::flow::continue_msg{};  
+				}
+			};
 
  
 		}; using ContainerProcNodeRef = std::shared_ptr<ContainerProcNode>;
