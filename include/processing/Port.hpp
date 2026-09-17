@@ -231,11 +231,11 @@ namespace act {
 
 		public:
 			InputPort(PortType type, std::string name, std::function<void(T)> recieveCallback) 
-				: Port<T, K>(type, name), m_recieveFunc(recieveCallback) {};
+				: Port<T, K>(type, name), m_recieveFunc(recieveCallback) { init(); };
 			InputPort(PortType type, std::string name, std::function<void(T, std::string)> recieveCallback) 
-				: Port<T, K>(type, name), m_namedRecieveFunc(recieveCallback), m_sendName(true) {};
+				: Port<T, K>(type, name), m_namedRecieveFunc(recieveCallback), m_sendName(true) { init(); };
 			InputPort(PortType type, std::string name, std::function<void(T, std::string)> recieveCallback, bool sendUID) 
-				: Port<T, K>(type, name), m_namedRecieveFunc(recieveCallback), m_sendUID(sendUID), m_sendName(!sendUID) {};
+				: Port<T, K>(type, name), m_namedRecieveFunc(recieveCallback), m_sendUID(sendUID), m_sendName(!sendUID) { init(); };
 
 			static std::shared_ptr<InputPort<T, K>> create(PortType type, std::string name, std::function<void(T)> recieveCallback)
 			{
@@ -248,11 +248,11 @@ namespace act {
 			};
 
 			InputPort(PortType type, std::string name, std::function<void(T, K)> recieveCallback)
-				: Port<T, K>(type, name), m_recieveCtxFunc(recieveCallback) { m_wantsContext = true; };
+				: Port<T, K>(type, name), m_recieveCtxFunc(recieveCallback) { m_wantsContext = true; init(); };
 			InputPort(PortType type, std::string name, std::function<void(T, std::string, K)> recieveCallback)
-				: Port<T, K>(type, name), m_namedRecieveCtxFunc(recieveCallback), m_sendName(true) { m_wantsContext = true; };
+				: Port<T, K>(type, name), m_namedRecieveCtxFunc(recieveCallback), m_sendName(true) { m_wantsContext = true; init(); };
 			InputPort(PortType type, std::string name, std::function<void(T, std::string, K)> recieveCallback, bool sendUID)
-				: Port<T, K>(type, name), m_namedRecieveCtxFunc(recieveCallback), m_sendUID(sendUID), m_sendName(!sendUID) { m_wantsContext = true; };
+				: Port<T, K>(type, name), m_namedRecieveCtxFunc(recieveCallback), m_sendUID(sendUID), m_sendName(!sendUID) { m_wantsContext = true; init(); };
 
 			static std::shared_ptr<InputPort<T, K>> create(PortType type, std::string name, std::function<void(T, K)> recieveCallback) 
 			{ 
@@ -263,6 +263,10 @@ namespace act {
 			{ 
 				return std::make_shared<act::proc::InputPort<T, K>>(type, name, recieveCallback); 
 			};
+
+			void init() {
+				tbb::flow::make_edge(m_overwriteNode, m_functionNode);
+			}
 			
 			void draw(int width, bool noCaption = false) override {
 				//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (act::Settings::get().fontSize * 0.5f));
@@ -275,17 +279,20 @@ namespace act {
 			}
 
 			void recieve(T data, K context = nullptr) override {
-				m_functionNode.try_put({ std::move(data), std::move(context) });
+				m_overwriteNode.try_put({ std::move(data), std::move(context) });
 			}
 
 		protected:
 			std::atomic_bool m_isProcessing = false;
 
+			tbb::flow::overwrite_node<std::pair<T, K>> m_overwriteNode{ FlowRuntime::getGraph() };
 			tbb::flow::function_node<std::pair<T, K>, tbb::flow::continue_msg> m_functionNode {
-				FlowRuntime::getGraph(), tbb::flow::unlimited, [&](std::pair<T, K> input) {
+				FlowRuntime::getGraph(), tbb::flow::serial, [&](std::pair<T, K> input) {
 					bool expected = false;
 					if (!m_isProcessing.compare_exchange_strong(expected, true))
 						return tbb::flow::continue_msg{};
+
+					ci::ThreadSetup threadSetup;
 
 					try {
 						executeRecieve(input.first, input.second);
@@ -301,6 +308,7 @@ namespace act {
 					}
 
 					m_isProcessing = false;
+					return tbb::flow::continue_msg{};
 				}
 			};
 
