@@ -98,8 +98,9 @@ These third party projects may contain other projects to function. Please refer 
 
 ### ImGui
 - License: [MIT License](https://github.com/ocornut/imgui/blob/master/LICENSE.txt)
-- Copyright (c) 2014-2025 Omar Cornut
+- Copyright (c) 2014-2026 Omar Cornut
 - Source on [GitHub](https://github.com/ocornut/imgui)
+- Notes: not included, comes with Cinder (may need an update)
 
 ### imnodes
 - License: [MIT License](3rd/imnodes/LICENSE.md)

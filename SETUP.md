@@ -9,8 +9,8 @@ Most of the dependencies are included in this repo (see the third-party notice b
 
 ## Needed Dependencies
 
-+ [Cinder - 0.9.4dev](https://github.com/cinder/Cinder) [Jan'26] (or possibly newer) \
-Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folder (same hierarchy level), so that it can be relatively found. You need to replace the ImGui files with its [docking-branch](https://github.com/ocornut/imgui/tree/docking) [Jan'26]. After that, your want to compile Cinder with dynamic runtime linking (in VisualStudio something like: Proj.-settings -> C/C++ -> CodeGeneration -> runtime lib -> "-DLL"):
++ [Cinder - 0.9.4dev](https://github.com/cinder/Cinder) [Mar'26] (or possibly newer) \
+Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folder (same hierarchy level), so that it can be relatively found. You need to replace the ImGui files with its [docking-branch](https://github.com/ocornut/imgui/tree/docking) [Sep'26]. After that, your want to compile Cinder with dynamic runtime linking (in VisualStudio something like: Proj.-settings -> C/C++ -> CodeGeneration -> runtime lib -> "-DLL"):
     - for Release "Multithreaded-DLL (/MD)" name the output folder "Release_MD\..\" (e.g. name the configuration accordingly)
     - for Debug "Multithreaded-Debug-DLL (/MDd)" name the output folder "Debug_MD\..\" likewise
 
