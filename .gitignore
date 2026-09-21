@@ -29,9 +29,10 @@ recordings/
 ./design/
 logs/
 
-3rd/OpenCV4/etc/
-3rd/OpenCV4/lib/
-3rd/OpenCV4/include/opencv2/
+3rd/OpenCV4/
+3rd/OpenCV5/etc/
+3rd/OpenCV5/lib/
+3rd/OpenCV5/include/opencv2/
 3rd/cppzmq/examples/
 3rd/cppzmq/demo/
 3rd/cppzmq/tests/
@@ -55,6 +56,5 @@ vc2022/enc_temp_folder/
 assets/recentLLM.json
 projects/
 3rd/oneTBB/lib/
-3rd/OpenCV5/
 3rd/doctest/doc/
 3rd/doctest/examples/
