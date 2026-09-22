@@ -33,6 +33,8 @@
 #include "ModuleBase.hpp"
 #include "WindowData.hpp"
 
+#include "ProcNodeBase.hpp"
+
 #include "cinder/audio/ContextPortAudio.h"
 #include "cinder/audio/DeviceManagerPortAudio.h"
 
@@ -66,6 +68,9 @@ InACTually::InACTually()
 	catch (...) {
 
 	}
+
+	m_mainCtx = ci::gl::context();
+	m_bgCtx = ci::gl::Context::create(m_mainCtx);
 
 	m_splashScreenTex = ci::gl::Texture::create(*ci::Surface::create(ci::loadImage(ci::app::getAssetPath("design/splash.png"))));
 
@@ -137,6 +142,7 @@ void InACTually::init()
 	m_networkMgr = net::NetworkManager::get(m_roomMgrs);
 
 	for (auto&& module : reg_modules) {
+		module->setGLContext(m_bgCtx);
 		module->setup(m_roomMgrs, m_networkMgr);
 	}
 
@@ -282,11 +288,13 @@ void InACTually::draw()
 		}
 
 		ci::gl::color(ci::Color::white());
-		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), false).scaledCentered(1.0f);
+		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), true).scaledCentered(1.0f);
 		ci::gl::draw(m_splashScreenTex, destRect);
 
-		return;
+		return;	
 	}
+
+	m_mainCtx->makeCurrent();
 
 	auto windowData = ci::app::getWindow()->getUserData<WindowData>();
 	if (windowData->getUID() != m_mainWindowUID) {

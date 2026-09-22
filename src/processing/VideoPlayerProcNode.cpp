@@ -19,6 +19,7 @@
 
 #include <opencv2/core/opengl.hpp>
 
+
 act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlayer") {
 	m_videoSize = glm::ivec2(1920, 1080);
 	m_drawSize = glm::ivec2(m_videoSize.x * 0.25, m_videoSize.y * 0.25);
@@ -45,7 +46,6 @@ act::proc::VideoPlayerProcNode::~VideoPlayerProcNode() {
 }
 
 void act::proc::VideoPlayerProcNode::setup(act::room::RoomManagersRef roomMgrs) {
-
 }
 
 void act::proc::VideoPlayerProcNode::update() {
@@ -70,6 +70,7 @@ void act::proc::VideoPlayerProcNode::update() {
 
 	if (m_isPlaying && m_video && m_video->getTexture()) {
 		
+		//m_glCtx->makeCurrent();
 		auto frameTexture = m_video->getTexture();
 
 		if (!frameTexture)
@@ -77,46 +78,48 @@ void act::proc::VideoPlayerProcNode::update() {
 
 		m_videoTexture = frameTexture;
 
-		cv::UMat frame;
-		try {
-			cv::ogl::Texture2D glFrame(frameTexture->getHeight(), frameTexture->getWidth(), cv::ogl::Texture2D::RGBA, frameTexture->getId(), false);
-			cv::ogl::convertFromGLTexture2D(glFrame, frame);
-		}
-		catch (const cv::Exception& e) {
-			CI_LOG_E("OpenCV OGL error: " << e.what());
-			return;
-		}
-
-		cv::flip(frame, frame, -1);
-
-		if (m_fadeAt.isComplete())
-			m_isFading = false;
-		if (m_isFading && m_videoFadeFrom && m_videoFadeFrom->getTexture()) {
-			cv::UMat fromFrame;
-			auto fromFrameTexture = m_videoFadeFrom->getTexture(); 
+		ci::app::App::get()->dispatchAsync([this, frameTexture]() {
+			cv::UMat frame;
 			try {
-				cv::ogl::Texture2D glfromFrame(fromFrameTexture->getHeight(), fromFrameTexture->getWidth(), cv::ogl::Texture2D::RGBA, fromFrameTexture->getId(), false);
-				cv::ogl::convertFromGLTexture2D(glfromFrame, fromFrame);
+				cv::ogl::Texture2D glFrame(frameTexture->getHeight(), frameTexture->getWidth(), cv::ogl::Texture2D::RGBA, frameTexture->getId(), false);
+				cv::ogl::convertFromGLTexture2D(glFrame, frame);
 			}
 			catch (const cv::Exception& e) {
 				CI_LOG_E("OpenCV OGL error: " << e.what());
 				return;
 			}
 
-			cv::addWeighted(frame, m_fadeAt, fromFrame, 1.0f - m_fadeAt, 0.0f, frame);
-		}
+			cv::flip(frame, frame, -1);
 
-		if (m_video->isDone()) {
-			if (!m_isLooping) {
-				m_isPlaying = false;
+			if (m_fadeAt.isComplete())
+				m_isFading = false;
+			if (m_isFading && m_videoFadeFrom && m_videoFadeFrom->getTexture()) {
+				cv::UMat fromFrame;
+				auto fromFrameTexture = m_videoFadeFrom->getTexture();
+				try {
+					cv::ogl::Texture2D glfromFrame(fromFrameTexture->getHeight(), fromFrameTexture->getWidth(), cv::ogl::Texture2D::RGBA, fromFrameTexture->getId(), false);
+					cv::ogl::convertFromGLTexture2D(glfromFrame, fromFrame);
+				}
+				catch (const cv::Exception& e) {
+					CI_LOG_E("OpenCV OGL error: " << e.what());
+					return;
+				}
+
+				cv::addWeighted(frame, m_fadeAt, fromFrame, 1.0f - m_fadeAt, 0.0f, frame);
 			}
-			else {
-				m_video->seekToStart();
+
+			if (m_video->isDone()) {
+				if (!m_isLooping) {
+					m_isPlaying = false;
+				}
+				else {
+					m_video->seekToStart();
+				}
 			}
-		}
-		if (!frame.empty()) {
-			m_videoImageOutPort->send(frame);
-		}
+			if (!frame.empty()) {
+				m_videoImageOutPort->send(frame);
+			}
+		});
 	}
 }
 
