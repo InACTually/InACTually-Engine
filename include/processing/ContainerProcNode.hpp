@@ -124,6 +124,7 @@ namespace act {
 
 			ImNodesEditorContext*							m_editorContext;
 
+			/* // for MT nodes' update, but give OpenGL/OpenCL context issues
 			tbb::flow::function_node<act::proc::ProcNodeBaseRef, tbb::flow::continue_msg> m_functionNode {
 				FlowRuntime::getGraph(), tbb::flow::unlimited, [&](act::proc::ProcNodeBaseRef node) { 
 					ci::ThreadSetup threadSetup;
@@ -131,6 +132,7 @@ namespace act {
 					return tbb::flow::continue_msg{};  
 				}
 			};
+			*/
 
  
 		}; using ContainerProcNodeRef = std::shared_ptr<ContainerProcNode>;

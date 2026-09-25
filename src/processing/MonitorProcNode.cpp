@@ -4,7 +4,7 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021Ã¯Â¿Â½2025 Lars Engeln, Fabian TÃ¯Â¿Â½pfer
+	Copyright (c) 2021-2025 Lars Engeln, Fabian Töpfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
@@ -27,6 +27,8 @@ act::proc::MonitorProcNode::MonitorProcNode() : ProcNodeBase("Monitor") {
 	m_display = false;
 	m_displayScale = 0.8f;
 	m_fullscreen = false;
+
+	m_textureHelper = TextureHelper::create();
 	
 	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
 
@@ -81,11 +83,11 @@ void act::proc::MonitorProcNode::draw() {
 		}
 	}
 	
-	if (m_show && m_texture) {
+	if (m_show && !m_textureHelper->getTexture().empty()) {
 		ci::gl::pushMatrices();
 		//ci::gl::rotate(ci::toRadians(180.0f));
 		
-		ImGui::Image(m_texture, m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
 		ImGui::Indent(adaptSize(m_drawSize).x - m_drawSize.x);
 
 		ci::gl::popMatrices();
@@ -97,39 +99,21 @@ void act::proc::MonitorProcNode::draw() {
 void act::proc::MonitorProcNode::onMat(cv::UMat event) {
 	m_imagePort->send(event);
 
-	// Guard against piling up dispatched lambdas / GL texture creations when the
-	// producer (capture thread) is faster than the main thread can consume them.
-	bool expected = false;
-	if (!m_frameInFlight.compare_exchange_strong(expected, true))
-		return;
 
-	ci::app::App::get()->dispatchAsync([this, event]() {
-		m_frameInFlight = false;
+	if (m_show || m_display || m_fullscreen) {
+		m_textureHelper->toTextureAsync(event, [this](cv::ogl::Texture2D texture) {
 
-		if (m_show || m_display || m_fullscreen) {
-			try {
-				cv::cvtColor(event, m_rgbaBuffer, cv::COLOR_BGR2RGBA);
-
-				m_glTex = cv::ogl::Texture2D(m_rgbaBuffer.rows, m_rgbaBuffer.cols, cv::ogl::Texture2D::RGBA, false);
-				cv::ogl::convertToGLTexture2D(m_rgbaBuffer, m_glTex);
-				m_texture = ci::gl::Texture2d::create(GL_TEXTURE_2D, m_glTex.texId(), m_glTex.cols(), m_glTex.rows(), false);
-			}
-			catch (const cv::Exception& e) {
-				CI_LOG_E("OpenCV OGL error: " << e.what());
-				return;
-			}
-
-			m_drawSize = glm::ivec2(m_texture->getWidth(), m_texture->getHeight());
+			m_drawSize = glm::ivec2(texture.cols(), texture.rows());
 
 			auto windowData = ci::app::getWindow()->getUserData<act::WindowData>();
 
-			if (m_fullscreen) {
-				windowData->setFullscreenTex(m_texture);
-			}
-		}
-		if (m_display)
-			m_texturePort->send(m_texture);
-	});
+			if (m_fullscreen)
+				windowData->setFullscreenTex(m_textureHelper->getTextureRef());
+			
+			if (m_display)
+				m_texturePort->send(m_textureHelper->getTextureRef());
+		});
+	}
 }
 
 glm::ivec2 act::proc::MonitorProcNode::adaptSize(glm::ivec2 size) {

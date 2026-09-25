@@ -91,9 +91,11 @@ void InACTually::init()
 
 	int numOfThreads = oneapi::tbb::this_task_arena::max_concurrency();
 
-	CI_LOG_I("has OpenCl " << cv::ocl::haveOpenCL() << ", has CUDA " << cv::cuda::getCudaEnabledDeviceCount());
+	CI_LOG_I("has OpenCL " << cv::ocl::haveOpenCL() << ", has CUDA " << cv::cuda::getCudaEnabledDeviceCount());
 	CI_LOG_I("has AMD FFT " << cv::ocl::haveAmdFft() << ", has AMD BLAS " << cv::ocl::haveAmdBlas() << ", has SVM " << cv::ocl::haveSVM());
 	CI_LOG_I("running with " << numOfThreads << " worker threads" << "\n");
+
+	CI_LOG_I("OpenCV " << cv::getBuildInformation());
 
 	oneapi::tbb::global_control c(oneapi::tbb::global_control::max_allowed_parallelism,	numOfThreads);
 
