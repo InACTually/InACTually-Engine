@@ -22,6 +22,7 @@
 #include <atomic>
 #include <opencv2/core/opengl.hpp>
 
+#include "TextureHelper.hpp"
 
 namespace act {
 	namespace proc {
@@ -51,7 +52,7 @@ namespace act {
 			act::room::DisplayManagerRef		m_displayMgr;
 			act::room::ProjectorManagerRef		m_projectorMgr;
 
-			ci::gl::Texture2dRef				m_texture;
+			TextureHelperRef					m_textureHelper;
 			glm::ivec2 adaptSize(glm::ivec2 size);
 			float								m_displayScale;
 

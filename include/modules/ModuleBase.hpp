@@ -59,9 +59,13 @@ namespace act {
 			bool getIsActive() { return m_isActive; };
 			void setIsActive(bool isActive) { m_isActive = isActive; };
 
+			void setGLContext(ci::gl::ContextRef glContext) { m_glContext = glContext; };
+
 		protected:
 			std::string m_name;
 			bool m_isActive = true;
+
+			ci::gl::ContextRef m_glContext;
 
 		}; using ModuleBaseRef = std::shared_ptr<ModuleBase>;
 

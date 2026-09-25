@@ -33,6 +33,8 @@
 #include "ModuleBase.hpp"
 #include "WindowData.hpp"
 
+#include "ProcNodeBase.hpp"
+
 #include "cinder/audio/ContextPortAudio.h"
 #include "cinder/audio/DeviceManagerPortAudio.h"
 
@@ -67,6 +69,9 @@ InACTually::InACTually()
 
 	}
 
+	m_mainCtx = ci::gl::context();
+	m_bgCtx = ci::gl::Context::create(m_mainCtx);
+
 	m_splashScreenTex = ci::gl::Texture::create(*ci::Surface::create(ci::loadImage(ci::app::getAssetPath("design/splash.png"))));
 
 	glm::ivec2 size = m_splashScreenTex->getSize();
@@ -86,9 +91,11 @@ void InACTually::init()
 
 	int numOfThreads = oneapi::tbb::this_task_arena::max_concurrency();
 
-	CI_LOG_I("has OpenCl " << cv::ocl::haveOpenCL() << ", has CUDA " << cv::cuda::getCudaEnabledDeviceCount());
+	CI_LOG_I("has OpenCL " << cv::ocl::haveOpenCL() << ", has CUDA " << cv::cuda::getCudaEnabledDeviceCount());
 	CI_LOG_I("has AMD FFT " << cv::ocl::haveAmdFft() << ", has AMD BLAS " << cv::ocl::haveAmdBlas() << ", has SVM " << cv::ocl::haveSVM());
 	CI_LOG_I("running with " << numOfThreads << " worker threads" << "\n");
+
+	CI_LOG_I("OpenCV " << cv::getBuildInformation());
 
 	oneapi::tbb::global_control c(oneapi::tbb::global_control::max_allowed_parallelism,	numOfThreads);
 
@@ -137,6 +144,7 @@ void InACTually::init()
 	m_networkMgr = net::NetworkManager::get(m_roomMgrs);
 
 	for (auto&& module : reg_modules) {
+		module->setGLContext(m_bgCtx);
 		module->setup(m_roomMgrs, m_networkMgr);
 	}
 
@@ -282,11 +290,13 @@ void InACTually::draw()
 		}
 
 		ci::gl::color(ci::Color::white());
-		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), false).scaledCentered(1.0f);
+		ci::Rectf destRect = ci::Rectf(m_splashScreenTex->getBounds()).getCenteredFit(ci::app::getWindowBounds(), true).scaledCentered(1.0f);
 		ci::gl::draw(m_splashScreenTex, destRect);
 
-		return;
+		return;	
 	}
+
+	m_mainCtx->makeCurrent();
 
 	auto windowData = ci::app::getWindow()->getUserData<WindowData>();
 	if (windowData->getUID() != m_mainWindowUID) {

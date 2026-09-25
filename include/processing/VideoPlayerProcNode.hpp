@@ -21,6 +21,7 @@
 #include "camera/CameraManager.hpp"
 #include "cinder/qtime/QuickTimeGl.h"
 
+#include "TextureHelper.hpp"
 
 namespace act {
 	namespace proc {
@@ -53,7 +54,8 @@ namespace act {
 			ci::fs::path getCurrentPath();
 
 		private:
-			ci::SurfaceRef			m_videoSurface;
+			TextureHelperRef		m_textureHelper;
+			TextureHelperRef		m_fadeTextureHelper;
 			ci::gl::Texture2dRef	m_videoTexture;
 
 			glm::ivec2				m_videoSize;
