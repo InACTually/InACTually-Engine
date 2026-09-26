@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2026
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -20,7 +20,6 @@
 
 
 act::room::CameraDevice::CameraDevice() {
-
 }
 
 act::room::CameraDevice::CameraDevice(ci::Capture::DeviceRef deviceReference) {
@@ -55,15 +54,16 @@ bool act::room::CameraDevice::update() {
 		return false;
 
 	if (m_capture && m_capture->checkNewFrame()) {
-		cv::UMat image = ci::toOcv(*m_capture->getSurface()).getUMat(cv::ACCESS_FAST);
+		auto&& image = ci::toOcv(*m_capture->getSurface()).getUMat(cv::ACCESS_WRITE);
 
-		if (m_flipped) cv::flip(image, image, 1);
+		if (m_flipped) 
+			cv::flip(image, image, 1);
 		//m_captureci::Surface = m_capture->getSurface();
-
+		
 		image.copyTo(m_currentImage);
 		if (m_isCalibrated) {
 			//cv::flip(image, image, 1);
-			m_undistoretedImage = remap(image);
+			remap(m_currentImage);
 		}
 
 		return true;
@@ -78,8 +78,8 @@ cv::UMat act::room::CameraDevice::getCurrentImage()
 
 cv::UMat act::room::CameraDevice::getUndistortedImage()
 {
-	if (m_isCalibrated)
-		m_undistoretedImage = remap(m_currentImage);
+	//if (m_isCalibrated)
+		//remap(m_currentImage);
 
 	return m_undistoretedImage;
 }
@@ -94,11 +94,9 @@ void act::room::CameraDevice::setCalibration(cv::Mat intrinsic, cv::Mat distCoef
 	m_isCalibrated = true;
 }
 
-cv::UMat act::room::CameraDevice::remap(cv::UMat image)
+void act::room::CameraDevice::remap(cv::UMat image)
 {
-	cv::UMat imageUndistorted;
-	cv::remap(image, imageUndistorted, m_map1, m_map2, cv::INTER_LINEAR);
-	return imageUndistorted;
+	cv::remap(image, m_undistoretedImage, m_map1, m_map2, cv::INTER_LINEAR);
 }
 
 

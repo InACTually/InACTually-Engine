@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -26,12 +26,25 @@ act::proc::CameraProcNode::CameraProcNode() : ProcNodeBase("Camera", NT_INPUT) {
 	m_show = false;
 	m_selectedCamera = 0;
 
+	try {
+		m_textureHelper = proc::TextureHelper::create();
+	}
+	catch (const std::exception& e) {
+		CI_LOG_E("Failed to create texture helper: " << e.what());
+	}
+	catch (...) {
+		CI_LOG_E("Failed to create texture helper");
+	}
+
 	m_cameraImageInPort = createImageInput("cameraImage", [&](cv::UMat image) {
+		if(image.empty())
+			return;
+
 		if (m_cameraRoomNode)
 			m_cameraImageOutPort->send(image); // , m_cameraRoomNode);
 
-		if (m_show) {
-			m_captureTexture = ci::gl::Texture2d::create(ci::fromOcv(image));
+		if (m_show && !image.empty()) {
+			m_textureHelper->toTextureAsync(image, [this](cv::ogl::Texture2D texture) {});	
 		}
 	}, false);
 
@@ -79,10 +92,10 @@ void act::proc::CameraProcNode::draw() {
 		}
 	}
 
-	if (m_show && m_captureTexture) {
+	if (m_show && !m_textureHelper->getTexture().empty()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
-		ImGui::Image(m_captureTexture, m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize, glm::vec2(0, 0), glm::vec2(1, 1));
 		ci::gl::pushMatrices();
 	}
 

@@ -91,9 +91,8 @@ void act::room::CameraRoomNode::setup()
 
 void act::room::CameraRoomNode::update()
 {
-	
 	if(m_cameraImagePort->getListenerCount() > 0)
-		if (m_camera->update())
+		if (m_camera->update()) // if has new frame
 			m_cameraImagePort->send(m_camera->getCurrentImage());
 
 	if (m_isDetectingDepth && !m_depthDetector) {
