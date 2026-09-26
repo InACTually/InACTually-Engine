@@ -212,14 +212,8 @@ namespace act {
 				ImNodes::SetNodeDraggable(m_id, !prevent);
 			}
 
-			void setGLContext(ci::gl::ContextRef ctx) {
-				m_glCtx = ci::gl::Context::create(ctx.get());
-			}
-
 		protected:
 			std::string	m_title;
-
-			ci::gl::ContextRef m_glCtx;
 			
 			ProcNodeType	m_nodeType;
 			glm::vec2		m_position		= glm::vec2(150, 20);

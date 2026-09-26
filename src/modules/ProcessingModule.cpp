@@ -252,7 +252,6 @@ void act::mod::ProcessingModule::drawCreateButton(std::string nodeName) {
 
 			auto node = m_nodeRegistry->create(nodeName);
 			if (node) {
-				node->setGLContext(m_glContext);
 				node->setup(m_roomMgrs);
 				m_focusedContainerNode->addNode(node);
 
@@ -378,7 +377,6 @@ void act::mod::ProcessingModule::loadFromFile(ci::fs::path path) {
 			if (node) {
 				node->setUID(uid);
 				node->setTitle(title);
-				node->setGLContext(m_glContext);
 				node->setup(m_roomMgrs);
 
 				if (n.contains("params"))

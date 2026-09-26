@@ -115,9 +115,6 @@ namespace act {
 		ci::app::AppBase* m_app;
 		UID m_mainWindowUID;
 
-		ci::gl::Context* m_mainCtx;
-		ci::gl::ContextRef m_bgCtx;
-
 		std::shared_ptr<input::MouseRawListener> m_mouseRawListener;
 		std::shared_ptr<input::TouchRawListener> m_touchRawListener;
 		std::shared_ptr<input::KeyRawListener>   m_keyRawListener;

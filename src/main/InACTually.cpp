@@ -69,9 +69,6 @@ InACTually::InACTually()
 
 	}
 
-	m_mainCtx = ci::gl::context();
-	m_bgCtx = ci::gl::Context::create(m_mainCtx);
-
 	m_splashScreenTex = ci::gl::Texture::create(*ci::Surface::create(ci::loadImage(ci::app::getAssetPath("design/splash.png"))));
 
 	glm::ivec2 size = m_splashScreenTex->getSize();
@@ -144,12 +141,8 @@ void InACTually::init()
 	m_networkMgr = net::NetworkManager::get(m_roomMgrs);
 
 	for (auto&& module : reg_modules) {
-		module->setGLContext(m_bgCtx);
 		module->setup(m_roomMgrs, m_networkMgr);
 	}
-
-	//getWindow()->setSize(getDisplay()->getSize() - glm::ivec2(0, 70));
-	//getWindow()->setPos(glm::ivec2(0, 70));
 
 	glm::ivec2 size = Settings::get().debugGUISize;
 	if (size.x == 0 || size.y == 0) {
@@ -158,7 +151,6 @@ void InACTually::init()
 		Settings::save();
 	}
 
-	
 	//m_interactionMgr = make_shared<ia::InteractionManager>();
 	//m_inputMgr = make_shared<input::InputManager>(m_interactionMgr);
 
@@ -239,8 +231,6 @@ void InACTually::draw()
 	if (AppState::get() == AS_CLOSING || AppState::get() == AS_CLEANUP)
 		return;
 
-	ci::app::getWindow()->getRenderer()->makeCurrentContext(true);
-
 	if (AppState::get() != AS_RUNNING) {
 		ci::gl::clear(util::Design::backgroundColor());
 		
@@ -295,8 +285,6 @@ void InACTually::draw()
 
 		return;	
 	}
-
-	m_mainCtx->makeCurrent();
 
 	auto windowData = ci::app::getWindow()->getUserData<WindowData>();
 	if (windowData->getUID() != m_mainWindowUID) {
