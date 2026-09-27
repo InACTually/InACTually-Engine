@@ -35,13 +35,18 @@ namespace act {
 			
 			cv::ogl::Texture2D toTexture(cv::UMat mat);
 			void toTextureAsync(cv::UMat mat, std::function<void(cv::ogl::Texture2D texture)> callback);
+			void toTextureAsync(cv::UMat mat) { toTextureAsync(mat, [this](cv::ogl::Texture2D texture) {}); };
+
 			cv::UMat fromTexture(ci::gl::TextureRef texture);
 			void fromTextureAsync(ci::gl::TextureRef texture, std::function<void(cv::UMat mat)> callback);
+			void fromTextureAsync(ci::gl::TextureRef texture) { fromTextureAsync(texture, [this](cv::UMat mat) {}); };
 			
 			cv::ogl::Texture2D getTexture() { return m_toTex; };
 			ci::gl::Texture2dRef getTextureRef() { return ci::gl::Texture2d::create(GL_TEXTURE_2D, m_toTex.texId(), m_toTex.cols(), m_toTex.rows(), true); };
 			cv::UMat getUMat() { return m_mat; };
 
+			bool hasTexture() { return !m_toTex.empty(); };
+			bool hasUMat() { return !m_mat.empty(); };
 		private:
 			cv::ogl::Texture2D		m_toTex;
 
