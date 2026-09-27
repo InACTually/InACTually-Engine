@@ -95,7 +95,7 @@ void act::proc::CameraProcNode::draw() {
 	if (m_show && !m_textureHelper->getTexture().empty()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
-		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize, glm::vec2(0, 0), glm::vec2(1, 1));
+		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize);
 		ci::gl::pushMatrices();
 	}
 

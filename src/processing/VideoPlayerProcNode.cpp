@@ -142,7 +142,7 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 	if (m_videoTexture) {
 		ci::gl::pushMatrices();
-		ImGui::Image(m_videoTexture, m_drawSize, glm::vec2(0, 0), glm::vec2(1, 1));
+		ImGui::Image(m_videoTexture, m_drawSize);
 		ci::gl::pushMatrices();
 	}
 

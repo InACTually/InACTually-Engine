@@ -87,7 +87,7 @@ void act::proc::MonitorProcNode::draw() {
 		ci::gl::pushMatrices();
 		//ci::gl::rotate(ci::toRadians(180.0f));
 		
-		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize);
 		ImGui::Indent(adaptSize(m_drawSize).x - m_drawSize.x);
 
 		ci::gl::popMatrices();
