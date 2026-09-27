@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Fabian Töpfer
@@ -39,11 +39,11 @@ namespace act {
 			void onMat(cv::UMat event);
 
 		private:
-			ci::gl::Texture2dRef												m_texture;
+			TextureHelperRef													m_textureHelper;
 			glm::ivec2															adaptSize(glm::ivec2 size);
 			float																m_displayScale;
 
-			ImageOutputPortRef												m_imagePort;
+			ImageOutputPortRef													m_imagePort;
 			OutputPortRef<std::pair<std::string, float>>						m_emotionPort;
 
 			static bool															m_registered;

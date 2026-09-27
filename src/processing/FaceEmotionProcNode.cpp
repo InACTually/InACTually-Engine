@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Fabian Töpfer
@@ -22,6 +22,8 @@
 act::proc::FaceEmotionProcNode::FaceEmotionProcNode() : ProcNodeBase("FaceEmotion") {
 
 	m_displayScale = 0.8f;
+
+	m_textureHelper = TextureHelper::create();
 	
 	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
 
@@ -55,13 +57,13 @@ void act::proc::FaceEmotionProcNode::draw() {
 	ImGui::TextUnformatted(m_currentEmotion.first.c_str());
 	ImGui::Text("%f",m_currentEmotion.second);
 	
-	if (m_show && m_texture) {
+	if (m_show && m_textureHelper->hasTexture()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
 
-		glm::vec2 texSize = ci::Rectf(m_texture->getBounds()).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
+		glm::vec2 texSize = ci::Rectf(glm::vec2(0, 0), ci::fromOcv(m_textureHelper->getTexture().size())).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
 
-		ImGui::Image(m_texture, texSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), texSize);
 
 		//ImGui::Indent(adaptSize(displaySize).x - displaySize.x);
 
@@ -77,7 +79,7 @@ void act::proc::FaceEmotionProcNode::onMat(cv::UMat event) {
 
 	m_imagePort->send(event);
 	if (m_show) {
-		m_texture = ci::gl::Texture2d::create(ci::fromOcv(event));
+		m_textureHelper->toTextureAsync(event);
 	}
 
 	cv::Mat emotions = detectCurrentEmotions(event);

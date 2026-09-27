@@ -9,7 +9,7 @@
     Licensed under the MIT License.
     See LICENSE file in the project root for full license information.
 
-    This file is created and substantially modified: 2021
+    This file is created and substantially modified: 2021, 2026
 
     contributors:
     Lars Engeln - mail@lars-engeln.de
@@ -23,8 +23,11 @@
 act::proc::ObjectDetectionProcNode::ObjectDetectionProcNode() : ProcNodeBase("ObjectDetection") {
 
 	m_displayScale = 0.8f;
-    m_isProcessing = false;
     m_minConfidence = 0.3f;
+    m_nmsThreshold = 0.5f;
+    m_objThreshold = 0.5f;
+
+	m_textureHelper = proc::TextureHelper::create();
 
     m_show = false;
 
@@ -41,30 +44,39 @@ act::proc::ObjectDetectionProcNode::ObjectDetectionProcNode() : ProcNodeBase("Ob
 
 
 act::proc::ObjectDetectionProcNode::~ObjectDetectionProcNode() {
-    if (m_isProcessing)
-        m_thread.join();
 }
 
 
 void act::proc::ObjectDetectionProcNode::initNetwork() {
 
-	// get labels of all classes
-	std::string classesFile = ci::app::getAssetPath("your-model-here").string();
+    m_classes = std::vector<std::string>{
+        "person", 
+        "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", 
+        "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", 
+        "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe",
+        "backpack", "umbrella", "handbag", "tie", "suitcase", 
+        "frisbee", "skis", "snowboard", "sports ball", "kite", 
+        "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket",
+        "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl",
+        "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", 
+        "chair", "couch", "potted plant", "bed", "dining table", "toilet", "tv", 
+        "laptop", "mouse", "remote", "keyboard", "cell phone", 
+        "microwave", "oven", "toaster", "sink", "refrigerator", 
+        "book", "clock", "vase", "scissors", "teddy bear", 
+        "hair drier", "toothbrush" 
+    };
 
-	std::ifstream ifs(classesFile);
-	std::string line;
-	while (getline(ifs, line)) m_classes.push_back(line);
+    m_strides = std::vector<int>{ 8, 16, 32 };
+    m_inputSize = cv::Size(640, 640);
 
-
-	std::string cfgFile = ci::app::getAssetPath("your-model-here").string();
-	std::string weightsFile = ci::app::getAssetPath("your-model-here").string();
-
-    if (cfgFile.empty() || weightsFile.empty()) {
-        CI_LOG_E("files not avaiable.");
+	std::string path = ci::app::getAssetPath("3rd/yolox/object_detection_yolox_2022nov.onnx").string();
+	
+    if (path.empty()) {
+        CI_LOG_E("File not avaiable.");
         return;
     }
     try {
-        m_network = cv::dnn::readNet(cfgFile, weightsFile);
+        m_network = cv::dnn::readNet(path);
     }
     catch (cv::Exception exc) {
         CI_LOG_EXCEPTION("ObjectDetection", exc);
@@ -72,39 +84,19 @@ void act::proc::ObjectDetectionProcNode::initNetwork() {
 
 	//add this for cuda support
 	// 
-	m_network.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-	m_network.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+	m_network.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+	m_network.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
+
+    generateAnchors();
 
 	if (m_network.empty()) {
 		std::ostringstream ss;
 		ss << "Failed to load network with the following settings:\n";
 		throw std::invalid_argument(ss.str());
 	}
-
-	std::vector<std::string> layers = m_network.getLayerNames();
-	auto i = m_network.getUnconnectedOutLayers();
-	m_outputLayer = layers[i[0] - 1];
-
 }
 
 void act::proc::ObjectDetectionProcNode::update() {
-
-	if(m_isProcessingDone) {
-        m_thread.join();
-        m_isProcessingDone = false;
-  
-        cv::UMat out;
-        cv::flip(m_processedFrame, out, 1);
-
-        if (m_show) {
-            m_texture = ci::gl::Texture2d::create(ci::fromOcv(out));
-		}
-        m_detectionImagePort->send(out);
-
-        m_featureListPort->send(m_currentObjects);
-		
-        m_isProcessing = false;
-	}
 }
 
 void act::proc::ObjectDetectionProcNode::draw() {
@@ -113,12 +105,12 @@ void act::proc::ObjectDetectionProcNode::draw() {
     ImGui::Checkbox("show", &m_show);
     
 
-	if (m_show && m_texture) {
+	if (m_show && m_textureHelper->hasTexture()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
 
-        glm::vec2 texSize = ci::Rectf(m_texture->getBounds()).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
-		ImGui::Image(m_texture, texSize, glm::vec2(1, 1), glm::vec2(0, 0));
+        glm::vec2 texSize = ci::Rectf(glm::vec2(0, 0), ci::fromOcv(m_textureHelper->getTexture().size())).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
+        ImGui::Image(m_textureHelper->getTexture().texId(), texSize);
 
 		ci::gl::pushMatrices();
 	}
@@ -134,95 +126,169 @@ void act::proc::ObjectDetectionProcNode::draw() {
     endNodeDraw();
 }
 
+void act::proc::ObjectDetectionProcNode::generateAnchors()
+{
+    std::vector< std::tuple<int, int, int> > nb;
+    int total = 0;
+
+    for (auto v : m_strides)
+    {
+        int w = m_inputSize.width / v;
+        int h = m_inputSize.height / v;
+        nb.push_back(std::tuple<int, int, int>(w * h, w, v));
+        total += w * h;
+    }
+    m_grids = cv::Mat(total, 2, CV_32FC1);
+    m_expandedStrides = cv::Mat(total, 1, CV_32FC1);
+    float* ptrGrids = m_grids.ptr<float>(0);
+    float* ptrStrides = m_expandedStrides.ptr<float>(0);
+    int pos = 0;
+    for (auto le : nb)
+    {
+        int r = get<1>(le);
+        for (int i = 0; i < get<0>(le); i++, pos++)
+        {
+            *ptrGrids++ = float(i % r);
+            *ptrGrids++ = float(i / r);
+            *ptrStrides++ = float((get<2>(le)));
+        }
+    }
+}
+
 void act::proc::ObjectDetectionProcNode::onMat(cv::UMat event) {
 	m_imagePort->send(event);
-
-    if (m_isProcessing)
-        return;
 	
-    cv::UMat frame;
-    event.copyTo(frame);
-    event.copyTo(m_processedFrame);
+    cv::Size targetSize = cv::Size(640, 640);
+    double ratio = std::min(targetSize.height / double(event.rows), targetSize.width / double(event.cols));
 
-    
 
-    m_thread = std::thread([&](cv::UMat mat) {
-        if (event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
-            return;
+    cv::Mat blob = preprocess(event, targetSize, ratio);
 
-        cv::Mat input_blob = cv::dnn::blobFromImage(mat, 1 / 255.0, cv::Size(416, 416), false, false);
-        m_network.setInput(input_blob, "data");
+    cv::Mat predictions = detect(blob);
 
-        m_detection.clear();
-        m_network.forward(m_detection, getOutputsNames(m_network));
-
-        std::vector<cv::Rect> boxes;
-        boxes = processDetection(m_processedFrame, m_detection);
-    	
-        m_isProcessingDone = true;
-    }, frame);
-    m_isProcessing = true;
+    processDetection(event.clone(), predictions, ratio);
 }
 
-std::vector<std::string> act::proc::ObjectDetectionProcNode::getOutputsNames(const cv::dnn::Net& net)
+cv::Mat act::proc::ObjectDetectionProcNode::preprocess(cv::UMat frame, cv::Size targetSize, float ratio)
 {
-    if (m_names.empty())
+    cv::UMat resizeImg;
+    cv::UMat paddedImg(targetSize.height, targetSize.width, CV_32FC3, cv::Scalar::all(114.0));
+
+    cv::dnn::Image2BlobParams params;
+    params.datalayout = cv::DNN_LAYOUT_NCHW;
+    params.ddepth = CV_32F;
+    params.mean = cv::Scalar::all(0);
+    params.scalefactor = cv::Scalar::all(1);
+    params.size = paddedImg.size();
+    params.swapRB = true;
+
+    cv::resize(frame, resizeImg, cv::Size(int(frame.cols * ratio), int(frame.rows * ratio)), cv::INTER_LINEAR);
+    resizeImg.copyTo(paddedImg(cv::Rect(0, 0, int(frame.cols * ratio), int(frame.rows * ratio))));
+
+    return cv::dnn::blobFromImageWithParams(paddedImg.getMat(cv::ACCESS_FAST), params);
+}
+
+cv::Mat act::proc::ObjectDetectionProcNode::detect(cv::Mat blob)
+{
+    m_network.setInput(blob);
+    std::vector<cv::Mat> outputs;
+    m_network.forward(outputs, m_network.getUnconnectedOutLayersNames());
+
+    cv::Mat predictions = postprocess(outputs[0]);
+    return predictions;
+}
+
+cv::Mat act::proc::ObjectDetectionProcNode::postprocess(cv::Mat outputs)
+{
+    cv::Mat dets = outputs.reshape(0, outputs.size[1]);
+    cv::Mat col01;
+    cv::add(dets.colRange(0, 2), m_grids, col01);
+    cv::Mat col23;
+    cv::exp(dets.colRange(2, 4), col23);
+    std::vector<cv::Mat> col = { col01, col23 };
+    cv::Mat boxes;
+    cv::hconcat(col, boxes);
+    float* ptr = m_expandedStrides.ptr<float>(0);
+    for (int r = 0; r < boxes.rows; r++, ptr++)
     {
-        //Get the indices of the output layers, i.e. the layers with unconnected outputs
-        std::vector<int> outLayers = net.getUnconnectedOutLayers();
-
-        //get the names of all the layers in the network
-        std::vector<std::string> layersNames = net.getLayerNames();
-
-        // Get the names of the output layers in names
-        m_names.resize(outLayers.size());
-        for (size_t i = 0; i < outLayers.size(); ++i)
-            m_names[i] = layersNames[outLayers[i] - 1];
+        boxes.rowRange(r, r + 1) = *ptr * boxes.rowRange(r, r + 1);
     }
-    return m_names;
+    // get boxes
+    cv::Mat boxes_xywh(boxes.rows, boxes.cols, CV_32FC1, cv::Scalar(1));
+    cv::Mat scores = dets.colRange(5, dets.cols).clone();
+    std::vector<float> maxScores(dets.rows);
+    std::vector<int> maxScoreIdx(dets.rows);
+    std::vector<cv::Rect2d> boxesXYWH(dets.rows);
+    for (int r = 0; r < boxes_xywh.rows; r++, ptr++)
+    {
+        boxes_xywh.at<float>(r, 0) = boxes.at<float>(r, 0) - boxes.at<float>(r, 2) / 2.f;
+        boxes_xywh.at<float>(r, 1) = boxes.at<float>(r, 1) - boxes.at<float>(r, 3) / 2.f;
+        boxes_xywh.at<float>(r, 2) = boxes.at<float>(r, 2);
+        boxes_xywh.at<float>(r, 3) = boxes.at<float>(r, 3);
+        // get scores and class indices
+        scores.rowRange(r, r + 1) = scores.rowRange(r, r + 1) * dets.at<float>(r, 4);
+        double minVal, maxVal;
+        cv::Point maxIdx;
+        minMaxLoc(scores.rowRange(r, r + 1), &minVal, &maxVal, nullptr, &maxIdx);
+        maxScoreIdx[r] = maxIdx.x;
+        maxScores[r] = float(maxVal);
+        boxesXYWH[r].x = boxes_xywh.at<float>(r, 0);
+        boxesXYWH[r].y = boxes_xywh.at<float>(r, 1);
+        boxesXYWH[r].width = boxes_xywh.at<float>(r, 2);
+        boxesXYWH[r].height = boxes_xywh.at<float>(r, 3);
+    }
+
+    std::vector<int> keep;
+    cv::dnn::NMSBoxesBatched(boxesXYWH, maxScores, maxScoreIdx, m_minConfidence, m_nmsThreshold, keep);
+    cv::Mat candidates(int(keep.size()), 6, CV_32FC1);
+    int row = 0;
+    for (auto idx : keep)
+    {
+        boxes_xywh.rowRange(idx, idx + 1).copyTo(candidates(cv::Rect(0, row, 4, 1)));
+        candidates.at<float>(row, 4) = maxScores[idx];
+        candidates.at<float>(row, 5) = float(maxScoreIdx[idx]);
+        row++;
+    }
+    if (keep.size() == 0)
+        return cv::Mat();
+    return candidates;
+
 }
 
 
-std::vector<cv::Rect>  act::proc::ObjectDetectionProcNode::processDetection(cv::UMat& frame, const std::vector<cv::Mat>& outs)
+std::vector<cv::Rect>  act::proc::ObjectDetectionProcNode::processDetection(cv::UMat frame, const cv::Mat& outs, float scaleFactor)
 {
     std::vector<int> classIDs;
     std::vector<float> confidences;
     std::vector<cv::Rect> boxes;
 
-    for (size_t i = 0; i < outs.size(); ++i)
+    for (int row = 0; row < outs.rows; row++)
     {
-        // Scan through all the bounding boxes output from the network and keep only the
-        // ones with high confidence scores. Assign the box's class label as the class
-        // with the highest score for the box.
-        float* data = (float*)outs[i].data;
-        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
-        {
-            cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
-            cv::Point classIDPoint;
-            double confidence;
-            // Get the value and location of the maximum score
-            minMaxLoc(scores, 0, &confidence, 0, &classIDPoint);
+        cv::Mat boxF = outs(cv::Rect(0, row, 4, 1));// / scaleFactor;
+        cv::Mat box;
+        boxF.convertTo(box, CV_32S);
 
-            if (confidence > m_minConfidence)
-            {
-                int centerX = (int)(data[0] * frame.cols);
-                int centerY = (int)(data[1] * frame.rows);
-                int width = (int)(data[2] * frame.cols);
-                int height = (int)(data[3] * frame.rows);
-                int left = centerX - width / 2;
-                int top = centerY - height / 2;
+        float score = outs.at<float>(row, 4);
+        if(score < m_minConfidence)
+			continue;
 
-                classIDs.push_back(classIDPoint.x);
-                confidences.push_back((float)confidence);
-                boxes.push_back(cv::Rect(left, top, width, height));
-            }
-        }
+        int classId = int(outs.at<float>(row, 5));
+        cv::Point classIDPoint;
+
+        int x0 = box.at<int>(0, 0);
+        int y0 = box.at<int>(0, 1);
+        int x1 = box.at<int>(0, 2);
+        int y1 = box.at<int>(0, 3);
+
+        classIDs.push_back(classId);
+        confidences.push_back((float)score);
+        boxes.push_back(cv::Rect(x0, y0, x1 + x0, y1 + y0));
     }
 
     // Perform non maximum suppression to eliminate redundant overlapping boxes with
     // lower confidences
     std::vector<int> indices;
-    cv::dnn::NMSBoxes(boxes, confidences, 0.5, 0.4, indices);
+    cv::dnn::NMSBoxes(boxes, confidences, m_minConfidence, m_nmsThreshold, indices);
 
     std::vector<int> msgLabel;
     std::vector<float> msgConf;
@@ -238,8 +304,7 @@ std::vector<cv::Rect>  act::proc::ObjectDetectionProcNode::processDetection(cv::
         {
             m_currentObjects.push_back(std::make_pair(m_classes[classIDs[idx]], confidences[idx]));
     	
-	        drawBox(m_classes[classIDs[idx]], confidences[idx], box.x, box.y,
-	            box.x + box.width, box.y + box.height, frame);
+	        drawBox(frame, box, m_classes[classIDs[idx]], confidences[idx]);
 
 	        msgLabel.push_back(classIDs[idx]);
 	        msgConf.push_back(confidences[idx]);
@@ -247,24 +312,27 @@ std::vector<cv::Rect>  act::proc::ObjectDetectionProcNode::processDetection(cv::
         }
     }
 
+	m_textureHelper->toTextureAsync(frame);
+	m_detectionImagePort->send(frame);
+
     return boxes;
 }
 
-void act::proc::ObjectDetectionProcNode::drawBox(std::string className, float conf, int left, int top, int right, int bottom, cv::UMat& frame)
+void act::proc::ObjectDetectionProcNode::drawBox(cv::UMat& frame, cv::Rect box, std::string className, float confidence)
 {
     //Draw a rectangle displaying the bounding box
-    rectangle(frame, cv::Point(left, top), cv::Point(right, bottom), ci::toOcv(util::Design::primaryColor()), 3);
+    rectangle(frame, box.tl(), box.br(), ci::toOcv(util::Design::primaryColor()), 3);
 
     //Get the label for the class name and its confidence
-    std::string label = cv::format("%.2f", conf);
+    std::string label = cv::format("%.2f", confidence);
     label = className + ":" + label;
 
     //Display the label at the top of the bounding box
     int baseLine;
     cv::Size labelSize = getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-    top = cv::max(top, labelSize.height);
-    rectangle(frame, cv::Point(left, top - round(1.5 * labelSize.height)), cv::Point(left + round(1.5 * labelSize.width), top + baseLine), cv::Scalar(255, 255, 255), cv::FILLED);
-    putText(frame, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0), 1);
+    box.y = cv::max(box.y, labelSize.height);
+    rectangle(frame, cv::Point(box.x, box.y - round(1.5 * labelSize.height)), cv::Point(box.x + round(1.5 * labelSize.width), box.y + baseLine), cv::Scalar(255, 255, 255), cv::FILLED);
+    putText(frame, label, cv::Point(box.x, box.y), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0), 1);
 }
 
 

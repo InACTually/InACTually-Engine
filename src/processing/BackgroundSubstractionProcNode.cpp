@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2023
+	This file is created and substantially modified: 2022-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -21,7 +21,10 @@
 act::proc::BackgroundSubstractionProcNode::BackgroundSubstractionProcNode() : ProcNodeBase("BackgroundSubstraction") {
 	m_drawSize = glm::ivec2(400, 300);
 
+	m_fgMaskTex = proc::TextureHelper::create();
+
 	valuesChanged = false;
+	m_isPendingBgModel = false;
 
 	m_detectShadows = false;
 	m_threshold = 16.0f;
@@ -49,12 +52,11 @@ void act::proc::BackgroundSubstractionProcNode::update() {
 void act::proc::BackgroundSubstractionProcNode::draw() {
 	beginNodeDraw();
 
-	if (m_texture_fgMask) {
+	if (m_fgMaskTex->hasTexture()) {
 		ci::gl::pushMatrices();
-		ci::gl::rotate(ci::toRadians(180.0f));
+		//ci::gl::rotate(ci::toRadians(180.0f));
 
-		ImGui::Image(m_texture_fgMask, glm::vec2(m_drawSize.x, m_drawSize.y), glm::vec2(1, 1), glm::vec2(0, 0));
-
+		ImGui::Image(m_fgMaskTex->getTexture().texId(), glm::vec2(m_drawSize.x, m_drawSize.y));
 		ci::gl::pushMatrices();
 	}
 
@@ -63,7 +65,7 @@ void act::proc::BackgroundSubstractionProcNode::draw() {
 	bool prvntDrag = false;
 
 	if (ImGui::SliderFloat("learning rate", &m_learningRate, 0, 1)){
-		valuesChanged = true;
+		//valuesChanged = true;
 		prvntDrag = true;
 	}
 
@@ -87,7 +89,7 @@ void act::proc::BackgroundSubstractionProcNode::draw() {
 
 	if (valuesChanged){
 		if (ImGui::Button("apply changes")) {
-			m_bgModel = cv::createBackgroundSubtractorKNN(m_historyLength, m_threshold, m_detectShadows);
+			m_isPendingBgModel = true;
 			valuesChanged = false;
 		}
 	}
@@ -96,15 +98,16 @@ void act::proc::BackgroundSubstractionProcNode::draw() {
 }
 
 void act::proc::BackgroundSubstractionProcNode::onMat(cv::UMat event) {
-
+	if (m_isPendingBgModel) {
+		m_isPendingBgModel = false;
+		m_bgModel = cv::createBackgroundSubtractorMOG2(m_historyLength, m_threshold, m_detectShadows);
+	}
 	try {
 		if (event.empty() || event.cols < 100 || event.rows < 100 || event.cols > 4096 || event.rows > 4096)
 			return;
-		if (m_foregroundMask.empty()) {
+		if (m_foregroundMask.empty() || m_foregroundMask.size() != event.size()) {
 			m_foregroundMask = cv::UMat(event.size(), event.type(), cv::Scalar(0));
 		}
-		else if (m_foregroundMask.size() != event.size() || m_foregroundMask.type() != event.type())
-			return;
 	}
 	catch (cv::Exception exc) {
 		CI_LOG_E(exc.what());
@@ -135,21 +138,11 @@ void act::proc::BackgroundSubstractionProcNode::onMat(cv::UMat event) {
 	m_fgCutoutPort->send(m_foregroundCutout);
 	m_fgMaskPort->send(m_foregroundMask);
 
-	std::weak_ptr<BackgroundSubstractionProcNode> weakSelf = std::static_pointer_cast<BackgroundSubstractionProcNode>(shared_from_this());
-	ci::app::App::get()->dispatchAsync([weakSelf, this]() {
-		if (!weakSelf.lock())
-			return;
-
-		if (!m_foregroundMask.empty())
-			m_texture_fgMask = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundMask));
-		if(!m_backgroundCutout.empty())
-			m_texture_bgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_backgroundCutout));
-		if (!m_foregroundCutout.empty())
-			m_texture_fgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundCutout));
-		float sizeFactor = 0.4;
-		if (m_texture_fgMask)
-			m_drawSize = glm::ivec2(m_texture_fgMask->getWidth() * sizeFactor, m_texture_fgMask->getHeight() * sizeFactor);
-	});
+	if (!m_foregroundMask.empty())
+		m_fgMaskTex->toTextureAsync(m_foregroundMask, [this](cv::ogl::Texture2D texture) {
+			float sizeFactor = 0.4;
+			m_drawSize = glm::ivec2(m_fgMaskTex->getTexture().cols() * sizeFactor, m_fgMaskTex->getTexture().rows() * sizeFactor);
+		});
 }
 
 ci::Json act::proc::BackgroundSubstractionProcNode::toParams() {

@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -17,6 +17,7 @@
 
 #include "procpch.hpp"
 #include "FaceDetectionProcNode.hpp"
+#include "CinderOpenCV.h"
 
 #include <numeric>
 
@@ -25,6 +26,8 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 
 	m_show = false;
 
+	m_textureHelper = proc::TextureHelper::create();
+
 	m_isFixingFaceSize = true;
 	m_fixedFaceSize = 200;
 
@@ -32,7 +35,7 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 	m_faceAvailHistoryMaxSize = 10;
 	m_faceAvailHistoryThreshold = 6;
 
-	mFaceHistorySize = 20;
+	m_facesHistorySize = 20;
 
 	m_faceImagePort = createImageOutput("biggest face image");
 	m_faceAvailablePort = createBoolOutput("face is available");
@@ -42,20 +45,23 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 		catch (cv::Exception exc) { CI_LOG_E(exc.what()); }
 	});
 
+	auto input_size = cv::Size(320, 320);
+	float conf_threshold = 0.6f;
+	float nms_threshold = 0.3f;;
+	int top_k = 5000;
 
-	std::string path = ci::app::getAssetPath("3rd/haarcascade_cuda/haarcascade_frontalface_alt.xml").string();
-	
+	std::string path = ci::app::getAssetPath("3rd/faceDetection/face_detection_yunet_2026may.onnx").string();
 	if (path.empty()) {
-		CI_LOG_E("file not avaiable.");
+		CI_LOG_E("File not avaiable.");
 		return;
 	}
+
 	try {
-		//mFaceCascade.load(path);
+		m_model = cv::FaceDetectorYN::create(path, "", input_size, conf_threshold, nms_threshold, top_k, cv::dnn::DNN_BACKEND_OPENCV, cv::dnn::DNN_TARGET_OPENCL);
 	}
 	catch (cv::Exception exc) {
 		CI_LOG_EXCEPTION("FaceDetection", exc);
 	}
-
 }
 
 act::proc::FaceDetectionProcNode::~FaceDetectionProcNode() {
@@ -69,15 +75,13 @@ void act::proc::FaceDetectionProcNode::draw() {
 
 	ImGui::Checkbox("show", &m_show);
 
-	if (m_show && m_texture) {
+	if (m_show && !m_textureHelper->getTexture().empty()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
-		glm::vec2 texSize = ci::Rectf(m_texture->getBounds()).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
+		glm::vec2 texSize = ci::Rectf(glm::vec2(0, 0), ci::fromOcv(m_textureHelper->getTexture().size())).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
 
-		ImGui::Image(m_texture, texSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), texSize);
 
-		//displaySize = glm::ivec2(m_texture->getWidth(), m_texture->getHeight());
-		//ImGui::Image(m_texture, displaySize, glm::vec2(1, 1), glm::vec2(0, 0));
 		ci::gl::pushMatrices();
 	}
 
@@ -102,11 +106,11 @@ void act::proc::FaceDetectionProcNode::draw() {
 }
 
 void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
-	if (true || event.empty() || event.cols < 100 || event.rows < 100)
+	if (event.empty() || event.cols < 100 || event.rows < 100)
 		return;
 
 	// clear out the previously detected faces
-	mFaces.clear();
+	m_faces.clear();
 
 	
 	cv::UMat mat;
@@ -114,12 +118,22 @@ void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
 	float calcScale = 1.0f / m_resizeScale;
 	// detect the faces and iterate them, appending them to m_faces
 	std::vector<cv::Rect> faces;
-	//mFaceCascade.detectMultiScale(mat, faces);
+	
+	m_model->setInputSize(mat.size());
+	cv::Mat result;
+	m_model->detect(mat, result);
+
 	float faceArea = 0.0f;
 	float faceHeight = 0.0f;
 	cv::Rect biggestFace;
-	for (std::vector<cv::Rect>::const_iterator faceIter = faces.begin(); faceIter != faces.end(); ++faceIter) {
-		ci::Rectf faceRect(ci::fromOcv(*faceIter));
+	for (int i = 0; i < result.rows; ++i) {
+		int x1 = static_cast<int>(result.at<float>(i, 0));
+		int y1 = static_cast<int>(result.at<float>(i, 1));
+		int w = static_cast<int>(result.at<float>(i, 2));
+		int h = static_cast<int>(result.at<float>(i, 3));
+		float conf = result.at<float>(i, 14);
+
+		ci::Rectf faceRect(x1, y1, x1 + w, y1 + h);
 		faceRect *= calcScale;
 		faceRect.x1 -= faceRect.getWidth() * 0.02f;
 		faceRect.x2 += faceRect.getWidth() * 0.02f;
@@ -133,8 +147,8 @@ void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
 			faceHeight = faceRect.getHeight();
 			biggestFace = ci::toOcv(ci::Area(faceRect));
 		}
-		mFaces.push_back(faceRect);
-		cv::rectangle(mat, faceIter->tl(), faceIter->br(), cv::Scalar(util::Design::primaryColor().b*255, util::Design::primaryColor().g * 255, util::Design::primaryColor().r * 255), 5);
+		m_faces.push_back(faceRect);
+		cv::rectangle(mat, cv::Point(x1, y1), cv::Point(x1+w, y1+h), cv::Scalar(util::Design::primaryColor().b * 255, util::Design::primaryColor().g * 255, util::Design::primaryColor().r * 255), 5);
 	}
 
 	m_faceAvailHistory.push_back(faceHeight > m_faceAvailHeightThreshold);
@@ -151,13 +165,11 @@ void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
 		}
 	}
 
-
 	if (faceArea > 0.0f) {
 		if (m_isFixingFaceSize) {
 			auto face = event(biggestFace);
-			cv::UMat mat;
-			cv::resize(face, mat, cv::Size(m_fixedFaceSize*0.94f, m_fixedFaceSize));
-			m_faceImagePort->send(mat);
+			cv::resize(face, face, cv::Size(m_fixedFaceSize*0.94f, m_fixedFaceSize));
+			m_faceImagePort->send(face);
 		}
 		else {
 			m_faceImagePort->send(event(biggestFace));
@@ -165,12 +177,12 @@ void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
 	}
 	faces.resize(0);
 	faces.clear();
-	mFacesHistory.push_back(mFaces);
-	if (mFacesHistory.size() >= mFaceHistorySize) {
-		mFacesHistory.pop_front();
+	m_facesHistory.push_back(m_faces);
+	if (m_facesHistory.size() >= m_facesHistorySize) {
+		m_facesHistory.pop_front();
 	}
 	if (m_show) {
-		m_texture = ci::gl::Texture2d::create(ci::fromOcv(mat));
+		m_textureHelper->toTextureAsync(mat);
 	}
 }
 
