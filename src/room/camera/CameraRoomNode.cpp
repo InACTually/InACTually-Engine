@@ -22,19 +22,13 @@
 #include "computing/DepthDetector.hpp"
 
 
-act::room::CameraRoomNode::CameraRoomNode(CameraDeviceRef camera, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
+act::room::CameraRoomNode::CameraRoomNode(CameraDeviceRef camera, std::string caption, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
 	: RoomNodeBase("camera", position, rotation, radius, replyUID)
 {
 	m_camera = camera;
-	setCaption(name);
-	/*if (m_capture) {
-		m_name = m_capture->getDevice()->getName();
-		m_captureSize = m_capture->getSize();
-	}
-	else {
-		m_name = deviceName;
-		m_captureSize = glm::ivec2(1920, 1080);
-	}*/
+	setCaption(caption);
+	m_deviceName = m_camera->getName();
+
 	m_displaySize = glm::ivec2(m_camera->getCaptureSize().x * 0.25, m_camera->getCaptureSize().y * 0.25);
 
 	m_cameraImagePort = proc::ImageOutputPort::create(act::proc::PT_IMAGE, "cameraImage");
@@ -43,7 +37,7 @@ act::room::CameraRoomNode::CameraRoomNode(CameraDeviceRef camera, std::string na
 	m_cameraPersp.setEyePoint(glm::vec3(0.0f));
 	setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
-	m_cameraPersp.lookAt(glm::vec3(0.0f, 1.0f, 0.0f));
+	m_cameraPersp.lookAt(glm::vec3(0.0f, 0.0f, 1.0f));
 
 	if (!camera->isCalibrated()) {
 		ci::Json iniJson = ci::Json("{\"distCoeffs\":\"[0, 0, 0, 0, 0]\",\"intrinsic\":\"[16, 0, 9, 0, 16, 4, 0, 0, 1]\"}");
@@ -54,8 +48,8 @@ act::room::CameraRoomNode::CameraRoomNode(CameraDeviceRef camera, std::string na
 }
 
 
-
-act::room::CameraRoomNode::CameraRoomNode(ci::Capture::DeviceRef deviceRef, std::string deviceName, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
+/*
+act::room::CameraRoomNode::CameraRoomNode(ci::Capture::DeviceRef deviceRef, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
 	: RoomNodeBase("camera", position, rotation, radius, replyUID)
 {
 	m_camera = CameraDevice::create(deviceRef);
@@ -75,7 +69,7 @@ act::room::CameraRoomNode::CameraRoomNode(ci::Capture::DeviceRef deviceRef, std:
 	}
 
 	m_pointcloudRoomNode = PointcloudRoomNode::create(glm::vec3(0, 0, 0), 1, getName() + "_Pointcloud");
-}
+}*/
 
 act::room::CameraRoomNode::~CameraRoomNode()
 {
@@ -202,7 +196,7 @@ void act::room::CameraRoomNode::fromParams(ci::Json json)
 			intr_data[i] = std::stof(token);
 			j_intrinsics.erase(0, pos + delimiter.length());
 			i++;
-		}
+		} 
 		intr_data[i] = std::stof(j_intrinsics);
 
 		double distCoeffs_data[5];

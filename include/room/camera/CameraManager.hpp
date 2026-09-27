@@ -53,11 +53,12 @@ namespace act {
 			act::room::CameraRoomNodeRef		getCamera(act::UID cameraUID);
 			act::room::CameraRoomNodeRef		getCameraByIndex(int index);
 			act::proc::ImageOutputPortRef		getCameraPort(act::UID cameraUID);
-			std::vector<std::string>			getUsedCameraNames() { return m_usedDevicesNames; }
+			std::vector<std::string>			getDeviceNamesOfCamerasInUse() { return m_devicesNamesInUse; }
+			std::vector<std::string>			getCaptionOfCamerasInUse() { return m_captionsInUse; }
 
 			bool hasAvailableDevice(std::string deviceName);
-			act::room::RoomNodeBaseRef addDevice(std::string deviceName, std::string name);
-			act::room::RoomNodeBaseRef addSelectedDevice(std::string deviceName, std::string name);
+			act::room::RoomNodeBaseRef addDevice(std::string deviceName);
+			act::room::RoomNodeBaseRef addSelectedDevice(std::string deviceName);
 
 		private:
 			act::room::CameraDeviceRef m_currentCamera;
@@ -70,7 +71,8 @@ namespace act {
 			std::vector<ci::Capture::DeviceRef> m_devices;
 			std::vector<std::string>			m_availableDeviceNames;
 
-			std::vector<std::string>			m_usedDevicesNames;
+			std::vector<std::string>			m_devicesNamesInUse;
+			std::vector<std::string>			m_captionsInUse;
 			std::vector<act::UID>				m_usedDevicesUID; // correlated to m_usedDevicesNames
 
 			int									m_selectedDevice;

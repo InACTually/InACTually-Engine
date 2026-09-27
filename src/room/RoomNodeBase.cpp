@@ -24,7 +24,7 @@
 act::net::NetworkPublisherRef act::room::RoomNodeBase::m_publisher = nullptr;
 
 act::room::RoomNodeBase::RoomNodeBase(std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID)
-	: m_name(name), m_caption(name)
+	: m_name(name), m_deviceName(name), m_caption(name)
 {
 	/*m_positionInPort = act::proc::InputPort<glm::vec3>::create(act::proc::PT_VEC3, "posIn", [&](glm::vec3 position) {
 		setPosition(position);
@@ -318,7 +318,8 @@ ci::Json act::room::RoomNodeBase::toJson()
 {
 	auto json = ci::Json::object();
 	json["uid"]			= getUID();
-	json["name"]		= getName();
+	json["name"]		= m_name;
+	json["deviceName"]	= m_deviceName;
 	json["caption"]		= getCaption();
 	json["isFixed"]		= m_isFixed;
 	json["isSmoothing"]	= m_isSmoothing;
@@ -340,6 +341,7 @@ void act::room::RoomNodeBase::fromJson(ci::Json json, act::UID replyUID)
 		setUID(json["uid"]);
 	}
 	util::setValueFromJson(json, "name", m_name);
+	util::setValueFromJson(json, "deviceName", m_deviceName);
 	util::setValueFromJson(json, "isSmoothing", m_isSmoothing);
 
 	if (json.contains("caption")) {

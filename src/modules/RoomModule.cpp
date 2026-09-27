@@ -394,7 +394,7 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 	}
 
 	if (roomNodeName == "camera") {
-		node = m_roomMgrs->cameraMgr->addDevice(deviceName, name);
+		node = m_roomMgrs->cameraMgr->addDevice(deviceName);
 	}
 
 	if (roomNodeName == "kinect") {

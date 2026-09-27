@@ -83,11 +83,11 @@ void act::proc::CameraProcNode::draw() {
 		// checkbox was clicked
 	}
 
-	if (m_camMgr->getUsedCameraNames().empty())
+	if (m_camMgr->getCaptionOfCamerasInUse().empty())
 		ImGui::Text("No CameraDevice has been set up.");
 	else {
 		ImGui::SetNextItemWidth(m_drawSize.x - ImGui::CalcTextSize("CameraDevice").x);
-		if (ImGui::Combo("CameraDevice", &m_selectedCamera, m_camMgr->getUsedCameraNames())) {
+		if (ImGui::Combo("CameraDevice", &m_selectedCamera, m_camMgr->getCaptionOfCamerasInUse())) {
 			attachCamera(m_camMgr->getCameraByIndex(m_selectedCamera));
 		}
 	}
@@ -106,22 +106,22 @@ void act::proc::CameraProcNode::draw() {
 
 ci::Json act::proc::CameraProcNode::toParams() {
 	ci::Json json = ci::Json::object();
-	json["selectedDevice"] = m_selectedCameraName;
+	json["selectedDevice"] = m_selectedCameraDeviceName;
 	json["show"] = m_show;
 	return json;
-}
+} 
 
 void act::proc::CameraProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "show", m_show);
 
-	if (util::setValueFromJson(json, "selectedDevice", m_selectedCameraName)) {
-		auto&& port = m_camMgr->getCameraPort(m_selectedCameraName);
+	if (util::setValueFromJson(json, "selectedDevice", m_selectedCameraDeviceName)) {
+		auto&& port = m_camMgr->getCameraPort(m_selectedCameraDeviceName);
 		if (port)
 			port->connect(m_cameraImageInPort);
 
 		m_selectedCamera = 0;
-		for (auto&& name : m_camMgr->getUsedCameraNames()) {
-			if (name == m_selectedCameraName)
+		for (auto&& name : m_camMgr->getDeviceNamesOfCamerasInUse()) {
+			if (name == m_selectedCameraDeviceName)
 				break;
 			m_selectedCamera++;
 		}
@@ -140,7 +140,7 @@ void act::proc::CameraProcNode::attachCamera(act::room::CameraRoomNodeRef camera
 	}
 	if (camera) {
 		m_cameraRoomNode = camera;
-		m_selectedCameraName = m_cameraRoomNode->getName();
+		m_selectedCameraDeviceName = m_cameraRoomNode->getName();
 		if (m_cameraRoomNode) {
 			m_cameraRoomNode->getCameraImagePort()->connect(m_cameraImageInPort);
 		}
