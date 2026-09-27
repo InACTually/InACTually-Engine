@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -40,9 +40,6 @@ namespace act {
 			void fromParams(ci::Json json) override;
 
 		private:
-			
-			ci::gl::Texture2dRef	m_texture;
-
 			float	m_resizeScale;
 			bool	m_isFixingFaceSize;
 			int		m_fixedFaceSize; // in px, quadratic
@@ -53,10 +50,12 @@ namespace act {
 			int		m_faceAvailHistoryThreshold;
 			std::deque<int> m_faceAvailHistory;
 
-			//cv::CascadeClassifier					mFaceCascade;
-			std::vector<ci::Rectf>					mFaces;
-			std::deque<std::vector<ci::Rectf>>		mFacesHistory;
-			int										mFaceHistorySize;
+			cv::Ptr<cv::FaceDetectorYN>				m_model;
+			std::vector<ci::Rectf>					m_faces;
+			std::deque<std::vector<ci::Rectf>>		m_facesHistory;
+			int										m_facesHistorySize;
+
+			TextureHelperRef						m_textureHelper;
 
 			ImageOutputPortRef	m_faceImagePort;
 			OutputPortRef<bool>		m_faceAvailablePort;

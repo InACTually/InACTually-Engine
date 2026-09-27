@@ -37,11 +37,11 @@ namespace act {
 		public:
 			CameraRoomNode(CameraDeviceRef camera, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID = "");
 
-			CameraRoomNode(ci::Capture::DeviceRef deviceRef, std::string deviceName, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID = "");
+			//CameraRoomNode(ci::Capture::DeviceRef deviceRef, std::string name, glm::vec3 position, glm::vec3 rotation, float radius, act::UID replyUID = "");
 			virtual ~CameraRoomNode();
 
 			static std::shared_ptr<CameraRoomNode> create(CameraDeviceRef camera, std::string name, glm::vec3 position = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3 rotation = glm::vec3(0.0f,0.0f,0.0f), float radius = 0.5f, act::UID replyUID = "") { return std::make_shared<CameraRoomNode>(camera, name, position, rotation, radius, replyUID); };
-			static std::shared_ptr<CameraRoomNode> create(ci::Capture::DeviceRef deviceRef, std::string deviceName, std::string name, glm::vec3 position = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), float radius = 0.5f, act::UID replyUID= "") { return std::make_shared<CameraRoomNode>(deviceRef, deviceName, name, position, rotation, radius, replyUID); };
+			//static std::shared_ptr<CameraRoomNode> create(ci::Capture::DeviceRef deviceRef, std::string name, glm::vec3 position = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), float radius = 0.5f, act::UID replyUID= "") { return std::make_shared<CameraRoomNode>(deviceRef, name, position, rotation, radius, replyUID); };
 
 
 			virtual void setup()	override;

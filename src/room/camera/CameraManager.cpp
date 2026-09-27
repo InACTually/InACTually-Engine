@@ -24,7 +24,8 @@ act::room::CameraManager::CameraManager()
 	: RoomNodeManagerBase("cameraManager")
 {
 	m_selectedDevice = -1;
-	m_usedDevicesNames = std::vector<std::string>(0);
+	m_devicesNamesInUse = std::vector<std::string>(0);
+	m_captionsInUse = std::vector<std::string>(0);
 	refreshLists();
 	
 }
@@ -47,7 +48,8 @@ act::room::RoomNodeBaseRef act::room::CameraManager::drawMenu()
 	if (ImGui::Button("add Device")) {
 		m_calibrator = CameraCalibrator::create();
 		m_calibrator->setCamera(m_currentCamera); 
-		m_doCalibrate = true;
+		m_doCalibrate = false;
+		addSelectedDevice(m_availableDeviceNames[m_selectedDevice]);
 	}
 	
 	if (ImGui::Button("refresh Devicelist")) {
@@ -68,13 +70,13 @@ act::room::RoomNodeBaseRef act::room::CameraManager::drawMenu()
 		if (ImGui::Button("Cancel")) {
 			ImGui::CloseCurrentPopup();
 			m_doCalibrate = false;
-			addSelectedDevice(m_availableDeviceNames[m_selectedDevice], m_availableDeviceNames[m_selectedDevice]);
+			addSelectedDevice(m_availableDeviceNames[m_selectedDevice]);
 		}
 		ImGui::SameLine();
 		if (m_calibrator->isFinishedCalibrating() && ImGui::Button("Apply")) {
 			ImGui::CloseCurrentPopup();
 			m_doCalibrate = false;
-			addSelectedDevice(m_availableDeviceNames[m_selectedDevice], m_availableDeviceNames[m_selectedDevice]);
+			addSelectedDevice(m_availableDeviceNames[m_selectedDevice]);
 		}
 		
 
@@ -146,11 +148,13 @@ void act::room::CameraManager::fromJson(ci::Json json)
 		auto nodesJson = json["nodes"];
 		for (auto&& node : nodesJson) {
 			std::string deviceName = "";
-			util::setValueFromJson(node, "name", deviceName);
+			util::setValueFromJson(node, "deviceName", deviceName);
 
 			std::string caption = deviceName;
 			util::setValueFromJson(node, "caption", caption);
-			auto camRoomNode = addDevice(deviceName, caption);
+
+			auto camRoomNode = addDevice(deviceName);
+			camRoomNode->setCaption(caption);
 
 			camRoomNode->fromJson(node);
 
@@ -175,7 +179,7 @@ act::room::CameraRoomNodeRef act::room::CameraManager::getCameraByIndex(int inde
 		return getCamera(m_usedDevicesUID[index]);
 	}
 	return nullptr;
-}
+} 
 
 act::proc::ImageOutputPortRef act::room::CameraManager::getCameraPort(act::UID cameraUID)
 {
@@ -193,10 +197,12 @@ act::proc::ImageOutputPortRef act::room::CameraManager::getCameraPort(act::UID c
 
 void act::room::CameraManager::refreshLists()
 {
-	m_usedDevicesNames.clear();
+	m_devicesNamesInUse.clear();
+	m_captionsInUse.clear();
 	m_usedDevicesUID.clear();
 	for (auto&& camera : m_nodes) {
-		m_usedDevicesNames.push_back(camera->getName());
+		m_devicesNamesInUse.push_back(camera->getName());
+		m_captionsInUse.push_back(camera->getCaption());
 		m_usedDevicesUID.push_back(camera->getUID());
 	}
 
@@ -206,14 +212,12 @@ void act::room::CameraManager::refreshLists()
 	for (auto&& d : m_devices) {
 		if(std::find_if(m_nodes.begin(), m_nodes.end(), [d](RoomNodeBaseRef node) { return node->getName() == d->getName();}) == m_nodes.end())
 			if (d->getName() != kinectNameFilter) {
-				if (!(std::find(m_usedDevicesNames.begin(), m_usedDevicesNames.end(), d->getName()) != m_usedDevicesNames.end())) {
+				if (!(std::find(m_devicesNamesInUse.begin(), m_devicesNamesInUse.end(), d->getName()) != m_devicesNamesInUse.end())) {
 					m_availableDeviceNames.push_back(d->getName());
 				}
 				
 			}
-	}
-
-	
+	}	
 }
 
 void act::room::CameraManager::setCameraByDeviceName(std::string deviceName)
@@ -229,19 +233,18 @@ void act::room::CameraManager::setCameraByDeviceName(std::string deviceName)
 		m_currentCamera = act::room::CameraDevice::create(device);
 }
 
-act::room::RoomNodeBaseRef act::room::CameraManager::addDevice(std::string deviceName, std::string name)
+act::room::RoomNodeBaseRef act::room::CameraManager::addDevice(std::string deviceName)
 {
-	
 	auto device = *std::find_if(std::begin(m_devices), std::end(m_devices) - 1, [&](ci::Capture::DeviceRef device) { return device->getName() == deviceName; });
 	if (device) {
 		if (m_currentCamera && m_currentCamera->getName() == deviceName) {
-			auto cam = CameraRoomNode::create(m_currentCamera, name);
+			auto cam = CameraRoomNode::create(m_currentCamera, deviceName);
 			m_nodes.push_back(cam);
 			refreshLists();
 			return cam;
 		}
 		else {
-			auto cam = CameraRoomNode::create(device, device->getName(), name);
+			auto cam = CameraRoomNode::create(CameraDevice::create(device), deviceName);
 			m_nodes.push_back(cam);
 			refreshLists();
 			return cam;
@@ -249,7 +252,7 @@ act::room::RoomNodeBaseRef act::room::CameraManager::addDevice(std::string devic
 	}
 	else { // if device not available anymore, i.e. loading Nodes
 		CI_LOG_W("Cannot find CameraDevice " << deviceName << "!");
-		auto cam = CameraRoomNode::create(nullptr, deviceName, name);
+		auto cam = CameraRoomNode::create(nullptr, deviceName);
 		m_nodes.push_back(cam);
 		return cam;
 		//refreshDeviceList();
@@ -258,17 +261,17 @@ act::room::RoomNodeBaseRef act::room::CameraManager::addDevice(std::string devic
 	return nullptr;
 }
 
-act::room::RoomNodeBaseRef act::room::CameraManager::addSelectedDevice(std::string deviceName, std::string name) {
+act::room::RoomNodeBaseRef act::room::CameraManager::addSelectedDevice(std::string deviceName) {
 	if (m_currentCamera->hasCapture()) {
 
-		auto cam = CameraRoomNode::create(m_currentCamera, name);
+		auto cam = CameraRoomNode::create(m_currentCamera, deviceName);
 		m_nodes.push_back(cam);
 		refreshLists();
 		return cam;
 	}
 	else { // if device not available anymore, i.e. loading Nodes
 		CI_LOG_W("Cannot find CameraDevice " << deviceName << "!");
-		auto cam = CameraRoomNode::create(nullptr, name);
+		auto cam = CameraRoomNode::create(nullptr, deviceName);
 		m_nodes.push_back(cam);
 		return cam;
 		//refreshDeviceList();

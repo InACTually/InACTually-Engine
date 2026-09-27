@@ -49,10 +49,6 @@ void act::mod::RoomModule::setup(act::room::RoomManagersRef roomMgrs, act::net::
 
 	act::room::RoomNodeBase::setPublisher(m_networkMgr);
 
-	for (auto&& mgr : m_roomMgrs->list) {
-		mgr->setup();
-	}
-
 	m_stage->setup(m_roomMgrs);
 }
 
@@ -398,7 +394,7 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 	}
 
 	if (roomNodeName == "camera") {
-		node = m_roomMgrs->cameraMgr->addDevice(deviceName, name);
+		node = m_roomMgrs->cameraMgr->addDevice(deviceName);
 	}
 
 	if (roomNodeName == "kinect") {

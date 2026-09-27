@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021-2024
+	This file is created and substantially modified: 2021-2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -20,7 +20,7 @@
 #include "roompch.hpp"
 
 #include "cinder/Capture.h"
-
+#include "TextureHelper.hpp"
 
 namespace act {
 	namespace room {
@@ -67,7 +67,7 @@ namespace act {
 			bool	m_isCalibrated = false;
 			bool	m_flipped = false;
 
-			cv::UMat remap(cv::UMat image);
+			void	remap(cv::UMat image);
 			
 			cv::Mat m_intrinsic;
 			cv::Mat m_distCoeffs;

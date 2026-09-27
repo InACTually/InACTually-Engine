@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -20,13 +20,14 @@
 
 #include "implot.h"
 
-
 act::proc::FlowDetectionProcNode::FlowDetectionProcNode() : ProcNodeBase("FlowDetection") {
 
 	m_displayScale = 0.8f;
 	m_resizeScale = 0.3f;
 	m_visualize = false;
 	m_movementValue = 0.0f;
+
+	m_textureHelper = TextureHelper::create();
 
 	auto image = createImageInput("image", [&](cv::UMat mat) { this->onMat(mat); });
 
@@ -48,12 +49,12 @@ void act::proc::FlowDetectionProcNode::draw() {
 
 	ImGui::Value("movement: ", m_movementValue, "%.3f");
 
-	if (m_texture && m_visualize) {
+	if (m_textureHelper->hasTexture() && m_visualize) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
 
-		glm::vec2 texSize = ci::Rectf(m_texture->getBounds()).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
-		ImGui::Image(m_texture, texSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		glm::vec2 texSize = ci::Rectf(glm::vec2(0, 0), ci::fromOcv(m_textureHelper->getTexture().size())).getCenteredFit(ci::Rectf(glm::ivec2(0, 0), m_drawSize), true).getSize();
+		ImGui::Image(m_textureHelper->getTexture().texId(), texSize);
 
 		ci::gl::pushMatrices();
 	}
@@ -117,11 +118,11 @@ void act::proc::FlowDetectionProcNode::onMat(cv::UMat event) {
 		hsv.convertTo(hsv8, CV_8U, 255.0);
 		cvtColor(hsv8, bgr, cv::COLOR_HSV2BGR);
 
+		cv::UMat img = bgr.getUMat(cv::ACCESS_FAST);
 
-
-		m_imagePort->send(bgr.getUMat(cv::ACCESS_FAST));
+		m_imagePort->send(img);
 		if (m_visualize) {
-			m_texture = ci::gl::Texture2d::create(ci::fromOcv(bgr));
+			m_textureHelper->toTextureAsync(img);
 		}
 	}
 }

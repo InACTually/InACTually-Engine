@@ -196,6 +196,7 @@
     <ClInclude Include="..\include\processing\PortType.hpp" />
     <ClInclude Include="..\include\processing\PositionProcNode.hpp" />
     <ClInclude Include="..\include\processing\StringProcNode.hpp" />
+    <ClInclude Include="..\include\processing\TextureHelper.hpp" />
     <ClInclude Include="..\include\processing\TriggerValueProcNode.hpp" />
     <ClInclude Include="..\include\processing\TweenProcNode.hpp" />
     <ClInclude Include="..\include\processing\Vector2ProcNode.hpp" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\src\processing\PointcloudProcNode.cpp" />
     <ClCompile Include="..\src\processing\PositionProcNode.cpp" />
     <ClCompile Include="..\src\processing\StringProcNode.cpp" />
+    <ClCompile Include="..\src\processing\TextureHelper.cpp" />
     <ClCompile Include="..\src\processing\TriggerValueProcNode.cpp" />
     <ClCompile Include="..\src\processing\TweenProcNode.cpp" />
     <ClCompile Include="..\src\processing\Vector2ProcNode.cpp" />

@@ -21,7 +21,7 @@
 #include "MatListener.hpp"
 
 #include "camera/CameraManager.hpp"
-
+#include "TextureHelper.hpp"
 
 namespace act {
 	namespace proc {
@@ -44,11 +44,11 @@ namespace act {
 		private:
 			act::room::CameraManagerRef		m_camMgr;
 			int								m_selectedCamera = 0;
-			std::string						m_selectedCameraName;
+			std::string						m_selectedCameraDeviceName;
 			act::UID						m_selectedCameraUID;
 
 			ci::SurfaceRef					m_captureSurface;
-			ci::gl::Texture2dRef			m_captureTexture;
+			TextureHelperRef				m_textureHelper;
 
 			glm::ivec2						m_captureSize;
 

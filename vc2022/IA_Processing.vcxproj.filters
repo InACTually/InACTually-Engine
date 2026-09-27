@@ -258,6 +258,9 @@
     <ClCompile Include="..\src\processing\ContainerProcNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\TextureHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\processing\IDBase.hpp">
@@ -507,6 +510,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\PortRefs.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\processing\TextureHelper.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

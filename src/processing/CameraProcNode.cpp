@@ -4,12 +4,12 @@
 	> interactive theater for actual acts
 	> this file is part of the "InACTually Engine", a MediaServer for driving all technology
 
-	Copyright (c) 2021â€“2025 Lars Engeln, Fabian TÃ¶pfer
+	Copyright (c) 2021-2025 Lars Engeln, Fabian Töpfer
 	Copyright (c) 2025 InACTually Community
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -26,12 +26,25 @@ act::proc::CameraProcNode::CameraProcNode() : ProcNodeBase("Camera", NT_INPUT) {
 	m_show = false;
 	m_selectedCamera = 0;
 
+	try {
+		m_textureHelper = proc::TextureHelper::create();
+	}
+	catch (const std::exception& e) {
+		CI_LOG_E("Failed to create texture helper: " << e.what());
+	}
+	catch (...) {
+		CI_LOG_E("Failed to create texture helper");
+	}
+
 	m_cameraImageInPort = createImageInput("cameraImage", [&](cv::UMat image) {
+		if(image.empty())
+			return;
+
 		if (m_cameraRoomNode)
 			m_cameraImageOutPort->send(image); // , m_cameraRoomNode);
 
-		if (m_show) {
-			m_captureTexture = ci::gl::Texture2d::create(ci::fromOcv(image));
+		if (m_show && !image.empty()) {
+			m_textureHelper->toTextureAsync(image, [this](cv::ogl::Texture2D texture) {});	
 		}
 	}, false);
 
@@ -70,19 +83,19 @@ void act::proc::CameraProcNode::draw() {
 		// checkbox was clicked
 	}
 
-	if (m_camMgr->getUsedCameraNames().empty())
+	if (m_camMgr->getCaptionOfCamerasInUse().empty())
 		ImGui::Text("No CameraDevice has been set up.");
 	else {
 		ImGui::SetNextItemWidth(m_drawSize.x - ImGui::CalcTextSize("CameraDevice").x);
-		if (ImGui::Combo("CameraDevice", &m_selectedCamera, m_camMgr->getUsedCameraNames())) {
+		if (ImGui::Combo("CameraDevice", &m_selectedCamera, m_camMgr->getCaptionOfCamerasInUse())) {
 			attachCamera(m_camMgr->getCameraByIndex(m_selectedCamera));
 		}
 	}
 
-	if (m_show && m_captureTexture) {
+	if (m_show && !m_textureHelper->getTexture().empty()) {
 		ci::gl::pushMatrices();
 		ci::gl::rotate(ci::toRadians(180.0f));
-		ImGui::Image(m_captureTexture, m_drawSize, glm::vec2(1, 1), glm::vec2(0, 0));
+		ImGui::Image(m_textureHelper->getTexture().texId(), m_drawSize);
 		ci::gl::pushMatrices();
 	}
 
@@ -93,22 +106,22 @@ void act::proc::CameraProcNode::draw() {
 
 ci::Json act::proc::CameraProcNode::toParams() {
 	ci::Json json = ci::Json::object();
-	json["selectedDevice"] = m_selectedCameraName;
+	json["selectedDevice"] = m_selectedCameraDeviceName;
 	json["show"] = m_show;
 	return json;
-}
+} 
 
 void act::proc::CameraProcNode::fromParams(ci::Json json) {
 	util::setValueFromJson(json, "show", m_show);
 
-	if (util::setValueFromJson(json, "selectedDevice", m_selectedCameraName)) {
-		auto&& port = m_camMgr->getCameraPort(m_selectedCameraName);
+	if (util::setValueFromJson(json, "selectedDevice", m_selectedCameraDeviceName)) {
+		auto&& port = m_camMgr->getCameraPort(m_selectedCameraDeviceName);
 		if (port)
 			port->connect(m_cameraImageInPort);
 
 		m_selectedCamera = 0;
-		for (auto&& name : m_camMgr->getUsedCameraNames()) {
-			if (name == m_selectedCameraName)
+		for (auto&& name : m_camMgr->getDeviceNamesOfCamerasInUse()) {
+			if (name == m_selectedCameraDeviceName)
 				break;
 			m_selectedCamera++;
 		}
@@ -127,7 +140,7 @@ void act::proc::CameraProcNode::attachCamera(act::room::CameraRoomNodeRef camera
 	}
 	if (camera) {
 		m_cameraRoomNode = camera;
-		m_selectedCameraName = m_cameraRoomNode->getName();
+		m_selectedCameraDeviceName = m_cameraRoomNode->getName();
 		if (m_cameraRoomNode) {
 			m_cameraRoomNode->getCameraImagePort()->connect(m_cameraImageInPort);
 		}

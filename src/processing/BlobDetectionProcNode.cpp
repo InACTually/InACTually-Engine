@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2023
+	This file is created and substantially modified: 2022-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -21,6 +21,8 @@
 
 act::proc::BlobDetectionProcNode::BlobDetectionProcNode() : ProcNodeBase("BlobDetection") {
 	m_drawSize = glm::ivec2(400, 300);
+
+	m_fgMaskTex = proc::TextureHelper::create();
 
 	valuesChanged = false;
 
@@ -50,12 +52,11 @@ void act::proc::BlobDetectionProcNode::update() {
 void act::proc::BlobDetectionProcNode::draw() {
 	beginNodeDraw();
 
-	if (m_texture_fgMask) {
+	if (m_fgMaskTex->hasTexture()) {
 		ci::gl::pushMatrices();
-		ci::gl::rotate(ci::toRadians(180.0f));
+		//ci::gl::rotate(ci::toRadians(180.0f));
 
-		ImGui::Image(m_texture_fgMask, glm::vec2(m_drawSize.x, m_drawSize.y), glm::vec2(1, 1), glm::vec2(0, 0));
-
+		ImGui::Image(m_fgMaskTex->getTexture().texId(), glm::vec2(m_drawSize.x, m_drawSize.y));
 		ci::gl::pushMatrices();
 	}
 
@@ -137,15 +138,15 @@ void act::proc::BlobDetectionProcNode::onMat(cv::UMat event) {
 		if (!weakSelf.lock())
 			return;
 
+		m_bgCutoutPort->send(m_backgroundCutout);
+		m_fgCutoutPort->send(m_foregroundCutout);
+		m_fgMaskPort->send(m_foregroundMask);
+
 		if (!m_foregroundMask.empty())
-			m_texture_fgMask = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundMask));
-		if (!m_backgroundCutout.empty())
-			m_texture_bgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_backgroundCutout));
-		if (!m_foregroundCutout.empty())
-			m_texture_fgCutout = ci::gl::Texture2d::create(ci::fromOcv(m_foregroundCutout)); 
-		float sizeFactor = 0.4;
-		if (m_texture_fgMask)
-			m_drawSize = glm::ivec2(m_texture_fgMask->getWidth() * sizeFactor, m_texture_fgMask->getHeight() * sizeFactor);
+			m_fgMaskTex->toTextureAsync(m_foregroundMask, [this](cv::ogl::Texture2D texture) {
+				float sizeFactor = 0.4;
+				m_drawSize = glm::ivec2(m_fgMaskTex->getTexture().cols() * sizeFactor, m_fgMaskTex->getTexture().rows() * sizeFactor);
+			});	
 	});
 }
 

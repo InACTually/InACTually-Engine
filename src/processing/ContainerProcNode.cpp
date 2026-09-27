@@ -40,7 +40,6 @@ act::proc::ContainerProcNode::~ContainerProcNode() {
 void act::proc::ContainerProcNode::setup() {};
 
 void act::proc::ContainerProcNode::update() {
-	// for (auto&& node : m_nodes) {
 	for(int i = 0; i < m_nodes.size();) {
 		if (!m_nodes[i]) {
 			CI_LOG_W("[ContainerProcNode - " << getTitle() << "] a node is empty");
@@ -48,7 +47,8 @@ void act::proc::ContainerProcNode::update() {
 			continue;
 		}
 		if (m_nodes[i]->isEnabled()) {
-			m_functionNode.try_put(m_nodes[i]);
+			//m_functionNode.try_put(m_nodes[i]);
+			m_nodes[i]->update();
 		}
 
 		i++;

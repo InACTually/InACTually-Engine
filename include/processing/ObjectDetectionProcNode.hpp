@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2021
+	This file is created and substantially modified: 2021, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -38,11 +38,11 @@ namespace act {
 			void onMat(cv::UMat event);
 
 		private:
-			ci::gl::Texture2dRef				m_texture;
+			TextureHelperRef					m_textureHelper;
 			float								m_displayScale;
 
-			ImageOutputPortRef				m_imagePort;
-			ImageOutputPortRef				m_detectionImagePort;
+			ImageOutputPortRef					m_imagePort;
+			ImageOutputPortRef					m_detectionImagePort;
 			OutputPortRef<featureList>			m_featureListPort;
 
 			float								m_minConfidence;
@@ -54,20 +54,23 @@ namespace act {
 			void								initNetwork();
 			featureList							m_currentObjects;
 
+			cv::Size							m_inputSize;
 			cv::dnn::Net						m_network;
-			std::vector<std::string>			m_names;
-			std::string							m_outputLayer;
 			std::vector<std::string>			m_classes;
+			std::vector<int>					m_strides;
+			cv::Mat								m_expandedStrides;
+			cv::Mat								m_grids;
 
-			std::thread							m_thread;
-			cv::UMat							m_processedFrame;
-			std::atomic<bool>					m_isProcessing;
-			std::atomic<bool>					m_isProcessingDone;
-			std::vector<cv::Mat>				m_detection;
+			float								m_nmsThreshold;
+			float								m_objThreshold;
 
-			std::vector<std::string>			getOutputsNames(const cv::dnn::Net& net);
-			std::vector<cv::Rect>				processDetection(cv::UMat& frame, const std::vector<cv::Mat>& outs);
-			void								drawBox(std::string className, float conf, int left, int top, int right, int bottom, cv::UMat& frame);
+			void								generateAnchors();
+
+			cv::Mat								preprocess(cv::UMat frame, cv::Size targetSize, float ratio);
+			cv::Mat								detect(cv::Mat blob);
+			cv::Mat								postprocess(cv::Mat	outputs);
+			std::vector<cv::Rect>				processDetection(cv::UMat frame, const cv::Mat& outputs, float scaleFactor);
+			void								drawBox(cv::UMat& frame, cv::Rect box, std::string className, float confidence);
 
 		}; using ObjectDetectionProcNodeRef = std::shared_ptr<ObjectDetectionProcNode>;
 

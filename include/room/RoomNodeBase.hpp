@@ -88,7 +88,7 @@ namespace act {
 			bool			getIsEmphasized()	{ return m_isHovered  || m_isHighlighted; }
 			bool			getIsUnfolded()		{ return m_isSelected || m_isShowingDetails; }
 
-			std::string getName() const { return m_name; };
+			std::string getName() const { return m_deviceName; };
 
 			std::string getCaption() const { return m_caption; };
 			void setCaption(std::string caption) { m_caption = caption; };
@@ -112,6 +112,7 @@ namespace act {
 
 		protected:
 			std::string				m_caption;
+			std::string				m_deviceName;
 
 			int						m_markerID = -1;					//-1 equals no assigned marker
 

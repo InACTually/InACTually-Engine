@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2023
+	This file is created and substantially modified: 2022-2023, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -54,18 +54,13 @@ namespace act {
 			bool m_detectShadows;
 			float m_learningRate;
 
-			ci::gl::Texture2dRef	m_texture_bg;
-			ci::gl::Texture2dRef	m_texture_fgMask;
-			ci::gl::Texture2dRef	m_texture_bgMask;
-			ci::gl::Texture2dRef	m_texture_fgCutout;
-			ci::gl::Texture2dRef	m_texture_bgCutout;
+			TextureHelperRef					m_fgMaskTex;
 
-			cv::Ptr<cv::BackgroundSubtractor> m_bgModel;
+			cv::Ptr<cv::BackgroundSubtractor>	m_bgModel;
 			cv::UMat	m_foregroundMask;
 			cv::UMat	m_backgroundMask;
 			cv::UMat	m_foregroundCutout;
 			cv::UMat	m_backgroundCutout;
-			cv::UMat	m_backgroundImg;
 
 			ImageOutputPortRef	m_fgMaskPort;
 			ImageOutputPortRef	m_fgCutoutPort;
