@@ -69,7 +69,7 @@ void act::proc::ObjectDetectionProcNode::initNetwork() {
     m_strides = std::vector<int>{ 8, 16, 32 };
     m_inputSize = cv::Size(640, 640);
 
-	std::string path = ci::app::getAssetPath("3rd/yolox/object_detection_yolox_2022nov.onnx").string();
+	std::string path = ci::app::getAssetPath("3rd/models/object_detection_yolox/object_detection_yolox_2022nov.onnx").string();
 	
     if (path.empty()) {
         CI_LOG_E("File not avaiable.");
@@ -82,8 +82,6 @@ void act::proc::ObjectDetectionProcNode::initNetwork() {
         CI_LOG_EXCEPTION("ObjectDetection", exc);
     }
 
-	//add this for cuda support
-	// 
 	m_network.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
 	m_network.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
 
@@ -158,18 +156,17 @@ void act::proc::ObjectDetectionProcNode::generateAnchors()
 void act::proc::ObjectDetectionProcNode::onMat(cv::UMat event) {
 	m_imagePort->send(event);
 	
-    cv::Size targetSize = cv::Size(640, 640);
-    double ratio = std::min(targetSize.height / double(event.rows), targetSize.width / double(event.cols));
+    double ratio = std::min(m_inputSize.height / double(event.rows), m_inputSize.width / double(event.cols));
 
 
-    cv::Mat blob = preprocess(event, targetSize, ratio);
+    cv::UMat blob = preprocess(event, m_inputSize, ratio);
 
     cv::Mat predictions = detect(blob);
 
     processDetection(event.clone(), predictions, ratio);
 }
 
-cv::Mat act::proc::ObjectDetectionProcNode::preprocess(cv::UMat frame, cv::Size targetSize, float ratio)
+cv::UMat act::proc::ObjectDetectionProcNode::preprocess(cv::UMat frame, cv::Size targetSize, float ratio)
 {
     cv::UMat resizeImg;
     cv::UMat paddedImg(targetSize.height, targetSize.width, CV_32FC3, cv::Scalar::all(114.0));
@@ -184,11 +181,13 @@ cv::Mat act::proc::ObjectDetectionProcNode::preprocess(cv::UMat frame, cv::Size 
 
     cv::resize(frame, resizeImg, cv::Size(int(frame.cols * ratio), int(frame.rows * ratio)), cv::INTER_LINEAR);
     resizeImg.copyTo(paddedImg(cv::Rect(0, 0, int(frame.cols * ratio), int(frame.rows * ratio))));
-
-    return cv::dnn::blobFromImageWithParams(paddedImg.getMat(cv::ACCESS_FAST), params);
+    
+    cv::UMat inputBlob;
+    cv::dnn::blobFromImageWithParams(paddedImg, inputBlob, params);
+    return inputBlob;
 }
 
-cv::Mat act::proc::ObjectDetectionProcNode::detect(cv::Mat blob)
+cv::Mat act::proc::ObjectDetectionProcNode::detect(cv::UMat blob)
 {
     m_network.setInput(blob);
     std::vector<cv::Mat> outputs;
@@ -252,7 +251,6 @@ cv::Mat act::proc::ObjectDetectionProcNode::postprocess(cv::Mat outputs)
     if (keep.size() == 0)
         return cv::Mat();
     return candidates;
-
 }
 
 

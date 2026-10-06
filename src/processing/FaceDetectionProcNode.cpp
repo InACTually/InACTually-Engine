@@ -50,7 +50,7 @@ act::proc::FaceDetectionProcNode::FaceDetectionProcNode() : ProcNodeBase("FaceDe
 	float nms_threshold = 0.3f;;
 	int top_k = 5000;
 
-	std::string path = ci::app::getAssetPath("3rd/faceDetection/face_detection_yunet_2026may.onnx").string();
+	std::string path = ci::app::getAssetPath("3rd/models/face_detection_yunet/face_detection_yunet_2026may.onnx").string();
 	if (path.empty()) {
 		CI_LOG_E("File not avaiable.");
 		return;

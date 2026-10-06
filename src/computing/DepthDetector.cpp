@@ -75,13 +75,13 @@ void act::comp::DepthDetector::initNetwork()
 
 	std::wstring modelFile;
 
-	m_isUsingTiny = true;
+	m_isUsingTiny = false;
 
 	if (m_isUsingTiny) {
-		modelFile = ci::app::getAssetPath("depth-anything/depth_anything_v2_vits_dynamic.onnx").wstring();
+		modelFile = ci::app::getAssetPath("3rd/models/depth-anything_v3/depth_anything_v2_vits_dynamic.onnx").wstring();
 	}
 	else {
-		modelFile = ci::app::getAssetPath("depth-anything/depth_anything_v2_vitb_dynamic.onnx").wstring();
+		modelFile = ci::app::getAssetPath("3rd/models/depth-anything_v3/DA3METRIC-LARGE.onnx").wstring();
 	}
 
 	try {

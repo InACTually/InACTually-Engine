@@ -65,6 +65,8 @@ namespace act {
 			
 			PT_FEATURE,		// std::pair<string,float>
 			PT_FEATURELIST, // std::vector<feature>
+			PT_OBJECT,		// room::ObjectRef
+			PT_OBJECTLIST,  // std::vector<room::ObjectRef>
 			PT_BODY,		// room::BodyRef
 			PT_BODYLIST,	// std::vector<room::BodyRef>
 			
