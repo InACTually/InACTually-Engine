@@ -21,6 +21,7 @@
 
 
 act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlayer") {
+	m_show = true;
 	m_videoSize = glm::ivec2(1920, 1080);
 	m_drawSize = glm::ivec2(m_videoSize.x * 0.25, m_videoSize.y * 0.25);
 
@@ -139,8 +140,10 @@ void act::proc::VideoPlayerProcNode::draw() {
 
 	for(auto&& path : m_paths)
 		ImGui::Text(path.string().c_str());
+	
+	ImGui::Checkbox("show", &m_show);
 
-	if (m_videoTexture) {
+	if (m_show && m_videoTexture) {
 		ci::gl::pushMatrices();
 		ImGui::Image(m_videoTexture, m_drawSize);
 		ci::gl::pushMatrices();
@@ -176,6 +179,7 @@ void act::proc::VideoPlayerProcNode::seek(number playPosition)
 ci::Json act::proc::VideoPlayerProcNode::toParams() {
 	ci::Json json = ci::Json::object();
 
+	json["show"] = m_show;
 	json["paths"] = m_paths;
 	json["resuming"] = m_isResuming;
 	json["looping"] = m_isLooping;
@@ -184,6 +188,7 @@ ci::Json act::proc::VideoPlayerProcNode::toParams() {
 }
 
 void act::proc::VideoPlayerProcNode::fromParams(ci::Json json) {
+	util::setValueFromJson(json, "show", m_show);
 	if (json.contains("paths")) {
 		m_paths.clear();
 		for (auto& path : json["paths"])

@@ -54,6 +54,7 @@ namespace act {
 			ci::fs::path getCurrentPath();
 
 		private:
+			bool					m_show;
 			TextureHelperRef		m_textureHelper;
 			TextureHelperRef		m_fadeTextureHelper;
 			ci::gl::Texture2dRef	m_videoTexture;
