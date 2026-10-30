@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2024
+	This file is created and substantially modified: 2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -82,10 +82,21 @@ namespace act {
 			float								m_minConfidence = 0.4f;
 			std::vector<cv::Mat>				m_detection;
 			cv::Size							m_blobSize;
-			void detect() override;
+			cv::UMat							m_blob;
+			std::vector<int>					m_strides;
+			cv::Mat								m_expandedStrides;
+			cv::Mat								m_grids;
 
+			float								m_nmsThreshold;
+			float								m_objThreshold;
+
+			void								generateAnchors();
+
+			cv::UMat							preprocess(cv::UMat frame, cv::Size targetSize, float ratio);
+			void								detect() override;
+			cv::Mat								postprocess(cv::Mat	outputs);
 			std::vector<std::string>			getOutputsNames(const cv::dnn::Net& net);
-			void								processDetection(cv::UMat& frame, const std::vector<cv::Mat>& outs);
+			void								processDetection(cv::UMat& frame, const cv::Mat& outs, float ratio);
 			void								drawBox(std::string className, float conf, int left, int top, int right, int bottom, cv::UMat& frame);
 
 

@@ -31,7 +31,7 @@ act::proc::FaceEmotionProcNode::FaceEmotionProcNode() : ProcNodeBase("FaceEmotio
 	m_emotionPort = createFeatureOutput("emotion");
 
 	//init network
-	std::string onnxFile = ci::app::getAssetPath("3rd/emotion/emotion-ferplus-8.onnx").string();
+	std::string onnxFile = ci::app::getAssetPath("3rd/models/face_emotion_ferplus/emotion-ferplus-8.onnx").string();
 	m_network = cv::dnn::readNetFromONNX(onnxFile);
 
 	if (m_network.empty()) {

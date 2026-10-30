@@ -66,8 +66,8 @@ namespace act {
 
 			void								generateAnchors();
 
-			cv::Mat								preprocess(cv::UMat frame, cv::Size targetSize, float ratio);
-			cv::Mat								detect(cv::Mat blob);
+			cv::UMat							preprocess(cv::UMat frame, cv::Size targetSize, float ratio);
+			cv::Mat								detect(cv::UMat blob);
 			cv::Mat								postprocess(cv::Mat	outputs);
 			std::vector<cv::Rect>				processDetection(cv::UMat frame, const cv::Mat& outputs, float scaleFactor);
 			void								drawBox(cv::UMat& frame, cv::Rect box, std::string className, float confidence);

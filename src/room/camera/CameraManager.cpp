@@ -49,7 +49,7 @@ act::room::RoomNodeBaseRef act::room::CameraManager::drawMenu()
 		m_calibrator = CameraCalibrator::create();
 		m_calibrator->setCamera(m_currentCamera); 
 		m_doCalibrate = false;
-		addSelectedDevice(m_availableDeviceNames[m_selectedDevice]);
+		addDevice(m_availableDeviceNames[m_selectedDevice]);
 	}
 	
 	if (ImGui::Button("refresh Devicelist")) {
@@ -262,7 +262,7 @@ act::room::RoomNodeBaseRef act::room::CameraManager::addDevice(std::string devic
 }
 
 act::room::RoomNodeBaseRef act::room::CameraManager::addSelectedDevice(std::string deviceName) {
-	if (m_currentCamera->hasCapture()) {
+	if (m_currentCamera && m_currentCamera->hasCapture()) {
 
 		auto cam = CameraRoomNode::create(m_currentCamera, deviceName);
 		m_nodes.push_back(cam);
