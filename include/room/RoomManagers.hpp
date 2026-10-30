@@ -21,7 +21,7 @@
 #include "position/PositionManager.hpp"
 #include "camera/CameraManager.hpp"
 #include "dmx/DMXManager.hpp"
-#include "kinect/KinectManager.hpp"
+//#include "kinect/KinectManager.hpp"
 #include "body/BodyTrackingManager.hpp"
 #include "marker/MarkerManager.hpp"
 #include "object/ObjectManager.hpp"
@@ -41,7 +41,7 @@ namespace act {
 			act::room::PositionManagerRef		positionMgr;
 			act::room::CameraManagerRef			cameraMgr;
 			act::room::DMXManagerRef			dmxMgr;
-			act::room::KinectManagerRef			kinectMgr;
+			//act::room::KinectManagerRef			kinectMgr;
 			act::room::BodyTrackingManagerRef	bodyTrackingMgr;
 			act::room::MarkerManagerRef			markerMgr;
 			act::room::ObjectManagerRef			objectMgr;
@@ -80,7 +80,7 @@ namespace act {
 					m_roomMgrs->positionMgr = act::room::PositionManager::create();
 					m_roomMgrs->cameraMgr = act::room::CameraManager::create();
 					m_roomMgrs->dmxMgr = act::room::DMXManager::create();
-					m_roomMgrs->kinectMgr = act::room::KinectManager::create();
+					//m_roomMgrs->kinectMgr = act::room::KinectManager::create();
 					m_roomMgrs->markerMgr = act::room::MarkerManager::create(m_roomMgrs->cameraMgr);
 					m_roomMgrs->objectMgr = act::room::ObjectManager::create(m_roomMgrs->cameraMgr);
 					m_roomMgrs->audioMgr = act::room::AudioManager::create();
@@ -90,14 +90,14 @@ namespace act {
 					m_roomMgrs->projectorMgr = act::room::ProjectorManager::create();
 					m_roomMgrs->lidarMgr = act::room::LidarManager::create();
 							  
-					m_roomMgrs->bodyTrackingMgr = act::room::BodyTrackingManager::create(m_roomMgrs->kinectMgr);
+					m_roomMgrs->bodyTrackingMgr = act::room::BodyTrackingManager::create(m_roomMgrs->cameraMgr);
 							  
 					m_roomMgrs->list.push_back(m_roomMgrs->actionspaceMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->positionMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->cameraMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->projectorMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->dmxMgr);
-					m_roomMgrs->list.push_back(m_roomMgrs->kinectMgr);
+					//m_roomMgrs->list.push_back(m_roomMgrs->kinectMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->bodyTrackingMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->markerMgr);
 					m_roomMgrs->list.push_back(m_roomMgrs->objectMgr);

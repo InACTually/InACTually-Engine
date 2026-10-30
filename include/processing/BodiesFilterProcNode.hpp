@@ -54,7 +54,6 @@ namespace act {
 			glm::vec3 m_currentPosition;
 
 			bool m_isBody;
-			k4abt_skeleton_t m_skeleton;
 
 			OutputPortRef<room::BodyRef> m_bodyOutPort;
 

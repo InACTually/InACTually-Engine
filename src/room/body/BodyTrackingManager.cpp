@@ -9,7 +9,7 @@
 	Licensed under the MIT License.
 	See LICENSE file in the project root for full license information.
 
-	This file is created and substantially modified: 2022-2024
+	This file is created and substantially modified: 2022-2024, 2026
 
 	contributors:
 	Lars Engeln - mail@lars-engeln.de
@@ -20,9 +20,9 @@
 
 #include <algorithm> 
 
-act::room::BodyTrackingManager::BodyTrackingManager(KinectManagerRef kinectMgr) : RoomNodeManagerBase("bodyTrackingManager")
+act::room::BodyTrackingManager::BodyTrackingManager(CameraManagerRef cameraMgr) : RoomNodeManagerBase("bodyTrackingManager")
 {
-	m_kinectMgr = kinectMgr;
+	m_cameraMgr = cameraMgr;
 	m_bodiesOutPort = act::proc::OutputPort<std::vector<act::room::BodyRef>>::create(act::proc::PT_BODYLIST, "bodies");
 }
 
@@ -36,7 +36,7 @@ void act::room::BodyTrackingManager::setup()
 
 void act::room::BodyTrackingManager::update()
 {
-	m_bodies = m_kinectMgr->getBodies();
+	// TODO: m_bodies = m_cameraMgr->getBodies();
 	if(!m_wereZeroBodiesBefore)
 		m_bodiesOutPort->send(m_bodies);
 

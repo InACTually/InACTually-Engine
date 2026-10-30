@@ -397,9 +397,9 @@ act::room::RoomNodeBaseRef act::mod::RoomModule::roomNodeFactory(std::string roo
 		node = m_roomMgrs->cameraMgr->addDevice(deviceName);
 	}
 
-	if (roomNodeName == "kinect") {
-		node = m_roomMgrs->kinectMgr->addDevice(deviceName, name);
-	}
+	//if (roomNodeName == "kinect") {
+	//	node = m_roomMgrs->kinectMgr->addDevice(deviceName, name);
+	//}
 
 	if (roomNodeName == "speaker") {
 		int channel = 0;

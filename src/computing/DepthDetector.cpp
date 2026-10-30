@@ -17,7 +17,6 @@
 
 #include "roompch.hpp"
 #include "DepthDetector.hpp"
-#include "kinect/KinectDevice.hpp"
 
 #include <chrono>
 using namespace std::chrono_literals;

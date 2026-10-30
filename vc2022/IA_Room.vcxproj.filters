@@ -16,9 +16,6 @@
     <Filter Include="Source Files\display">
       <UniqueIdentifier>{70d69a54-cb65-48cb-969b-7116ac2e6d95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\kinect">
-      <UniqueIdentifier>{79edb36c-2279-4398-aa74-80e3814f827e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\marker">
       <UniqueIdentifier>{d6caff9e-26f3-4007-bb4a-5b895a3d642e}</UniqueIdentifier>
     </Filter>
@@ -75,18 +72,6 @@
     <ClInclude Include="..\include\room\marker\MarkerRoomNode.hpp">
       <Filter>Source Files\marker</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\room\kinect\KinectRoomNode.hpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\room\kinect\KinectDevice.hpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\room\kinect\KinectDummy.hpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\room\kinect\KinectManager.hpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\room\display\DisplayManager.hpp">
       <Filter>Source Files\display</Filter>
     </ClInclude>
@@ -137,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="..\include\room\body\BodyTrackingManager.hpp">
       <Filter>Source Files\body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\utils\KinectHelper.hpp">
-      <Filter>Source Files\kinect</Filter>
     </ClInclude>
     <ClInclude Include="..\include\room\dmx\DimmerRoomNode.hpp">
       <Filter>Source Files\dmx</Filter>
@@ -227,18 +209,6 @@
     </ClCompile>
     <ClCompile Include="..\src\room\marker\MarkerRoomNode.cpp">
       <Filter>Source Files\marker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\room\kinect\KinectDevice.cpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\room\kinect\KinectDummy.cpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\room\kinect\KinectManager.cpp">
-      <Filter>Source Files\kinect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\room\kinect\KinectRoomNode.cpp">
-      <Filter>Source Files\kinect</Filter>
     </ClCompile>
     <ClCompile Include="..\src\room\display\DisplayManager.cpp">
       <Filter>Source Files\display</Filter>

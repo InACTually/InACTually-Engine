@@ -74,7 +74,7 @@ void act::proc::BodiesFilterProcNode::drawPickPosition()
 
 	for (int i = 0; i < m_bodies.size(); i++) {
 		ImGui::PushID(i);
-		auto joint = m_bodies[i]->joints[K4ABT_JOINT_SPINE_CHEST];
+		auto joint = m_bodies[i]->joints[room::BJT_SPINE_CHEST];
 		glm::vec3 position = glm::vec3(joint->position.x, joint->position.y, joint->position.z);
 		if (ImGui::Button("pick position"))
 			m_nearestToPosition = position;
@@ -138,7 +138,7 @@ act::room::BodyRef act::proc::BodiesFilterProcNode::findNearestBody(room::BodyRe
 		if (!b)
 			continue;
 
-		m_currentPosition = b->joints[K4ABT_JOINT_SPINE_CHEST]->position;
+		m_currentPosition = b->joints[room::BJT_SPINE_CHEST]->position;
 		
 		float d = ci::distance(glm::vec2(m_currentPosition.x, m_currentPosition.z), glm::vec2(m_nearestToPosition.x, m_nearestToPosition.z));
 		if (d < distance) {

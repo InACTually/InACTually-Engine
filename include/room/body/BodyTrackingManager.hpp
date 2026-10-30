@@ -18,7 +18,7 @@
 #pragma once
 
 #include "RoomNodeManagerBase.hpp"
-#include "kinect/KinectManager.hpp"
+#include "camera/CameraManager.hpp"
 
 #include "Body.hpp"
 #include "BodyRoomNode.hpp"
@@ -29,10 +29,10 @@ namespace act {
 
 		class BodyTrackingManager : public RoomNodeManagerBase {
 		public:
-			BodyTrackingManager(KinectManagerRef kinectMgr);
+			BodyTrackingManager(CameraManagerRef cameraMgr);
 			~BodyTrackingManager();
 
-			static	std::shared_ptr<BodyTrackingManager> create(KinectManagerRef kinectMgr) { return std::make_shared<BodyTrackingManager>(kinectMgr); };
+			static	std::shared_ptr<BodyTrackingManager> create(CameraManagerRef cameraMgr) { return std::make_shared<BodyTrackingManager>(cameraMgr); };
 
 			void	setup() override;
 			void	update() override;
@@ -46,7 +46,7 @@ namespace act {
 			act::proc::OutputPortRef<std::vector<act::room::BodyRef>> getOutputPort() { return m_bodiesOutPort; };
 
 		private:
-			KinectManagerRef m_kinectMgr;
+			CameraManagerRef m_cameraMgr;
 
 			std::vector<act::room::BodyRef> m_bodies;
 			act::proc::OutputPortRef<std::vector<act::room::BodyRef>> m_bodiesOutPort;

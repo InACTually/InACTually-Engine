@@ -29,8 +29,8 @@ act::proc::BoneVectorProcNode::BoneVectorProcNode() : ProcNodeBase("BoneVector")
 	auto skeleton = InputPort<room::BodyRef>::create(PT_BODY, "Body", [&](room::BodyRef body) { this->onSkeleton(body); });
 	m_inputPorts.push_back(skeleton);
 
-	m_fromJoint = K4ABT_JOINT_ELBOW_RIGHT;
-	m_toJoint = K4ABT_JOINT_HAND_RIGHT;
+	m_fromJoint = room::BJT_ELBOW_RIGHT;
+	m_toJoint = room::BJT_HAND_RIGHT;
 }
 
 act::proc::BoneVectorProcNode::~BoneVectorProcNode() {

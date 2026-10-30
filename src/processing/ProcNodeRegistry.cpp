@@ -33,9 +33,6 @@
 #include "AudioPlayerProcNode.hpp"
 #include "SpectrumProcNode.hpp"
 
-// Azure Kinect
-#include "KinectProcNode.hpp"
-
 // Light
 #include "DMXDimmerProcNode.hpp"
 #include "MovingHeadProcNode.hpp"
@@ -134,9 +131,7 @@ act::proc::ProcNodeRegistry::ProcNodeRegistry()
     act::proc::ProcNodeRegistry::add("Audio", "AudioIn", act::proc::AudioInProcNode::create);
     act::proc::ProcNodeRegistry::add("Audio", "AudioPlayer", act::proc::AudioPlayerProcNode::create);
     act::proc::ProcNodeRegistry::add("Audio", "Spectrum", act::proc::SpectrumProcNode::create);
-
-    act::proc::ProcNodeRegistry::add("Azure Kinect", "Kinect", act::proc::KinectProcNode::create);
-    
+  
     act::proc::ProcNodeRegistry::add("Light", "DMXDimmer", act::proc::DMXDimmerProcNode::create);
     act::proc::ProcNodeRegistry::add("Light", "MovingHead", act::proc::MovingHeadProcNode::create);
 

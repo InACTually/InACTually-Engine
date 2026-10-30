@@ -20,7 +20,6 @@
       <UniqueIdentifier>{2581bff1-2ec0-41c8-93b3-2b48211d0741}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\animation" />
-    <Filter Include="Source Files\azure kinect" />
     <Filter Include="Source Files\general io" />
     <Filter Include="Source Files\network" />
     <Filter Include="Source Files\object marker" />
@@ -68,9 +67,6 @@
     </ClCompile>
     <ClCompile Include="..\src\processing\SpectrumProcNode.cpp">
       <Filter>Source Files\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\processing\KinectProcNode.cpp">
-      <Filter>Source Files\azure kinect</Filter>
     </ClCompile>
     <ClCompile Include="..\src\processing\DMXDimmerProcNode.cpp">
       <Filter>Source Files\light</Filter>
@@ -316,9 +312,6 @@
     </ClInclude>
     <ClInclude Include="..\include\processing\SpectrumProcNode.hpp">
       <Filter>Source Files\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\processing\KinectProcNode.hpp">
-      <Filter>Source Files\azure kinect</Filter>
     </ClInclude>
     <ClInclude Include="..\include\processing\DMXDimmerProcNode.hpp">
       <Filter>Source Files\light</Filter>
