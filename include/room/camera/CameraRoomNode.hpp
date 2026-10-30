@@ -74,7 +74,7 @@ namespace act {
 
 			//ci::SurfaceRef			m_captureci::Surface;
 			ci::gl::Texture2dRef	m_captureTexture;
-			ci::gl::Texture2dRef	m_depthTexture;
+			cv::ogl::Texture2D		m_depthTexture;
 
 			ci::CaptureRef			m_capture;
 			std::string				m_captureName;

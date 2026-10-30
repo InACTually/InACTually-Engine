@@ -87,7 +87,7 @@ act::room::RoomNodeBaseRef act::room::MarkerManager::drawMenu() {
 	}
 
 	for (auto&& tex : m_feedbackTextures) {
-		ImGui::Image(tex, glm::vec2(tex->getSize()) * 0.3f);
+		ImGui::Image(tex.texId(), glm::vec2(tex.cols(), tex.rows()) * 0.3f);
 	}
 	
 	return nullptr;
@@ -169,7 +169,7 @@ void act::room::MarkerManager::checkCameras()
 }
 
 void act::room::MarkerManager::processMarkers() {
-	std::vector<ci::gl::TextureRef> feedbackTextures;
+	std::vector<cv::ogl::Texture2D> feedbackTextures;
 
 	for (auto&& markerDetector : m_markerDetectors) {	
 		auto&& detector = markerDetector.second;
@@ -178,7 +178,7 @@ void act::room::MarkerManager::processMarkers() {
 			continue;
 
 		auto tex = detector->getFeedbackTexture();
-		if (tex && tex->getWidth() > 0 && tex->getHeight() > 0)
+		if (!tex.empty() && tex.cols() > 0 && tex.rows() > 0)
 			feedbackTextures.push_back(tex);
 
 		auto&& cantidates = detector->getCandidates();

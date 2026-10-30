@@ -77,7 +77,7 @@ namespace act {
 
 			std::map<act::UID, comp::MarkerDetectorRef> m_markerDetectors;
 
-			std::vector<ci::gl::TextureRef> m_feedbackTextures;
+			std::vector<cv::ogl::Texture2D> m_feedbackTextures;
 		};
 		using MarkerManagerRef = std::shared_ptr<MarkerManager>;
 	}

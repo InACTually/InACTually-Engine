@@ -77,7 +77,7 @@ act::room::RoomNodeBaseRef act::room::ObjectManager::drawMenu() {
 	}
 
 	for (auto&& tex : m_feedbackTextures) { 
-		ImGui::Image(tex, glm::vec2(tex->getSize()) * 0.6f);
+		ImGui::Image(tex.texId(), glm::vec2(tex.cols(), tex.rows()) * 0.6f);
 	}
 
 	for (auto&& node : m_nodes) {
@@ -132,7 +132,7 @@ void act::room::ObjectManager::checkCameras()
 }
 
 void act::room::ObjectManager::processObjects() {
-	std::vector<ci::gl::TextureRef> feedbackTextures;
+	std::vector<cv::ogl::Texture2D> feedbackTextures;
 
 	for (auto&& objectDetector : m_objectDetectors) {	
 		auto&& detector = objectDetector.second;
@@ -141,7 +141,7 @@ void act::room::ObjectManager::processObjects() {
 			continue;
 
 		auto tex = detector->getFeedbackTexture();
-		if (tex && tex->getWidth() > 0 && tex->getHeight() > 0)
+		if (!tex.empty() && tex.cols() > 0 && tex.rows() > 0)
 			feedbackTextures.push_back(tex);
 
 		auto&& cantidates = detector->getCandidates();

@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -22,6 +21,9 @@
 #include "camera/CameraManager.hpp"
 #include "marker/MarkerRoomNode.hpp"
 #include "camera/CameraRoomNode.hpp"
+#include "processing/TextureHelper.hpp"
+#include <condition_variable>
+#include <mutex>
 #if __has_include(<opencv2/aruco.hpp>)
 #define WITHARUCO
 #endif
@@ -44,8 +46,12 @@ namespace act {
 					if (image.empty())
 						return;
 
-					m_currentImage = image;
-					m_hasNewImage = true;
+					{
+						std::lock_guard<std::mutex> lock(m_stateMutex);
+						m_currentImage = image;
+						m_hasNewImage = true;
+					}
+					m_stateChanged.notify_one();
 					});
 
 				if (camera)
@@ -85,43 +91,48 @@ namespace act {
 
 			cv::UMat getFeedbackImage() { return m_feedbackImage; }
 
-			ci::gl::TextureRef getFeedbackTexture() {
-				cv::UMat mat = cv::UMat(m_feedbackImage);
-				//m_feedbackImage.copyTo(mat);
-				auto img = ci::fromOcv(mat);
-				if (img)
-					return ci::gl::Texture::create(img, ci::gl::Texture::Format().loadTopDown());
+			cv::ogl::Texture2D getFeedbackTexture() {
+				if (!m_textureHelper)
+					m_textureHelper = proc::TextureHelper::create();
 
-				return nullptr;
+				auto tex = m_textureHelper->toTexture(m_feedbackImage);
+				return tex;
 			}
 
 
 			void doDetecting(bool detecting = true) {
-				if (m_detecting == detecting)
-					return;
+				{
+					std::lock_guard<std::mutex> lock(m_stateMutex);
+					if (m_detecting == detecting)
+						return;
+					m_detecting = detecting;
+				}
 
-				m_detecting = detecting;
-
-				if (m_detecting) {
-					m_thread = std::thread([&]() {
-						while (m_detecting) {
-							if (!m_hasNewImage || !m_isInitialized)
-								continue;
-
-							m_hasNewImage = false;
+				if (detecting) {
+					m_thread = std::thread([this]() {
+						while (true) {
+							{
+								std::unique_lock<std::mutex> lock(m_stateMutex);
+								m_stateChanged.wait(lock, [this]() { return !m_detecting || (m_hasNewImage && m_isInitialized); });
+								if (!m_detecting)
+									break;
+								m_hasNewImage = false;
+							}
 							detect();
 						}
 						});
 				}
 				else {
-					while (!m_thread.joinable()) {
-						std::this_thread::sleep_for(5ms);
-					}
-					m_thread.join();
+					m_stateChanged.notify_all();
+					if (m_thread.joinable())
+						m_thread.join();
 				}
 			}
 
-			bool isDetecting() { return m_detecting; }
+			bool isDetecting() {
+				std::lock_guard<std::mutex> lock(m_stateMutex);
+				return m_detecting;
+			}
 
 			bool hasNewCandidates() { return m_areNewCandidatesAvailable; }
 			std::vector<C> getCandidates() { m_areNewCandidatesAvailable = false; return m_currentCandidates; }
@@ -142,10 +153,13 @@ namespace act {
 			std::string m_name;
 
 			proc::ImageInputPortRef m_cameraImageInPort;
+			proc::TextureHelperRef m_textureHelper;
 			bool m_hasNewImage = false;
 
 			bool m_detecting = false;
 			std::thread m_thread;
+			std::mutex m_stateMutex;
+			std::condition_variable m_stateChanged;
 
 		};
 	}

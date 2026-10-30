@@ -106,7 +106,7 @@ void act::proc::FaceDetectionProcNode::draw() {
 }
 
 void act::proc::FaceDetectionProcNode::onMat(cv::UMat event) {
-	if (event.empty() || event.cols < 100 || event.rows < 100)
+	if (event.empty() || event.cols < 100 || event.rows < 100 || m_model.empty())
 		return;
 
 	// clear out the previously detected faces

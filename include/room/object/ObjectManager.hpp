@@ -61,7 +61,7 @@ namespace act {
 
 			std::map<act::UID, comp::ObjectDetectorRef> m_objectDetectors;
 
-			std::vector<ci::gl::TextureRef> m_feedbackTextures;
+			std::vector<cv::ogl::Texture2D> m_feedbackTextures;
 		};
 		using ObjectManagerRef = std::shared_ptr<ObjectManager>;
 	}

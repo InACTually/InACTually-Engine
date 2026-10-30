@@ -1,4 +1,3 @@
-
 /*
 	InACTually
 	> interactive theater for actual acts
@@ -22,9 +21,6 @@
 #include "DetectorBase.hpp"
 #include "camera/CameraRoomNode.hpp"
 
-#include "onnxruntime_cxx_api.h"
-
-
 namespace act {
 	namespace comp {
 
@@ -40,36 +36,26 @@ namespace act {
 			virtual ci::Json toJson();
 			virtual void fromJson(ci::Json json);
 
+			void setInputSize(cv::Size inputSize);
+			cv::Size getInputSize() const { return m_blobSize; }
+
 		private:			
-			static constexpr const int m_width	= 238;
-			static constexpr const int m_height = 238;
-			float mean[3] = { 0.485f, 0.456f, 0.406f }; 
+			static constexpr const int m_defaultWidth = 192; //238;
+			static constexpr const int m_defaultHeight = 192; // 238;
+			float mean[3] = { 0.485f, 0.456f, 0.406f };
 			float std[3] = { 0.229f, 0.224f, 0.225f };
 
-			cv::UMat									m_colorImage;
-			Ort::Env									m_env;
-			OrtCUDAProviderOptionsV2*					m_cudaOpts;
-			Ort::Session								m_session;
-			Ort::Value									m_inputTensor;
-			Ort::Value									m_outputTensor;
-			std::vector<std::string>					m_outputNameStrings;
-			std::vector<const char*>					m_outputNames;
-			std::vector<std::string>					m_inputNameStrings;
-			std::vector<const char*>					m_inputNames;
-			std::vector<float>							m_inputImage; // 268324 = 518*518
-			std::array<float, m_width * m_height>		m_results{};
+			cv::UMat				m_colorImage;
+			cv::dnn::Net			m_net;
 
-			std::array<int64_t, 4> m_inputShape{ 1, 3, m_height, m_width };
-			std::array<int64_t, 3> m_outputShape{ 1, m_height, m_width };
-
-			std::string							m_outputLayer;
-			bool								m_isUsingTiny = true; 
+			std::string				m_outputLayer;
+			bool					m_isUsingTiny = true;
 			void initNetwork();
 
 			bool m_detecting = true;
 
-			std::vector<cv::Mat>				m_detection;
-			cv::Size							m_blobSize;
+			std::vector<cv::UMat>	m_detection;
+			cv::Size				m_blobSize = cv::Size(m_defaultWidth, m_defaultHeight);
 			void detect() override;
 
 			glm::ivec2 m_displaySize = glm::ivec2(640, 360);
