@@ -64,6 +64,11 @@ namespace act {
 			DMXProRef							m_dmxInterface;
 			int									m_selectedInterface;
 			void refreshInterfaceNames();
+
+			// Function to setup a 1 channel dimmer to always have
+			// at least a simple dimmer available
+			void setupSimpleDimmer();
+
 			std::vector<std::string>			m_interfaceNames;
 			void changeInterface(std::string interfaceName);
 

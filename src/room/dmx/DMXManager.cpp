@@ -34,6 +34,8 @@ act::room::DMXManager::DMXManager()
 
 	m_fixtureDescriptionImporter = act::system::FixtureDescriptionImporter::create();
 
+	setupSimpleDimmer();
+
 	refreshInterfaceNames();
 
 	changeInterface("COM3");
@@ -186,6 +188,9 @@ void act::room::DMXManager::fromJson(ci::Json json)
 			CI_LOG_I("loaded Fixture: " << name);
 		}
 
+		if (m_fixtureNames.empty())
+			setupSimpleDimmer();
+
 	}
 
 	if (json.contains("nodes")) {
@@ -220,6 +225,21 @@ void act::room::DMXManager::refreshInterfaceNames()
 
 	if (!m_dmxInterface && !m_interfaceNames.empty())
 		changeInterface(m_interfaceNames[0]);
+}
+
+void act::room::DMXManager::setupSimpleDimmer() {
+	std::string simpleDimmerName = "Dimmer";
+
+	if (!std::count(m_fixtureNames.begin(), m_fixtureNames.end(), simpleDimmerName)){
+		ci::Json simpleDimmerDesc = ci::Json::object();
+		simpleDimmerDesc["name"] = simpleDimmerName;
+		simpleDimmerDesc["channel"] = 1;
+		simpleDimmerDesc["type"] = "dimmer";
+		simpleDimmerDesc["mapping"]["dimmer"] = 1;
+
+		m_fixtureDescriptions.push_back(simpleDimmerDesc);
+		m_fixtureNames.push_back(simpleDimmerName);
+	}
 }
 
 void act::room::DMXManager::changeInterface(std::string interfaceName)
