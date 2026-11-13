@@ -36,16 +36,12 @@ void act::system::FixtureDescriptionImporter::draw() {
 
 	ImGui::OpenPopup("Fixture Import");
 
-	if (ImGui::BeginPopupModal("Fixture Import")) {
+	if (ImGui::BeginPopupModal("Fixture Import", &m_isShowImporter)) {
 
 		drawCustomFixtureImport();
 
 		drawOFLImport();
 
-		if (ImGui::Button("Close Importer")) {
-			m_isShowImporter = false;
-			ImGui::CloseCurrentPopup();
-		}
 		ImGui::EndPopup();
 	}
 }
