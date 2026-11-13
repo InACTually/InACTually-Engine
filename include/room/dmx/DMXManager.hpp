@@ -50,7 +50,7 @@ namespace act {
 			act::room::RoomNodeBaseRef getDeviceByMarkerID(int id);
 			act::room::DimmerRoomNodeRef getDimmerByIndex(int index);
 
-			std::vector<std::string> getFixtureNames() { return m_availableDeviceNames; }
+			std::vector<std::string> getFixtureNames() { return m_fixtureNames; }
 			int hasAvailableDevice(std::string deviceName);
 
 
@@ -59,7 +59,7 @@ namespace act {
 			void saveDevicesToJson();
 			void onImportFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
- 
+
 		private:
 			DMXProRef							m_dmxInterface;
 			int									m_selectedInterface;
@@ -67,8 +67,6 @@ namespace act {
 			std::vector<std::string>			m_interfaceNames;
 			void changeInterface(std::string interfaceName);
 
-			void loadFixtures();
-			void saveFixtures();
 			int getFixtureIndexByName(std::string fixtureName);
 			std::vector<ci::Json>				m_fixtureDescriptions;
 			std::vector<std::string>			m_fixtureNames;
@@ -76,11 +74,9 @@ namespace act {
 
 			act::system::FixtureDescriptionImporterRef m_fixtureDescriptionImporter;
 
-			void refreshLists() override;
-			std::vector<std::string>			m_availableDeviceNames;
 			int									m_currentAddress;
 
-		
+
 		};
 		using DMXManagerRef = std::shared_ptr<DMXManager>;
 	}

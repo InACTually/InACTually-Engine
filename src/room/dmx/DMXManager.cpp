@@ -31,13 +31,10 @@ act::room::DMXManager::DMXManager()
 	m_currentAddress = 1;
 
 	m_fixtureNames = std::vector<std::string>(0);
-	m_availableDeviceNames = std::vector<std::string>(0);
 
 	m_fixtureDescriptionImporter = act::system::FixtureDescriptionImporter::create();
 
 	refreshInterfaceNames();
-	loadFixtures();
-	refreshLists();
 
 	changeInterface("COM3");
 }
@@ -82,14 +79,19 @@ act::room::RoomNodeBaseRef act::room::DMXManager::drawMenu()
 	ImGui::Separator();
 	ImGui::Text("Add Device(s):");
 
-	//ImGui::SetNextItemWidth(m_displaySize.x - ImGui::CalcTextSize("Device").x);
-	ImGui::Combo("Device", &m_selectedFixture, m_fixtureNames);
-	if (ImGui::InputInt("address", &m_currentAddress)) {
-		m_currentAddress = std::clamp(m_currentAddress, 1, 512);
+	if (m_fixtureNames.size() > 0) {
+
+		ImGui::Combo("Device", &m_selectedFixture, m_fixtureNames);
+		if (ImGui::InputInt("address", &m_currentAddress)) {
+			m_currentAddress = std::clamp(m_currentAddress, 1, 512);
+		}
+		if (ImGui::Button("add Device")) {
+			// add input for name
+			return addDevice(m_fixtureDescriptions[m_selectedFixture]["name"], m_selectedFixture, m_currentAddress);
+		}
 	}
-	if (ImGui::Button("add Device")) {
-		// add input for name
-		return addDevice(m_fixtureDescriptions[m_selectedFixture]["name"], m_selectedFixture, m_currentAddress);
+	else {
+		ImGui::Text("No fixture descriptions present in room file.");
 	}
 
 	//Fixture Importer
@@ -130,26 +132,30 @@ ci::Json act::room::DMXManager::toJson()
 {
 	auto json = ci::Json::object();
 
+	// save dmx interface used
 	if(m_dmxInterface)
 		json["interfaceName"] = m_dmxInterface->getDeviceName();
 
+	// save fixture descriptions used for this room
+	ci::Json fixtureDescriptions = ci::Json::object();
+	fixtureDescriptions["devices"] = ci::Json::array();
+	auto& devices = fixtureDescriptions["devices"];
+
+	for (auto&& desc : m_fixtureDescriptions) {
+		devices.push_back(desc);
+	}
+
+	json["fixtureDescriptions"] = devices;
+
+	// save fixture room nodes
 	ci::Json nodes = ci::Json::array();
 	for (auto&& node : m_nodes) {
 		auto device = std::dynamic_pointer_cast<act::room::DMXRoomNodeBase>(node);
 		auto nodeJson = node->toJson();
 		nodes.push_back(nodeJson);
 	}
+
 	json["nodes"] = nodes;
-
-
-	ci::Json availableDevices = ci::Json::array();
-	for (auto&& name : m_fixtureNames) {
-		auto nodeJson = ci::Json::object();
-		nodeJson["deviceName"] = name;
-		availableDevices.push_back(nodeJson);
-	};
-
-	json["availableDevices"] = availableDevices;
 
 	return json;
 }
@@ -167,6 +173,21 @@ void act::room::DMXManager::fromJson(ci::Json json)
 			m_selectedInterface = -1;
 		}
 	}
+
+	if (json.contains("fixtureDescriptions") && json["fixtureDescriptions"].is_array()) {
+
+		m_fixtureDescriptions.clear();
+		m_fixtureNames.clear();
+
+		for (auto&& desc : json["fixtureDescriptions"]) {
+			m_fixtureDescriptions.push_back(desc);
+			std::string name = desc["name"];
+			m_fixtureNames.push_back(name);
+			CI_LOG_I("loaded Fixture: " << name);
+		}
+
+	}
+
 	if (json.contains("nodes")) {
 		auto nodesJson = json["nodes"];
 		for (auto&& node : nodesJson) {
@@ -209,34 +230,12 @@ void act::room::DMXManager::changeInterface(std::string interfaceName)
 	m_dmxInterface = DMXPro::create(interfaceName);
 }
 
-void act::room::DMXManager::loadFixtures()
-{
-	ci::fs::path path = ci::app::getAssetPath("dmx/fixtures.json");
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "dmx/fixtures.json";
-		ci::writeJson(path, ""); // touch
-		saveFixtures();
-	}
-
-	m_fixtureDescriptions.clear();
-	m_fixtureNames.clear();
-	ci::Json fixtureDescriptions = ci::loadJson(ci::loadFile(path));
-
-	int smallestID = INT_MAX;
-	for (auto&& desc : fixtureDescriptions["devices"]) {
-		m_fixtureDescriptions.push_back(desc);
-		std::string name = desc["name"];
-		m_fixtureNames.push_back(name);
-		CI_LOG_I("loaded Fixture: " << name);
-	}
-}
-
 void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
 {
 	if (!fixtureDescription.contains("name")
-	 || !fixtureDescription["name"].is_string()
-	 || !fixtureDescription.contains("type")
-	 || !fixtureDescription.contains("mapping")) {
+		|| !fixtureDescription["name"].is_string()
+		|| !fixtureDescription.contains("type")
+		|| !fixtureDescription.contains("mapping")) {
 		CI_LOG_E("importFixture called with malformed fixtureDescription. Fixture description has to have a name, a type and a mapping!");
 		return;
 	}
@@ -251,8 +250,6 @@ void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
 	m_fixtureDescriptions.push_back(fixtureDescription);
 	m_fixtureNames.push_back(fixturename);
 	CI_LOG_I("imported Fixture loaded:" << fixturename);
-
-	saveFixtures();
 }
 
 void act::room::DMXManager::saveDevicesToJson() {
@@ -276,24 +273,6 @@ void act::room::DMXManager::saveDevicesToJson() {
 
 }
 
-void act::room::DMXManager::saveFixtures()
-{
-	ci::fs::path path = ci::app::getAssetPath("dmx/fixtures.json");
-	if (path.empty()) {
-		path = ci::app::getAssetPath("").string() + "dmx/fixtures.json";
-		ci::writeJson(path, ""); // touch
-	}
-
-	ci::Json fixtureDescriptions = ci::Json::object();
-	fixtureDescriptions["devices"] = ci::Json::array();
-	auto& devices = fixtureDescriptions["devices"];
-
-	for (auto&& desc : m_fixtureDescriptions) {
-		devices.push_back(desc);
-	}
-	ci::writeJson(path, fixtureDescriptions);
-}
-
 int act::room::DMXManager::getFixtureIndexByName(std::string fixtureName)
 {
 	for (int i = 0; i < m_fixtureNames.size(); i++) {
@@ -303,13 +282,6 @@ int act::room::DMXManager::getFixtureIndexByName(std::string fixtureName)
 	return -1;
 }
 
-void act::room::DMXManager::refreshLists()
-{
-	m_availableDeviceNames.clear();
-	for (auto&& device : m_nodes) {
-		m_availableDeviceNames.push_back(device->getName());
-	}
-}
 
 
 act::room::RoomNodeBaseRef act::room::DMXManager::addDevice(std::string name, int fixtureIndex, int startAddress)
