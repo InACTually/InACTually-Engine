@@ -567,7 +567,7 @@ void act::room::ProjectorRoomNode::drawDotGroundGrid()
 	{
 		for (int z = -50; z <= 50; z++)
 		{
-			cv::Mat X = (cv::Mat_<double>(4, 1) << x * spacing, 0, z * spacing, 1.0); //dot in 3D
+			cv::Vec4d X(x * spacing, 0, z * spacing, 1.0); //dot in 3D
 
 			//project 
 			cv::Mat x = m_P * X;
@@ -580,7 +580,7 @@ void act::room::ProjectorRoomNode::drawDotGroundGrid()
 		}
 	}
 
-	cv::Mat X = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1.0);
+	cv::Vec4d X(0, 0, 0, 1.0);
 
 	//reproject 
 	cv::Mat x = m_P * X;
@@ -610,7 +610,7 @@ glm::vec2 act::room::ProjectorRoomNode::getDotFromIndex(int i)
 
 	int collumn = i % 6;
 
-	cv::Mat X = (cv::Mat_<double>(4, 1) << 0, (row + 1) * spacing, (collumn + 1) * spacing, 1.0); //dot in 3D
+	cv::Vec4d X(0, (row + 1) * spacing, (collumn + 1) * spacing, 1.0); //dot in 3D
 
 	//project 
 	cv::Mat x = m_P * X;
@@ -711,37 +711,37 @@ void act::room::ProjectorRoomNode::getTestPairs(std::vector<cv::Point3f>& object
 	double roll = 0.0 * CV_PI / 180.0; // rotation around Z
 
 
-	cv::Mat Rx = (cv::Mat_<double>(3, 3) <<
+	cv::Matx33d Rx(
 		1, 0, 0,
 		0, cos(pitch), -sin(pitch),
 		0, sin(pitch), cos(pitch));
 
-	cv::Mat Ry = (cv::Mat_<double>(3, 3) <<
+	cv::Matx33d Ry(
 		cos(yaw), 0, sin(yaw),
 		0, 1, 0,
 		-sin(yaw), 0, cos(yaw));
 
-	cv::Mat Rz = (cv::Mat_<double>(3, 3) <<
+	cv::Matx33d Rz(
 		cos(roll), -sin(roll), 0,
 		sin(roll), cos(roll), 0,
 		0, 0, 1);
 
 	//combine in order: yaw pitch roll 
-	cv::Mat R = Ry * Rx * Rz;
+	cv::Matx33d R = Ry * Rx * Rz;
 	R = R.t(); //to inverse world to cam rotation
 	
 	//camera center in world space
-	cv::Mat t = (cv::Mat_<double>(3, 1) << 5, 5, 5);
+	cv::Vec3d t(5, 5, 5);
 	t = R * -t; //to world to cam translation
 
 	//calculate correspondences
 	for (auto& p : objectPoints) {
-		cv::Mat Pw = (cv::Mat_<double>(3, 1) << p.x, p.y, p.z);
-		cv::Mat Pc = R * Pw + t;
+		cv::Vec3d Pw(p.x, p.y, p.z);
+		cv::Vec3d Pc = R * Pw + t;
 
-		double Xc = Pc.at<double>(0);
-		double Yc = Pc.at<double>(1);
-		double Zc = -Pc.at<double>(2); // negative z
+		double Xc = Pc[0];
+		double Yc = Pc[1];
+		double Zc = -Pc[2]; // negative z
 
 		double u = fx * Xc / Zc - skew * Yc / Zc + cx; // negative skew cause y flipped
 		double v = fy * Yc / Zc + m_resolution.y - cy;
@@ -837,7 +837,7 @@ void act::room::ProjectorRoomNode::calibrateDLT(const bool useTestPairs)
 	setPrincipalPoint(glm::vec2(K.at<double>(0, 2), K.at<double>(1, 2)), true, false);
 
 	//set extrinsics
-	cv::Mat convertToGL = (cv::Mat_<double>(3, 3) <<
+	cv::Matx33d convertToGL(
 		1, 0, 0,
 		0, -1, 0,
 		0, 0, -1); // convert to openGL
@@ -954,15 +954,16 @@ void act::room::ProjectorRoomNode::calculateErrors(const cv::Mat& P, const std::
 		const cv::Point2f& imgPt = imagePoints[i];
 
 		//Convert to homogeneous coordinates
-		cv::Mat X = (cv::Mat_<double>(4, 1) << objPt.x, objPt.y, objPt.z, 1.0);
+		cv::Vec4d X(objPt.x, objPt.y, objPt.z, 1.0);
 
+		cv::Matx34d Pm;
+		P.copyTo(Pm);
 		//reproject 
-		cv::Mat x = P * X;
+		cv::Vec3d x = Pm * X;
 
 		//Unhomogenize reprojectefc point
-		double u = x.at<double>(0, 0) / x.at<double>(2, 0);
-		double v = x.at<double>(1, 0) / x.at<double>(2, 0);
-
+		double u = x[0] / x[2];
+		double v = x[1] / x[2];
 		//Compute error
 		double dx = imgPt.x - u;
 		double dy = imgPt.y - v;

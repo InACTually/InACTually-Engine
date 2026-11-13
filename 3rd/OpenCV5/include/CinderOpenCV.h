@@ -131,17 +131,17 @@ inline cv::Mat toOcvRef( Channel32f &channel )
 	return cv::Mat( channel.getHeight(), channel.getWidth(), CV_MAKETYPE( CV_32F, 1 ), channel.getData(), channel.getRowBytes() );
 }
 
-inline cv::Mat toOcvRef( Surface8u &surface )
+inline cv::Mat toOcvRef( ci::Surface8u &surface )
 {
 	return cv::Mat( surface.getHeight(), surface.getWidth(), CV_MAKETYPE( CV_8U, surface.hasAlpha()?4:3), surface.getData(), surface.getRowBytes() );
 }
 
-inline cv::Mat toOcvRef( Surface16u &surface )
+inline cv::Mat toOcvRef( ci::Surface16u &surface )
 {
 	return cv::Mat( surface.getHeight(), surface.getWidth(), CV_MAKETYPE( CV_16U, surface.hasAlpha()?4:3), surface.getData(), surface.getRowBytes() );
 }
 
-inline cv::Mat toOcvRef( Surface32f &surface )
+inline cv::Mat toOcvRef( ci::Surface32f &surface )
 {
 	return cv::Mat( surface.getHeight(), surface.getWidth(), CV_MAKETYPE( CV_32F, surface.hasAlpha()?4:3), surface.getData(), surface.getRowBytes() );
 }
@@ -156,27 +156,27 @@ inline ImageSourceRef fromOcv( cv::UMat &umat )
 	return ImageSourceRef( new ImageSourceCvMat( umat.getMat( cv::ACCESS_READ ) ) );
 }
 
-inline cv::Scalar toOcv( const Color &color )
+inline cv::Scalar toOcv( const ci::Color &color )
 {
 	return CV_RGB( color.r * 255, color.g * 255, color.b * 255 );
 }
 
-inline vec2 fromOcv( const cv::Point2f &point )
+inline glm::vec2 fromOcv( const cv::Point2f &point )
 {
-	return vec2( point.x, point.y );
+	return glm::vec2( point.x, point.y );
 }
 
-inline cv::Point2f toOcv( const vec2 &point )
+inline cv::Point2f toOcv( const glm::vec2 &point )
 {
 	return cv::Point2f( point.x, point.y );
 }
 
-inline ivec2 fromOcv( const cv::Point &point )
+inline glm::ivec2 fromOcv( const cv::Point &point )
 {
-	return ivec2( point.x, point.y );
+	return glm::ivec2( point.x, point.y );
 }
 
-inline cv::Point toOcv( const ivec2 &point )
+inline cv::Point toOcv( const glm::ivec2 &point )
 {
 	return cv::Point( point.x, point.y );
 }
@@ -188,7 +188,7 @@ inline cv::Rect toOcv( const ci::Area &r )
 
 inline ci::Area fromOcv( const cv::Rect &r )
 {
-	return Area( r.x, r.y, r.x + r.width, r.y + r.height );
+	return ci::Area( r.x, r.y, r.x + r.width, r.y + r.height );
 }
 
 } // namespace cinder

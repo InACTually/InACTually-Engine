@@ -58,3 +58,5 @@ projects/
 3rd/oneTBB/lib/
 3rd/doctest/doc/
 3rd/doctest/examples/
+3rd/OpenCV5/bin/Debug/opencv_versiond.exe
+3rd/OpenCV5/bin/Release/opencv_version.exe

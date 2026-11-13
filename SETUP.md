@@ -15,7 +15,7 @@ Place Cinder in a folder named "Cinder" parallel to your InACTually-Engine folde
     - for Debug "Multithreaded-Debug-DLL (/MDd)" name the output folder "Debug_MD\..\" likewise
 
 + [OpenCV 5.1.0](https://github.com/opencv/opencv) (or possibly newer) \
-You need to compile OpenCV with "WITH_OPENGL"-flag (best "WITH_TBB") and things you like to have.\
+You need to compile OpenCV with flags: "WITH_OPENGL"-flag, "WITH__OPENCL_SVM", (best "WITH_TBB") and things you like to have.\
 Place OpenCV in `./3rd/OpenCV5` – care: the include folder is `./3rd/OpenCV5/include/opencv`.\
 You need to place/copy the corresponding *.dll's in `vc2022\bin\Release|Debug`.
 

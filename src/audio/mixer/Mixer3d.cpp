@@ -129,19 +129,18 @@ void act::aio::Mixer3d::update()
 			// position of planeIntersection in tangent space
 			glm::vec2 sound2D{ ci::dot(planeIntersection, tangent), ci::dot(planeIntersection, bitangent) };
 
-			cv::Mat mat = (cv::Mat_<float>(2, 2) <<
+			cv::Matx22f mat(
 				speaker2D1.x - speaker2D3.x, speaker2D2.x - speaker2D3.x,
 				speaker2D1.y - speaker2D3.y, speaker2D2.y - speaker2D3.y);
 
-			cv::Mat vec = (cv::Mat_<float>(2, 1) <<
+			cv::Vec2f vec(
 				sound2D.x - speaker2D3.x,
 				sound2D.y - speaker2D3.y);
 
-			cv::Mat sol = (cv::Mat_<float>(2, 1));
-
+			cv::Vec2f sol;
 			cv::solve(mat, vec, sol);
-			float u1{ clamp(sol.at<float>(0)) };
-			float u2{ clamp(sol.at<float>(1)) };
+			float u1{ clamp(sol[0]) };
+			float u2{ clamp(sol[1]) };
 			float u3{ clamp(1.0f - u1 - u2) };
 			float mixCenterRimVolume{ clamp(glm::length(soundPos - m_centroid) / glm::length(planeIntersection - m_centroid)) };
 
@@ -470,19 +469,19 @@ act::aio::Mixer3d::Collider act::aio::Mixer3d::findCollider(glm::vec3 soundPos)
 			p2 = collider.speakers[2].get()->getPosition();
 			p3 = m_centroid;
 		}
-		cv::Mat mat = (cv::Mat_<float>(3, 3) <<
-				p1.x - p0.x, p2.x - p0.x, p3.x - p0.x,
-				p1.y - p0.y, p2.y - p0.y, p3.y - p0.y,
-				p1.z - p0.z, p2.z - p0.z, p3.z - p0.z
-			);
+		cv::Matx33f mat(
+			p1.x - p0.x, p2.x - p0.x, p3.x - p0.x,
+			p1.y - p0.y, p2.y - p0.y, p3.y - p0.y,
+			p1.z - p0.z, p2.z - p0.z, p3.z - p0.z
+		);
 
-		cv::Mat vec = (cv::Mat_<float>(3, 1) <<
-				soundPos.x - p0.x,
-				soundPos.y - p0.y,
-				soundPos.z - p0.z
-			);
+		cv::Vec3f vec(
+			soundPos.x - p0.x,
+			soundPos.y - p0.y,
+			soundPos.z - p0.z
+		);
 
-		cv::Mat sol = (cv::Mat_<float>(3, 1));
+		cv::Vec3f sol;
 
 		cv::solve(mat, vec, sol);
 
