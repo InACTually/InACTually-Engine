@@ -36,6 +36,7 @@ namespace act {
 
 			void	draw();
 			void	update();
+			void	drawCustomFixtureImport();
 			void	drawOFLImport();
 			void	drawOFLFixtureDetails(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
 			void	drawOFLFixtureTable(ofl::OFLFixtureDescriptionRef fixture, int manufacturerId, int fixtureId);
@@ -49,9 +50,13 @@ namespace act {
 
 		private:
 
+			std::vector<ci::Json> m_customFixtures;
+			std::deque<ci::Json> m_FixtureDescImportQueue;
+			void loadCustomFixtures();
+
 			std::map<std::string, std::string> m_oflJsonDmpCache;
 			std::deque<ofl::OFLFixtureDescriptionRef> m_oflFetchFixtureQueue;
-			std::deque<ofl::OFLFixtureDescriptionRef> m_importQueue;
+			std::deque<ofl::OFLFixtureDescriptionRef> m_oflImportQueue;
 			bool m_isOpenOFLInBrowser = false;
 			bool m_isSearchOFLAgain = false;
 			bool m_isOFLReparsing = false;

@@ -50,7 +50,7 @@ namespace act {
 			act::room::RoomNodeBaseRef getDeviceByMarkerID(int id);
 			act::room::DimmerRoomNodeRef getDimmerByIndex(int index);
 
-			std::vector<std::string> getFixtureNames() { return m_availableDeviceNames; }
+			std::vector<std::string> getFixtureNames() { return m_fixtureNames; }
 			int hasAvailableDevice(std::string deviceName);
 
 
@@ -59,28 +59,34 @@ namespace act {
 			void saveDevicesToJson();
 			void onImportFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
- 
+			bool addRoomNodeFromJson(ci::Json json);
+
 		private:
 			DMXProRef							m_dmxInterface;
 			int									m_selectedInterface;
 			void refreshInterfaceNames();
+
+			// Function to setup a 1 channel dimmer to always have
+			// at least a simple dimmer available
+			void setupSimpleDimmer();
+
 			std::vector<std::string>			m_interfaceNames;
 			void changeInterface(std::string interfaceName);
 
-			void loadFixtures();
-			void saveFixtures();
 			int getFixtureIndexByName(std::string fixtureName);
+			
 			std::vector<ci::Json>				m_fixtureDescriptions;
 			std::vector<std::string>			m_fixtureNames;
 			int									m_selectedFixture;
+			int									m_currentAddress;
 
 			act::system::FixtureDescriptionImporterRef m_fixtureDescriptionImporter;
 
-			void refreshLists() override;
-			std::vector<std::string>			m_availableDeviceNames;
-			int									m_currentAddress;
+			// Stores json description of fixtures that could not be initialized properly
+			std::vector<ci::Json>	m_fixtureNodesMissingDesc;
+			bool					m_isSaveBrokenNodes = true;
 
-		
+
 		};
 		using DMXManagerRef = std::shared_ptr<DMXManager>;
 	}

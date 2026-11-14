@@ -21,6 +21,7 @@
 act::system::FixtureDescriptionImporter::FixtureDescriptionImporter() {
 	m_oflDescriptionMapper = OFLDescriptionMapper::create();
 	m_isShowImporter = false;
+	loadCustomFixtures();
 }
 
 act::system::FixtureDescriptionImporter::~FixtureDescriptionImporter() {
@@ -35,14 +36,12 @@ void act::system::FixtureDescriptionImporter::draw() {
 
 	ImGui::OpenPopup("Fixture Import");
 
-	if (ImGui::BeginPopupModal("Fixture Import")) {
+	if (ImGui::BeginPopupModal("Fixture Import", &m_isShowImporter)) {
+
+		drawCustomFixtureImport();
 
 		drawOFLImport();
 
-		if (ImGui::Button("Close Importer")) {
-			m_isShowImporter = false;
-			ImGui::CloseCurrentPopup();
-		}
 		ImGui::EndPopup();
 	}
 }
@@ -87,14 +86,58 @@ void act::system::FixtureDescriptionImporter::update() {
 		m_oflFetchFixtureQueue.pop_front();
 	}
 
-	while (m_importQueue.size() > 0) {
-		auto const& fixture = m_importQueue.front();
-		ci::Json internalDesc = OFLDescriptionMapper::getInternalDescription(fixture);
+	// Gets the internal description of an ofl fixture respecting the selected parameters
+	while (m_oflImportQueue.size() > 0) {
+		auto const& fixture = m_oflImportQueue.front();
+
+		m_FixtureDescImportQueue.push_back(OFLDescriptionMapper::getInternalDescription(fixture));
+
+		m_oflImportQueue.pop_front();
+	}
+
+	while (m_FixtureDescImportQueue.size() > 0) {
+		auto const& fixtureDesc = m_FixtureDescImportQueue.front();
 
 		if (auto const dmxManagerRef = m_importFixtureListenerWRef.lock())
-			dmxManagerRef->onImportFixture(internalDesc);
+			dmxManagerRef->onImportFixture(fixtureDesc);
 
-		m_importQueue.pop_front();
+		m_FixtureDescImportQueue.pop_front();
+	}
+}
+
+void act::system::FixtureDescriptionImporter::drawCustomFixtureImport() {
+	if (ImGui::CollapsingHeader("Custom Fixtures (fixtures.json")) {
+		if (ImGui::BeginTable("custom fixtures table", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg)) {
+			ImGui::TableSetupColumn("Name");
+			ImGui::TableSetupColumn("Channel");
+			ImGui::TableSetupColumn("##importButtons");
+			ImGui::TableHeadersRow();
+
+			for (auto& fixtureDesc : m_customFixtures) {
+
+				if (fixtureDesc.empty() || !fixtureDesc.contains("name") || !fixtureDesc.contains("channel"))
+					continue;
+
+				ImGui::TableNextRow();
+
+				ImGui::TableSetColumnIndex(0);
+				std::string fixtureName = fixtureDesc["name"].get<std::string>();
+				ImGui::Text(fixtureName.c_str());
+
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text(std::to_string(fixtureDesc["channel"].get<int>()).c_str());
+
+				ImGui::TableSetColumnIndex(2);
+				std::string buttonLabel = "Import Fixture##import" + fixtureName;
+				if (ImGui::Button(buttonLabel.c_str())) {
+					m_FixtureDescImportQueue.push_back(fixtureDesc);
+					fixtureDesc.clear(); // clear description to ensure it is only imported once
+					m_isShowImporter = false;
+				}
+			}
+
+			ImGui::EndTable();
+		}
 	}
 }
 
@@ -265,8 +308,9 @@ void act::system::FixtureDescriptionImporter::drawOFLFixtureDetails(ofl::OFLFixt
 
 	// === Import Button
 	ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Always check plausibility of the internal fixture description before importing the fixture!");
-	if (ImGui::Button("Add Fixture To Project") && !fixture->isQueuedForLoading) {
-		m_importQueue.push_back(fixture);
+	std::string buttonLabel = "Import Fixture##import" + internalDescKey;
+	if (ImGui::Button(buttonLabel.c_str()) && !fixture->isQueuedForLoading) {
+		m_oflImportQueue.push_back(fixture);
 		m_isShowImporter = false;
 	}
 }
@@ -356,6 +400,18 @@ void act::system::FixtureDescriptionImporter::drawOFLFixtureTable(ofl::OFLFixtur
 
 void act::system::FixtureDescriptionImporter::registerImportFixtureListener(std::weak_ptr<ImportFixtureListener> listenerWRef) {
 	m_importFixtureListenerWRef = listenerWRef;
+}
+
+void act::system::FixtureDescriptionImporter::loadCustomFixtures() {
+	ci::fs::path path = ci::app::getAssetPath("dmx/fixtures.json");
+	if (path.empty()) return;
+
+	m_customFixtures.clear();
+	ci::Json fixtureDescriptions = ci::loadJson(ci::loadFile(path));
+
+	for (auto&& desc : fixtureDescriptions["devices"]) {
+		m_customFixtures.push_back(desc);
+	}
 }
 
 void act::system::FixtureDescriptionImporter::filterOFLFixtures() {
