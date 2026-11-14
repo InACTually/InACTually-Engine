@@ -79,6 +79,33 @@ act::room::RoomNodeBaseRef act::room::DMXManager::drawMenu()
 	}
 
 	ImGui::Separator();
+
+	if (m_fixtureNodesMissingDesc.size()) {
+		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
+		ImGui::Text("The room contains broken fixture nodes!");
+		ImGui::PopStyleColor();
+		ImGui::Text("The following room nodes are missing their fixture description an will not be processed!");
+		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 200, 0, 255));
+		std::string label = "";
+		for (auto&& node : m_fixtureNodesMissingDesc) {
+			if (node.contains("name") && node["name"].is_string())
+				label = node["name"].get<std::string>();
+			else
+				label = "ukn";
+
+			if (node.contains("params") && node["params"].contains("fixtureName") && node["params"]["fixtureName"].is_string())
+				label = label + ":" + node["params"]["fixtureName"].get<std::string>();
+			else
+				label = label+":ukn";
+
+			ImGui::Text(label.c_str());
+		}
+		ImGui::PopStyleColor();
+		ImGui::Text("Import a fixture with matching name to resolve the error.");
+		ImGui::Checkbox("Keep broken fixture nodes in room file", &m_isSaveBrokenNodes);
+		ImGui::Separator();
+	}
+
 	ImGui::Text("Add Device(s):");
 
 	if (m_fixtureNames.size() > 0) {
@@ -151,10 +178,17 @@ ci::Json act::room::DMXManager::toJson()
 
 	// save fixture room nodes
 	ci::Json nodes = ci::Json::array();
+
 	for (auto&& node : m_nodes) {
 		auto device = std::dynamic_pointer_cast<act::room::DMXRoomNodeBase>(node);
 		auto nodeJson = node->toJson();
 		nodes.push_back(nodeJson);
+	}
+
+	if (m_isSaveBrokenNodes) {
+		for (auto&& node : m_fixtureNodesMissingDesc) {
+			nodes.push_back(node);
+		}
 	}
 
 	json["nodes"] = nodes;
@@ -196,23 +230,8 @@ void act::room::DMXManager::fromJson(ci::Json json)
 	if (json.contains("nodes")) {
 		auto nodesJson = json["nodes"];
 		for (auto&& node : nodesJson) {
-			auto params = node["params"];
-			std::string fixtureName = "";
-			util::setValueFromJson(params, "fixtureName", fixtureName);
-			int startAddress = 0;
-			util::setValueFromJson(params, "startAddress", startAddress);
-
-			int fixtureIndex = getFixtureIndexByName(fixtureName);
-			if (fixtureIndex < 0) {
-				CI_LOG_W("Can not find fixture: " << fixtureName);
-				continue;
-			}
-
-			std::string name = fixtureName;
-			util::setValueFromJson(node, "name", name);
-			auto dmxDevice = addDevice(name, fixtureIndex, startAddress);
-
-			dmxDevice->fromJson(node);
+			if(!addRoomNodeFromJson(node))
+				m_fixtureNodesMissingDesc.push_back(node);
 		}
 	}
 	refreshLists();
@@ -270,6 +289,21 @@ void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
 	m_fixtureDescriptions.push_back(fixtureDescription);
 	m_fixtureNames.push_back(fixturename);
 	CI_LOG_I("imported Fixture loaded:" << fixturename);
+
+	if (m_fixtureNodesMissingDesc.size()) {
+		CI_LOG_I("Checking fixture room nodes with missing description ...");
+
+		for (int i = 0; i < m_fixtureNodesMissingDesc.size(); i++) {
+			auto& node = m_fixtureNodesMissingDesc[i];
+			try {
+				if(addRoomNodeFromJson(node))
+					m_fixtureNodesMissingDesc.erase(m_fixtureNodesMissingDesc.begin() + i);
+			}
+			catch (const std::exception& e) {
+				CI_LOG_E("Failed to addRoomNodeFromJson on fixture missing description " << i << " : " << e.what());
+			}
+		}
+	}
 }
 
 void act::room::DMXManager::saveDevicesToJson() {
@@ -322,6 +356,27 @@ act::room::RoomNodeBaseRef act::room::DMXManager::addDevice(std::string name, in
 		return node;
 	}
 	return nullptr;
+}
+
+bool act::room::DMXManager::addRoomNodeFromJson(ci::Json json) {
+	auto params = json["params"];
+	std::string fixtureName = "";
+	util::setValueFromJson(params, "fixtureName", fixtureName);
+	int startAddress = 0;
+	util::setValueFromJson(params, "startAddress", startAddress);
+
+	int fixtureIndex = getFixtureIndexByName(fixtureName);
+	if (fixtureIndex < 0) {
+		CI_LOG_W("Can not find fixture: " << fixtureName);
+		return false;
+	}
+
+	std::string name = fixtureName;
+	util::setValueFromJson(json, "name", name);
+	auto dmxDevice = addDevice(name, fixtureIndex, startAddress);
+
+	dmxDevice->fromJson(json);
+	return true;
 }
 
 int act::room::DMXManager::hasAvailableDevice(std::string deviceName) {

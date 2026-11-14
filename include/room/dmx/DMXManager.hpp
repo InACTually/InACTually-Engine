@@ -59,6 +59,7 @@ namespace act {
 			void saveDevicesToJson();
 			void onImportFixture(ci::Json fixtureDescription) override;
 			act::room::RoomNodeBaseRef addDevice(std::string name, int fixtureIndex, int startAddress);
+			bool addRoomNodeFromJson(ci::Json json);
 
 		private:
 			DMXProRef							m_dmxInterface;
@@ -73,13 +74,17 @@ namespace act {
 			void changeInterface(std::string interfaceName);
 
 			int getFixtureIndexByName(std::string fixtureName);
+			
 			std::vector<ci::Json>				m_fixtureDescriptions;
 			std::vector<std::string>			m_fixtureNames;
 			int									m_selectedFixture;
+			int									m_currentAddress;
 
 			act::system::FixtureDescriptionImporterRef m_fixtureDescriptionImporter;
 
-			int									m_currentAddress;
+			// Stores json description of fixtures that could not be initialized properly
+			std::vector<ci::Json>	m_fixtureNodesMissingDesc;
+			bool					m_isSaveBrokenNodes = true;
 
 
 		};
