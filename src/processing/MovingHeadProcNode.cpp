@@ -110,8 +110,9 @@ void act::proc::MovingHeadProcNode::onZoom(float zoom)
 }
 
 void act::proc::MovingHeadProcNode::onColor(ci::Color color) {
+	m_color = color;
 	if (m_movingHead)
-		m_movingHead->setColor(m_color);
+		m_movingHead->setColor(color);
 }
 
 void act::proc::MovingHeadProcNode::onLookAt(glm::vec3 lookAt) {
