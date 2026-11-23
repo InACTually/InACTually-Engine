@@ -46,6 +46,8 @@ namespace act {
 			void fromParams(ci::Json json) override;
 
 			void loadVideo(ci::fs::path path);
+			void syncPlaybackTime();
+			void resetPlaybackClockToCurrentTime();
 
 			void setIsLooping(bool isLooping)	{ m_isLooping = isLooping; };
 			void setIsResuming(bool isResuming) { m_isResuming = isResuming; };
@@ -75,6 +77,9 @@ namespace act {
 			bool					m_isAdding;
 
 			bool					m_isPlaying;
+			double					m_playbackStartedAt;
+			double					m_playbackStartVideoTime;
+			double					m_frameDuration;
 			bool					m_isLooping;
 			bool					m_isResuming;
 		};

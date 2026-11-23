@@ -17,6 +17,8 @@
 #include "procpch.hpp"
 #include "VideoPlayerProcNode.hpp"
 
+#include <algorithm>
+#include <cmath>
 #include <opencv2/core/opengl.hpp>
 
 
@@ -28,6 +30,9 @@ act::proc::VideoPlayerProcNode::VideoPlayerProcNode() : ProcNodeBase("VideoPlaye
 	m_isOpenDialog = false;
 	m_isAdding = false;
 	m_isPlaying = false;
+	m_playbackStartedAt = 0.0;
+	m_playbackStartVideoTime = 0.0;
+	m_frameDuration = 1.0 / 30.0; // assumption, #TODO: get Framerate from File
 	m_isLooping = true;
 
 	m_textureHelper = TextureHelper::create();
@@ -73,6 +78,8 @@ void act::proc::VideoPlayerProcNode::update() {
 	}
 
 	if (m_isPlaying && m_video) {
+		syncPlaybackTime();
+
 		if (!m_video->getTexture())
 			return;
 
@@ -96,10 +103,12 @@ void act::proc::VideoPlayerProcNode::update() {
 			m_isFading = false;
 		if (m_isFading && m_videoFadeFrom && m_videoFadeFrom->getTexture()) {
 			auto fadeMat = m_fadeTextureHelper->fromTexture(m_videoFadeFrom->getTexture());
-			cv::addWeighted(mat, m_fadeAt, fadeMat, 1.0f - m_fadeAt, 0.0f, fadeMat);
-			m_videoImageOutPort->send(fadeMat);
+			if (!mat.empty() && !fadeMat.empty() && mat.rows == fadeMat.rows && mat.cols == fadeMat.cols && mat.type() == fadeMat.type()) {
+				cv::addWeighted(mat, m_fadeAt, fadeMat, 1.0f - m_fadeAt, 0.0f, fadeMat);
+				m_videoImageOutPort->send(fadeMat);
+			}
 		}
-		
+
 		if (m_video->isDone()) {
 			if (!m_isLooping) {
 				m_isPlaying = false;
@@ -109,6 +118,43 @@ void act::proc::VideoPlayerProcNode::update() {
 			}
 		}
 	}
+}
+
+void act::proc::VideoPlayerProcNode::syncPlaybackTime()
+{
+	if (!m_video)
+		return;
+
+	auto duration = m_video->getDuration();
+	if (duration <= 0.0)
+		return;
+
+	double currentTime = m_video->getCurrentTime();
+	double targetTime = m_playbackStartVideoTime + (ci::app::getElapsedSeconds() - m_playbackStartedAt);
+
+	if (m_isLooping) {
+		targetTime = std::fmod(targetTime, duration);
+		if (targetTime < 0.0)
+			targetTime += duration;
+	}
+	else {
+		targetTime = std::max(0.0, std::min(targetTime, static_cast<double>(duration)));
+	}
+
+	double maxLag = std::max(m_frameDuration * 0.5, 0.001);
+	if (targetTime > currentTime + maxLag || targetTime < currentTime - maxLag)
+		m_video->seekToTime(targetTime);
+
+	if (!m_isLooping && targetTime >= duration) {
+		m_isPlaying = false;
+		m_video->stop();
+	}
+}
+
+void act::proc::VideoPlayerProcNode::resetPlaybackClockToCurrentTime()
+{
+	m_playbackStartedAt = ci::app::getElapsedSeconds();
+	m_playbackStartVideoTime = (m_video ? m_video->getCurrentTime() : 0.0);
 }
 
 void act::proc::VideoPlayerProcNode::draw() {
@@ -159,11 +205,16 @@ void act::proc::VideoPlayerProcNode::onTrigger(bool event)
 
 	if (event && !m_isPlaying && m_video) {
 		m_isPlaying = true;
+		m_video->play();
+		resetPlaybackClockToCurrentTime();
 	}
 	else if (!event && m_isPlaying) {
 		m_isPlaying = false;
-		if(!m_isResuming)
+		m_video->stop();
+		if(!m_isResuming) {
 			m_video->seekToStart();
+			m_playbackStartVideoTime = 0.0;
+		}
 	}
 }
 
@@ -174,6 +225,10 @@ void act::proc::VideoPlayerProcNode::seek(number playPosition)
 
 	playPosition = std::clamp(playPosition, 0.0f, 1.0f);
 	m_video->seekToTime(m_video->getDuration() * playPosition);
+	if (m_isPlaying)
+		resetPlaybackClockToCurrentTime();
+	else
+		m_playbackStartVideoTime = m_video->getCurrentTime();
 }
 
 ci::Json act::proc::VideoPlayerProcNode::toParams() {
@@ -209,10 +264,22 @@ void act::proc::VideoPlayerProcNode::loadVideo(ci::fs::path path)
 	if (p.is_relative())
 		p = ci::app::getAssetPath(p);
 	try {
-		// load up the movie, set it to loop, and begin playing
 		m_video = ci::qtime::MovieGl::create(p.string());
-		//mMovie->setLoop();
-		m_video->play();
+		auto frameRate = m_video->getFramerate();
+		if (frameRate > 0.0)
+			m_frameDuration = 1.0 / frameRate;
+		else
+			m_frameDuration = 1.0 / 30.0;
+
+		if (m_isPlaying) {
+			m_video->play();
+			resetPlaybackClockToCurrentTime();
+		}
+		else {
+			m_video->stop();
+			m_video->seekToStart();
+			m_playbackStartVideoTime = 0.0;
+		}
 	}
 	catch (ci::Exception& exc) {
 		std::stringstream strstr;
@@ -237,6 +304,10 @@ bool act::proc::VideoPlayerProcNode::fadeToVideoIndex(int index)
 
 	ci::app::App::get()->dispatchAsync([this, index]() {
 		m_video->seekToTime(m_videoFadeFrom->getCurrentTime());
+		if (m_isPlaying)
+			resetPlaybackClockToCurrentTime();
+		else
+			m_playbackStartVideoTime = m_video->getCurrentTime();
 
 		m_fadeAt = 0.0f;
 		ci::app::timeline().apply(&m_fadeAt, 1.0f, 3, ci::easeInOutSine);
