@@ -19,6 +19,7 @@
 
 #include "ProcNodeBase.hpp"
 
+#include <atomic>
 
 namespace act {
 	namespace proc {
@@ -42,14 +43,16 @@ namespace act {
 			bool init;
 
 			int m_nextTrigger = 0;
-			bool m_isTriggering = false;
 			bool m_startAtRandom = false;
+			std::atomic_int m_pendingFireCount{ 0 };
+			std::atomic_bool m_fireInputHigh{ false };
 
 			InputPortRef<bool> m_fireInputPort;
 			InputPortRef<bool> m_stepUpInputPort;
 			InputPortRef<bool> m_stepDownInputPort;
 			InputPortRef<bool> m_resetInputPort;
 
+			void queueFire();
 			void fireTrigger();
 			void stepUp();
 			void stepDown();

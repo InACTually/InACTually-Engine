@@ -26,13 +26,15 @@ act::proc::TriggerListProcNode::TriggerListProcNode() : ProcNodeBase("TriggerLis
 	init = true;
 
 
-	m_fireInputPort = createBoolInput("fire", [&](bool triggered) { 
-		if (triggered && !m_isTriggering) {
-			fireTrigger(); 
-			m_isTriggering = false;
+	m_fireInputPort = createBoolInput("fire", [&](bool triggered) {
+		if (triggered) {
+			bool expected = false;
+			if (m_fireInputHigh.compare_exchange_strong(expected, true)) {
+				queueFire();
+			}
 		}
-		else if (!triggered && m_isTriggering) {
-			m_isTriggering = true;
+		else {
+			m_fireInputHigh = false;
 		}
 	});
 
@@ -47,6 +49,11 @@ act::proc::TriggerListProcNode::~TriggerListProcNode() {
 void act::proc::TriggerListProcNode::update() {
 	if (init) {
 		init = false;
+	}
+
+	int pendingFires = m_pendingFireCount.exchange(0);
+	while (pendingFires-- > 0) {
+		fireTrigger();
 	}
 }
 
@@ -69,7 +76,7 @@ void act::proc::TriggerListProcNode::draw() {
 
 	m_fireInputPort->draw(0, true);
 	if (ImGui::Button(ICON_FA_ARROW_ALT_CIRCLE_RIGHT " fire", btnWidth)) {
-		fireTrigger();
+		queueFire();
 	}
 	
 	m_resetInputPort->draw(0, true);
@@ -171,16 +178,27 @@ void act::proc::TriggerListProcNode::fromParams(ci::Json json) {
 	}
 }
 
+void act::proc::TriggerListProcNode::queueFire()
+{
+	m_pendingFireCount.fetch_add(1);
+}
+
 void act::proc::TriggerListProcNode::fireTrigger()
 {
 	if (m_outputPorts.empty())
 		return;
 
-	auto port = std::dynamic_pointer_cast<OutputPort<bool>>(m_outputPorts[m_nextTrigger]);
+	if (m_nextTrigger < 0)
+		m_nextTrigger = 0;
+	if (m_nextTrigger >= m_outputPorts.size())
+		m_nextTrigger = m_outputPorts.size() - 1;
+
+	int triggerIndex = m_nextTrigger;
+	auto port = std::dynamic_pointer_cast<OutputPort<bool>>(m_outputPorts[triggerIndex]);
 	stepDown();
 	if (port)
 		port->send(true);
-	if (m_nextTrigger == m_outputPorts.size() - 1)
+	if (port && triggerIndex == m_outputPorts.size() - 1)
 		port->send(false);
 }
 
@@ -193,14 +211,19 @@ void act::proc::TriggerListProcNode::stepUp()
 
 void act::proc::TriggerListProcNode::stepDown()
 {
+	if (m_outputPorts.empty()) {
+		m_nextTrigger = 0;
+		return;
+	}
+
 	m_nextTrigger = m_nextTrigger + 1;
-	if (m_nextTrigger > m_outputPorts.size() - 1)
+	if (m_nextTrigger >= m_outputPorts.size())
 		m_nextTrigger = m_outputPorts.size() - 1;
 }
 
 void act::proc::TriggerListProcNode::setNextTrigger(int index)
 {
-	if (index >= m_outputPorts.size())
+	if (index < 0 || index >= m_outputPorts.size())
 		return;
 
 	m_nextTrigger = index;
@@ -232,13 +255,17 @@ void act::proc::TriggerListProcNode::setTriggerLabel(int index, std::string labe
 
 void act::proc::TriggerListProcNode::removeTrigger(int index)
 {
-	if (index >= m_outputPorts.size())
+	if (index < 0 || index >= m_outputPorts.size())
 		return;
 
 	m_outputPorts.erase(m_outputPorts.begin() + index);
 
-	if (m_nextTrigger > m_outputPorts.size())
-		m_nextTrigger = m_outputPorts.size();
+	if (m_outputPorts.empty()) {
+		m_nextTrigger = 0;
+	}
+	else if (m_nextTrigger >= m_outputPorts.size()) {
+		m_nextTrigger = m_outputPorts.size() - 1;
+	}
 }
 
 void act::proc::TriggerListProcNode::moveTriggerUp(int index)
@@ -251,7 +278,7 @@ void act::proc::TriggerListProcNode::moveTriggerUp(int index)
 
 void act::proc::TriggerListProcNode::moveTriggerDown(int index)
 {
-	if (index >= m_outputPorts.size())
+	if (index < 0 || index >= m_outputPorts.size() - 1)
 		return;
 
 	moveTriggerTo(index, index + 1);
@@ -259,6 +286,9 @@ void act::proc::TriggerListProcNode::moveTriggerDown(int index)
 
 void act::proc::TriggerListProcNode::moveTriggerTo(int index, int to)
 {
+	if (index < 0 || to < 0 || index >= m_outputPorts.size() || to >= m_outputPorts.size() || index == to)
+		return;
+
 	if (index > to)
 		std::rotate(m_outputPorts.rend() - index - 1, m_outputPorts.rend() - index, m_outputPorts.rend() - to);
 	else
