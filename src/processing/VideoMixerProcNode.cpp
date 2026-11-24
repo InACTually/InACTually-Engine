@@ -20,10 +20,25 @@
 act::proc::VideoMixerProcNode::VideoMixerProcNode() : ProcNodeBase("VideoMixer") {
 	m_drawSize = glm::ivec2(200, 200);
 
-	createNumberInput("value",			[&](number val) { m_mixValue = val; });
+	createNumberInput("value",			[&](number val) {
+		{
+			std::lock_guard<std::mutex> lock(m_mixMutex);
+			m_mixValue = val;
+		}
+		mix();
+	});
 
-	createImageInput("primary image",	[&](image img)	{ m_primaryImage = img; mix(); });
-	createImageInput("secondary image",	[&](image img)	{ m_secondaryImage = img; });
+	createImageInput("primary image",	[&](image img)	{
+		{
+			std::lock_guard<std::mutex> lock(m_mixMutex);
+			m_primaryImage = img.clone();
+		}
+		mix();
+	});
+	createImageInput("secondary image",	[&](image img)	{
+		std::lock_guard<std::mutex> lock(m_mixMutex);
+		m_secondaryImage = img.clone();
+	});
 
 	m_output = createImageOutput("mixed image");
 }
@@ -38,8 +53,19 @@ void act::proc::VideoMixerProcNode::update() {
 void act::proc::VideoMixerProcNode::draw() {
 	beginNodeDraw();
 
-	if (ImGui::SliderFloat("mix value", &m_mixValue, 0.0f, 1.0f))
+	float mixValue = 0.0f;
+	{
+		std::lock_guard<std::mutex> lock(m_mixMutex);
+		mixValue = m_mixValue;
+	}
+
+	if (ImGui::SliderFloat("mix value", &mixValue, 0.0f, 1.0f)) {
+		{
+			std::lock_guard<std::mutex> lock(m_mixMutex);
+			m_mixValue = mixValue;
+		}
 		mix();
+	}
 
 	endNodeDraw();
 }
@@ -55,23 +81,63 @@ void act::proc::VideoMixerProcNode::fromParams(ci::Json json) {
 
 void act::proc::VideoMixerProcNode::mix()
 {
-	if (m_primaryImage.empty() && m_secondaryImage.empty())
+	std::lock_guard<std::mutex> processLock(m_mixProcessMutex);
+
+	image primaryImage;
+	image secondaryImage;
+	float mixValue = 0.0f;
+
+	{
+		std::lock_guard<std::mutex> lock(m_mixMutex);
+		primaryImage = m_primaryImage;
+		secondaryImage = m_secondaryImage;
+		mixValue = m_mixValue;
+	}
+
+	if (primaryImage.empty() && secondaryImage.empty())
 		return;
-	if (m_primaryImage.empty()) {
-		m_output->send(m_secondaryImage);
+	if (primaryImage.empty()) {
+		m_output->send(secondaryImage);
 		return;
 	}
-	if (m_secondaryImage.empty()) {
-		m_output->send(m_primaryImage);
+	if (secondaryImage.empty()) {
+		m_output->send(primaryImage);
 		return;
 	}
-	if(m_mixedImage.empty())
-		m_mixedImage = cv::UMat(m_primaryImage.size(), m_primaryImage.type());
 
-	if(m_primaryImage.size() != m_secondaryImage.size())
-		cv::resize(m_secondaryImage, m_secondaryImage, m_primaryImage.size());
+	if (primaryImage.size() != secondaryImage.size()) {
+		image resizedSecondary;
+		cv::resize(secondaryImage, resizedSecondary, primaryImage.size());
+		secondaryImage = resizedSecondary;
+	}
 
-	float alpha = std::clamp(m_mixValue, 0.0f, 1.0f);
-	cv::addWeighted(m_primaryImage, alpha, m_secondaryImage, 1.0f - alpha, 0.0f, m_mixedImage);
-	m_output->send(m_mixedImage);
+	if (primaryImage.channels() != secondaryImage.channels()) {
+		image convertedSecondary;
+		if (primaryImage.channels() == 4 && secondaryImage.channels() == 3)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_BGR2BGRA);
+		else if (primaryImage.channels() == 3 && secondaryImage.channels() == 4)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_BGRA2BGR);
+		else if (primaryImage.channels() == 1 && secondaryImage.channels() == 3)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_BGR2GRAY);
+		else if (primaryImage.channels() == 1 && secondaryImage.channels() == 4)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_BGRA2GRAY);
+		else if (primaryImage.channels() == 3 && secondaryImage.channels() == 1)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_GRAY2BGR);
+		else if (primaryImage.channels() == 4 && secondaryImage.channels() == 1)
+			cv::cvtColor(secondaryImage, convertedSecondary, cv::COLOR_GRAY2BGRA);
+		else
+			convertedSecondary = secondaryImage;
+		secondaryImage = convertedSecondary;
+	}
+
+	if (primaryImage.depth() != secondaryImage.depth()) {
+		image convertedDepth;
+		secondaryImage.convertTo(convertedDepth, CV_MAKETYPE(primaryImage.depth(), secondaryImage.channels()));
+		secondaryImage = convertedDepth;
+	}
+
+	image mixedImage;
+	float alpha = std::clamp(mixValue, 0.0f, 1.0f);
+	cv::addWeighted(primaryImage, alpha, secondaryImage, 1.0f - alpha, 0.0f, mixedImage);
+	m_output->send(mixedImage);
 }

@@ -291,19 +291,33 @@ void act::proc::VideoPlayerProcNode::loadVideo(ci::fs::path path)
 
 bool act::proc::VideoPlayerProcNode::fadeToVideoIndex(int index)
 {
-	if (index >= m_paths.size())
+	if (index < 0 || index >= static_cast<int>(m_paths.size()))
 		return false;
 
-	m_videoFadeFrom = m_video;
+	auto fadeFrom = m_video;
 	loadVideo(m_paths[index]);
 
 	if (!m_video) {
-		m_video = m_videoFadeFrom;
+		m_video = fadeFrom;
 		return false;
 	}
 
-	ci::app::App::get()->dispatchAsync([this, index]() {
-		m_video->seekToTime(m_videoFadeFrom->getCurrentTime());
+	if (!fadeFrom) {
+		m_videoFadeFrom.reset();
+		m_isFading = false;
+		if (m_isPlaying)
+			resetPlaybackClockToCurrentTime();
+		else
+			m_playbackStartVideoTime = m_video->getCurrentTime();
+		return true;
+	}
+
+	m_videoFadeFrom = fadeFrom;
+	ci::app::App::get()->dispatchAsync([this, fadeFrom]() {
+		if (!m_video || !fadeFrom)
+			return;
+
+		m_video->seekToTime(fadeFrom->getCurrentTime());
 		if (m_isPlaying)
 			resetPlaybackClockToCurrentTime();
 		else

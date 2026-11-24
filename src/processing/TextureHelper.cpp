@@ -21,17 +21,36 @@
 
 cv::ogl::Texture2D act::proc::TextureHelper::toTexture(cv::UMat mat) {
 	try {
-		cv::cvtColor(mat, mat, cv::COLOR_BGR2RGBA);
+		if (mat.empty())
+			return cv::ogl::Texture2D();
 
-		m_toTex = cv::ogl::Texture2D(mat.rows, mat.cols, cv::ogl::Texture2D::RGBA, true);
-		cv::ogl::convertToGLTexture2D(mat, m_toTex);
-		//m_texture = ci::gl::Texture2d::create(GL_TEXTURE_2D, m_glTex.texId(), m_glTex.cols(), m_glTex.rows(), true);
+		cv::UMat rgba;
+		switch (mat.channels()) {
+		case 1:
+			cv::cvtColor(mat, rgba, cv::COLOR_GRAY2RGBA);
+			break;
+		case 3:
+			cv::cvtColor(mat, rgba, cv::COLOR_BGR2RGBA);
+			break;
+		case 4:
+			cv::cvtColor(mat, rgba, cv::COLOR_BGRA2RGBA);
+			break;
+		default:
+			return cv::ogl::Texture2D();
+		}
+
+		cv::ogl::Texture2D toTex(rgba.rows, rgba.cols, cv::ogl::Texture2D::RGBA, true);
+		cv::ogl::convertToGLTexture2D(rgba, toTex);
+		{
+			std::lock_guard<std::mutex> lock(m_toTexMutex);
+			m_toTex = toTex;
+		}
+		return toTex;
 	}
 	catch (const cv::Exception& e) {
 		CI_LOG_E("OpenCV OGL error: " << e.what());
 		return cv::ogl::Texture2D();
 	}
-	return m_toTex;
 }
 
 void act::proc::TextureHelper::toTextureAsync(cv::UMat mat, std::function<void(cv::ogl::Texture2D texture)> callback) {
@@ -40,28 +59,33 @@ void act::proc::TextureHelper::toTextureAsync(cv::UMat mat, std::function<void(c
 		return;
 
 	auto weakSelf = std::weak_ptr<TextureHelper>(shared_from_this());
+	cv::UMat matCopy = mat.clone();
 
-	ci::app::App::get()->dispatchAsync([&, weakSelf, mat, callback]() {
+	ci::app::App::get()->dispatchAsync([weakSelf, matCopy, callback]() {
 		if (auto self = weakSelf.lock()) {
-			toTexture(mat);
+			auto texture = self->toTexture(matCopy);
+			self->m_toTexInFlight = false;
+			callback(texture);
 		}
-
-		m_toTexInFlight = false;
-		callback(m_toTex);
 	});
 }
 
 cv::UMat act::proc::TextureHelper::fromTexture(ci::gl::TextureRef texture) {
 	try {
 		auto fromTex = cv::ogl::Texture2D(texture->getHeight(), texture->getWidth(), cv::ogl::Texture2D::RGBA, texture->getId(), false);
-		cv::ogl::convertFromGLTexture2D(fromTex, m_mat);
+		cv::UMat mat;
+		cv::ogl::convertFromGLTexture2D(fromTex, mat);
+		{
+			std::lock_guard<std::mutex> lock(m_matMutex);
+			m_mat = mat;
+		}
+		return mat;
 	}
 	catch (const cv::Exception& e) {
 		CI_LOG_E("OpenCV OGL error: " << e.what());
 		m_fromTexInFlight = false;
 		return cv::UMat();
 	}
-	return m_mat;
 }
 
 void act::proc::TextureHelper::fromTextureAsync(ci::gl::TextureRef texture, std::function<void(cv::UMat mat)> callback) {
@@ -71,12 +95,38 @@ void act::proc::TextureHelper::fromTextureAsync(ci::gl::TextureRef texture, std:
 
 	auto weakSelf = std::weak_ptr<TextureHelper>(shared_from_this());
 
-	ci::app::App::get()->dispatchSync([&, weakSelf, texture, callback]() {
+	ci::app::App::get()->dispatchSync([weakSelf, texture, callback]() {
 		if (auto self = weakSelf.lock()) {
-			fromTexture(texture);
+			auto mat = self->fromTexture(texture);
+			self->m_fromTexInFlight = false;
+			callback(mat);
 		}
-
-		m_fromTexInFlight = false;
-		callback(m_mat);
 	});
+}
+
+cv::ogl::Texture2D act::proc::TextureHelper::getTexture() {
+	std::lock_guard<std::mutex> lock(m_toTexMutex);
+	return m_toTex;
+}
+
+ci::gl::Texture2dRef act::proc::TextureHelper::getTextureRef() {
+	std::lock_guard<std::mutex> lock(m_toTexMutex);
+	if (m_toTex.empty())
+		return nullptr;
+	return ci::gl::Texture2d::create(GL_TEXTURE_2D, m_toTex.texId(), m_toTex.cols(), m_toTex.rows(), true);
+}
+
+cv::UMat act::proc::TextureHelper::getUMat() {
+	std::lock_guard<std::mutex> lock(m_matMutex);
+	return m_mat;
+}
+
+bool act::proc::TextureHelper::hasTexture() {
+	std::lock_guard<std::mutex> lock(m_toTexMutex);
+	return !m_toTex.empty();
+}
+
+bool act::proc::TextureHelper::hasUMat() {
+	std::lock_guard<std::mutex> lock(m_matMutex);
+	return !m_mat.empty();
 }

@@ -17,6 +17,7 @@
 
 #include "ProcNodeBase.hpp"
 
+#include <mutex>
 
 namespace act {
 	namespace proc {
@@ -38,6 +39,8 @@ namespace act {
 		private:
 			OutputPortRef<image> m_output;
 
+			std::mutex m_mixMutex;
+			std::mutex m_mixProcessMutex;
 			float m_mixValue = 0.0f;
 			image m_primaryImage;
 			image m_secondaryImage;

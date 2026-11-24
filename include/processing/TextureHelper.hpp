@@ -22,6 +22,8 @@
 
 #include "opencv2/core/opengl.hpp"
 
+#include <mutex>
+
 namespace act {
 	namespace proc {
 
@@ -41,12 +43,12 @@ namespace act {
 			void fromTextureAsync(ci::gl::TextureRef texture, std::function<void(cv::UMat mat)> callback);
 			void fromTextureAsync(ci::gl::TextureRef texture) { fromTextureAsync(texture, [this](cv::UMat mat) {}); };
 			
-			cv::ogl::Texture2D getTexture() { return m_toTex; };
-			ci::gl::Texture2dRef getTextureRef() { return ci::gl::Texture2d::create(GL_TEXTURE_2D, m_toTex.texId(), m_toTex.cols(), m_toTex.rows(), true); };
-			cv::UMat getUMat() { return m_mat; };
+			cv::ogl::Texture2D getTexture();
+			ci::gl::Texture2dRef getTextureRef();
+			cv::UMat getUMat();
 
-			bool hasTexture() { return !m_toTex.empty(); };
-			bool hasUMat() { return !m_mat.empty(); };
+			bool hasTexture();
+			bool hasUMat();
 		private:
 			cv::ogl::Texture2D		m_toTex;
 
@@ -55,6 +57,9 @@ namespace act {
 
 			std::atomic_bool		m_toTexInFlight{ false };
 			std::atomic_bool		m_fromTexInFlight{ false };
+
+			mutable std::mutex	m_toTexMutex;
+			mutable std::mutex	m_matMutex;
 
 		}; using TextureHelperRef = std::shared_ptr<TextureHelper>;
 
