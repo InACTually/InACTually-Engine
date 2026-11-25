@@ -51,6 +51,14 @@ cv::ogl::Texture2D act::proc::TextureHelper::toTexture(cv::UMat mat) {
 		CI_LOG_E("OpenCV OGL error: " << e.what());
 		return cv::ogl::Texture2D();
 	}
+	catch (const std::exception& e) {
+		CI_LOG_E("Texture conversion error: " << e.what());
+		return cv::ogl::Texture2D();
+	}
+	catch (...) {
+		CI_LOG_E("Texture conversion error: unknown exception");
+		return cv::ogl::Texture2D();
+	}
 }
 
 void act::proc::TextureHelper::toTextureAsync(cv::UMat mat, std::function<void(cv::ogl::Texture2D texture)> callback) {
@@ -61,11 +69,29 @@ void act::proc::TextureHelper::toTextureAsync(cv::UMat mat, std::function<void(c
 	auto weakSelf = std::weak_ptr<TextureHelper>(shared_from_this());
 	cv::UMat matCopy = mat.clone();
 
-	ci::app::App::get()->dispatchAsync([weakSelf, matCopy, callback]() {
+	ci::app::App::get()->dispatchSync([weakSelf, matCopy, callback]() {
 		if (auto self = weakSelf.lock()) {
-			auto texture = self->toTexture(matCopy);
+			cv::ogl::Texture2D texture;
+			try {
+				texture = self->toTexture(matCopy);
+			}
+			catch (const std::exception& e) {
+				CI_LOG_E("toTextureAsync error: " << e.what());
+			}
+			catch (...) {
+				CI_LOG_E("toTextureAsync error: unknown exception");
+			}
+
 			self->m_toTexInFlight = false;
-			callback(texture);
+			try {
+				callback(texture);
+			}
+			catch (const std::exception& e) {
+				CI_LOG_E("toTextureAsync callback error: " << e.what());
+			}
+			catch (...) {
+				CI_LOG_E("toTextureAsync callback error: unknown exception");
+			}
 		}
 	});
 }
@@ -97,9 +123,27 @@ void act::proc::TextureHelper::fromTextureAsync(ci::gl::TextureRef texture, std:
 
 	ci::app::App::get()->dispatchSync([weakSelf, texture, callback]() {
 		if (auto self = weakSelf.lock()) {
-			auto mat = self->fromTexture(texture);
+			cv::UMat mat;
+			try {
+				mat = self->fromTexture(texture);
+			}
+			catch (const std::exception& e) {
+				CI_LOG_E("fromTextureAsync error: " << e.what());
+			}
+			catch (...) {
+				CI_LOG_E("fromTextureAsync error: unknown exception");
+			}
+
 			self->m_fromTexInFlight = false;
-			callback(mat);
+			try {
+				callback(mat);
+			}
+			catch (const std::exception& e) {
+				CI_LOG_E("fromTextureAsync callback error: " << e.what());
+			}
+			catch (...) {
+				CI_LOG_E("fromTextureAsync callback error: unknown exception");
+			}
 		}
 	});
 }

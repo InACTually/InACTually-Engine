@@ -58,8 +58,8 @@ namespace act {
 			std::atomic_bool		m_toTexInFlight{ false };
 			std::atomic_bool		m_fromTexInFlight{ false };
 
-			mutable std::mutex	m_toTexMutex;
-			mutable std::mutex	m_matMutex;
+			mutable std::mutex		m_toTexMutex;
+			mutable std::mutex		m_matMutex;
 
 		}; using TextureHelperRef = std::shared_ptr<TextureHelper>;
 
