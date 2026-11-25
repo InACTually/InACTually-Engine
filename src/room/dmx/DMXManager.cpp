@@ -227,6 +227,9 @@ void act::room::DMXManager::fromJson(ci::Json json)
 
 	}
 
+	// NOTE: Broken fixture nodes are not part of the room so we only clean them here and not in the clear method
+	m_fixtureNodesMissingDesc.clear();
+
 	if (json.contains("nodes")) {
 		auto nodesJson = json["nodes"];
 		for (auto&& node : nodesJson) {
