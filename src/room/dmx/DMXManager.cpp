@@ -227,6 +227,9 @@ void act::room::DMXManager::fromJson(ci::Json json)
 
 	}
 
+	// NOTE: Broken fixture nodes are not part of the room so we only clean them here and not in the clear method
+	m_fixtureNodesMissingDesc.clear();
+
 	if (json.contains("nodes")) {
 		auto nodesJson = json["nodes"];
 		for (auto&& node : nodesJson) {
@@ -293,16 +296,15 @@ void act::room::DMXManager::onImportFixture(ci::Json fixtureDescription)
 	if (m_fixtureNodesMissingDesc.size()) {
 		CI_LOG_I("Checking fixture room nodes with missing description ...");
 
-		for (int i = 0; i < m_fixtureNodesMissingDesc.size(); i++) {
-			auto& node = m_fixtureNodesMissingDesc[i];
-			try {
-				if(addRoomNodeFromJson(node))
-					m_fixtureNodesMissingDesc.erase(m_fixtureNodesMissingDesc.begin() + i);
-			}
-			catch (const std::exception& e) {
-				CI_LOG_E("Failed to addRoomNodeFromJson on fixture missing description " << i << " : " << e.what());
-			}
-		}
+		std::erase_if(m_fixtureNodesMissingDesc, [this](ci::Json& node) {
+				try {
+					return addRoomNodeFromJson(node);
+				}
+				catch (const std::exception& e) {
+					CI_LOG_E("Failed to addRoomNodeFromJson on fixture missing description : " << e.what());
+				}
+				return false;
+			});
 	}
 }
 
